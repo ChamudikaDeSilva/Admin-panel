@@ -9,7 +9,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                         <div className="container mx-auto h-full sm:p-10">
                             <nav className="flex px-4 justify-between items-center">
                                 <div className="text-7xl font-bold">
-                                    <span className="text-lime-500">Pamona's Harvest Haven</span><span className="text-lime-500">.</span>
+                                    <span className="text-lime-500">Pamona's Harvest Haven</span>
                                 </div>
                                 <div>
                                     <img src="https://image.flaticon.com/icons/svg/497/497348.svg" alt="" className="w-8"></img>
@@ -18,8 +18,8 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                             <header className="container px-4 lg:flex mt-10 items-center h-full lg:mt-0">
                                 <div className="w-full">
                                     <h1 className="text-4xl lg:text-6xl font-bold">Find your <span className="text-lime-500">greeny</span> stuff for your kitchen</h1>
-                                    <div className="w-20 h-2 bg-green-700 my-4"></div>
-                                    <p className="text-xl mb-10">Welcome to Pamona's Harvest Haven. Discover premium greenery and accessories to transform your home into a serene oasis.
+                                    <div className="w-20 h-2 bg-lime-500 my-4"></div>
+                                    <p className="text-xl mb-10 text-gray-600">Welcome to Pamona's Harvest Haven. Discover premium greenery and accessories to transform your home into a serene oasis.
                                         Elevate your living space with our curated selection designed to bring life and tranquility.</p>
                                     <Link
                                         href={route('register')}
