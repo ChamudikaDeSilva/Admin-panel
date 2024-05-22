@@ -60,7 +60,9 @@ export default function Authenticated({ user, header, children }) {
                             </li>
 
                                 <li className="mb-2">
-                                    <a href="#" className="block text-gray-700 hover:text-amber-400">Permissions</a>
+                                <Link href={route('permissions')} className="block text-gray-700 hover:text-amber-400">
+                                    Permissions
+                                </Link>
                                 </li>
                                 <li className="mb-2">
                                     <a href="#" className="block text-gray-700 hover:text-amber-400">Module Permissions</a>

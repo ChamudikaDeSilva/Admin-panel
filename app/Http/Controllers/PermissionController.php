@@ -2,27 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Module;
+
+use App\Models\Permission;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 
-
-class ModuleController extends Controller
+class PermissionController extends Controller
 {
     public function index()
     {
-        $modules = Module::all();
+        $permissions=Permission::all();
 
-        return Inertia::render('Admin/module', [
-            'modules' => $modules,
+        return Inertia::render('Admin/permission',[
+            'permissions' => $permissions,
         ]);
     }
 
-    public function moduleIndex()
+    public function permissionIndex()
     {
-        $modules = Module::all();
-        return response()->json(['modules' => $modules]);
+        $permissions=Permission::all();
+        return response()->json(['permissions' => $permissions]);
     }
 
     public function store(Request $request)
@@ -33,19 +33,19 @@ class ModuleController extends Controller
                 'name' => 'required|string|max:255',
             ]);
 
-            $module = new Module();
-            $module->name = $validatedData['name'];
+            $permission = new Permission();
+            $permission->name = $validatedData['name'];
 
-            $module->save();
+            $permission->save();
 
             //Log::info('Module created successfully.', ['module_id' => $module->id]);
 
 
-            return response()->json($module, 201);
+            return response()->json($permission, 201);
         }
         catch (\Exception $e)
         {
-            Log::error('Error adding module: ' . $e->getMessage());
+            Log::error('Error adding permission: ' . $e->getMessage());
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
     }
@@ -53,15 +53,14 @@ class ModuleController extends Controller
     public function destroy($id)
     {
         try{
-            $module =Module::findOrFail($id);
-            $module->delete();
+            $permission= Permission::findOrFail($id);
+            $permission->delete();
             return response()->json(['message'=>'Module deleted successfully']);
         }
         catch (\Exception $e)
         {
-            Log::error('Error deleting module: '. $e->getMessage());
-            return response()->json(['error' => 'Internal Server Error'], 500);
+            Log::error($e->getMessage());
+            return response()->json($e->getMessage(),500);
         }
     }
-
 }
