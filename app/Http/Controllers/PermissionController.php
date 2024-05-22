@@ -37,10 +37,7 @@ class PermissionController extends Controller
             $permission->name = $validatedData['name'];
 
             $permission->save();
-
-            //Log::info('Module created successfully.', ['module_id' => $module->id]);
-
-
+            
             return response()->json($permission, 201);
         }
         catch (\Exception $e)
