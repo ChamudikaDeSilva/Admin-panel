@@ -4,6 +4,7 @@ import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
+import SidebarDropdown from '@/Components/SidebarDropdown'; // Make sure the path is correct
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
@@ -50,6 +51,17 @@ export default function Authenticated({ user, header, children }) {
                             <li className="mb-2">
                                 <a href="#" className="block text-gray-700 hover:text-amber-400">Contact</a>
                             </li>
+                            <SidebarDropdown title="Security">
+                                <li className="mb-2">
+                                    <a href="#" className="block text-gray-700 hover:text-amber-400">Modules</a>
+                                </li>
+                                <li className="mb-2">
+                                    <a href="#" className="block text-gray-700 hover:text-amber-400">Permissions</a>
+                                </li>
+                                <li className="mb-2">
+                                    <a href="#" className="block text-gray-700 hover:text-amber-400">Module Permissions</a>
+                                </li>
+                            </SidebarDropdown>
                         </ul>
                     </div>
                 </div>
@@ -110,7 +122,7 @@ export default function Authenticated({ user, header, children }) {
                                                         >
                                                             <path
                                                                 fillRule="evenodd"
-                                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 011.414 1.414l-4 4a1 1 01-1.414 0l-4-4a1 1 010-1.414z"
                                                                 clipRule="evenodd"
                                                             />
                                                         </svg>
