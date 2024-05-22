@@ -4,8 +4,7 @@ import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
-import SidebarDropdown from '@/Components/SidebarDropdown'; // Make sure the path is correct
-
+import SidebarDropdown from '@/Components/SidebarDropdown';
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -40,7 +39,9 @@ export default function Authenticated({ user, header, children }) {
                         <h1 className="text-2xl font-semibold text-amber-500">Pamona's Haven</h1>
                         <ul className="mt-4">
                             <li className="mb-2">
-                                <a href="#" className="block text-gray-700 hover:text-amber-400">Home</a>
+                                <Link href={route('dashboard')} className="block text-gray-700 hover:text-amber-400">
+                                        Home
+                                </Link>
                             </li>
                             <li className="mb-2">
                                 <a href="#" className="block text-gray-700 hover:text-amber-400">About</a>
@@ -52,9 +53,12 @@ export default function Authenticated({ user, header, children }) {
                                 <a href="#" className="block text-gray-700 hover:text-amber-400">Contact</a>
                             </li>
                             <SidebarDropdown title="Security">
-                                <li className="mb-2">
-                                    <a href="#" className="block text-gray-700 hover:text-amber-400">Modules</a>
-                                </li>
+                            <li className="mb-2">
+                                <Link href={route('modules')} className="block text-gray-700 hover:text-amber-400">
+                                    Modules
+                                </Link>
+                            </li>
+
                                 <li className="mb-2">
                                     <a href="#" className="block text-gray-700 hover:text-amber-400">Permissions</a>
                                 </li>

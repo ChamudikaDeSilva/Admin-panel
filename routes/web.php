@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -36,3 +37,6 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+//Route::get('/modules', [ModuleController::class, 'index'])->name('modules');
+Route::get('/modules', [ModuleController::class, 'index'])->middleware(['auth', 'verified'])->name('modules');
