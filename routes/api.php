@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\ModulePermissionController;
 use App\Http\Controllers\PermissionController;
 
 /*
@@ -29,4 +30,7 @@ Route::delete('/modules/delete/{id}', [ModuleController::class, 'destroy']);
 Route::get('/permissions/get', [PermissionController::class, 'permissionIndex']);
 Route::post('/permissions/create', [PermissionController::class, 'store']);
 Route::delete('/permissions/delete/{id}', [PermissionController::class, 'destroy']);
+
+//Module Permissions
+Route::get('roles/modules/permissions/get', [ModulePermissionController::class, 'modulePermissionIndex']);
 

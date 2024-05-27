@@ -65,7 +65,9 @@ export default function Authenticated({ user, header, children }) {
                                 </Link>
                                 </li>
                                 <li className="mb-2">
-                                    <a href="#" className="block text-gray-700 hover:text-amber-400">Module Permissions</a>
+                                <Link href={route('modules_permissions')} className="block text-gray-700 hover:text-amber-400">
+                                    Module Permissions
+                                </Link>
                                 </li>
                             </SidebarDropdown>
                         </ul>

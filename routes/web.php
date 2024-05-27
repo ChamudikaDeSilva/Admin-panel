@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ModuleController;
+use App\Http\Controllers\ModulePermissionController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -42,3 +43,4 @@ require __DIR__.'/auth.php';
 //Route::get('/modules', [ModuleController::class, 'index'])->name('modules');
 Route::get('/modules', [ModuleController::class, 'index'])->middleware(['auth', 'verified'])->name('modules');
 Route::get('/permissions', [PermissionController::class, 'index'])->middleware(['auth', 'verified'])->name('permissions');
+Route::get('/module/permissions', [ModulePermissionController::class, 'index'])->middleware(['auth', 'verified'])->name('modules_permissions');
