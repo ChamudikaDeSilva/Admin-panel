@@ -55,7 +55,7 @@ export default function Authenticated({ user, header, children }) {
                             <SidebarDropdown title="Security">
                             <li className="mb-2">
                                 <Link href={route('modules')} className="block text-gray-700 hover:text-amber-400">
-                                    Modules
+                                    Moduless
                                 </Link>
                             </li>
 
