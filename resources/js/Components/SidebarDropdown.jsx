@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 export default function SidebarDropdown({ title, children }) {
     const [isOpen, setIsOpen] = useState(false);
@@ -8,26 +8,28 @@ export default function SidebarDropdown({ title, children }) {
     };
 
     return (
-        <div className="mb-2">
+        <div>
             <button
                 onClick={toggleDropdown}
-                className="block text-left w-full text-gray-700 hover:text-amber-400 focus:outline-none"
+                className="w-full flex items-center p-2 text-base font-medium text-gray-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
             >
-                {title}
+                <span className="ml-2">{title}</span>
                 <svg
-                    className={`w-4 h-4 inline-block ml-2 transition-transform ${
-                        isOpen ? 'transform rotate-180' : ''
-                    }`}
-                    fill="none"
-                    stroke="currentColor"
+                    className={`ml-auto transition-transform ${isOpen ? 'transform rotate-180' : ''}`}
+                    width="24"
+                    height="24"
                     viewBox="0 0 24 24"
+                    fill="none"
                     xmlns="http://www.w3.org/2000/svg"
                 >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                    <path
+                        d="M12 14L8 10L16 10L12 14Z"
+                        fill="currentColor"
+                    />
                 </svg>
             </button>
             {isOpen && (
-                <ul className="mt-2 pl-4">
+                <ul className="pl-4 mt-2">
                     {children}
                 </ul>
             )}

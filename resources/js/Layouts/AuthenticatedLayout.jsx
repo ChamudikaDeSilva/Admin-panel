@@ -5,9 +5,14 @@ import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 import SidebarDropdown from '@/Components/SidebarDropdown';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHouse, faCircleInfo, faGear, faAddressBook, faLock, faBars, faLockOpen, faUserLock } from '@fortawesome/free-solid-svg-icons';
+
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
+
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -30,49 +35,80 @@ export default function Authenticated({ user, header, children }) {
             <div className="flex overflow-hidden bg-gray-00">
                 {/* Sidebar */}
                 <div
-                    id="sidebar"
-                    className={`absolute bg-lime-200 text-white w-56 min-h-screen overflow-y-auto transition-transform transform ${
-                        sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                    } ease-in-out duration-300`}
-                >
-                    <div className="p-4">
-                        <h1 className="text-2xl font-semibold text-amber-500">Pamona's Haven</h1>
-                        <ul className="mt-4">
-                            <li className="mb-2">
-                                <Link href={route('dashboard')} className="block text-gray-700 hover:text-amber-400">
-                                        Home
-                                </Link>
-                            </li>
-                            <li className="mb-2">
-                                <a href="#" className="block text-gray-700 hover:text-amber-400">About</a>
-                            </li>
-                            <li className="mb-2">
-                                <a href="#" className="block text-gray-700 hover:text-amber-400">Services</a>
-                            </li>
-                            <li className="mb-2">
-                                <a href="#" className="block text-gray-700 hover:text-amber-400">Contact</a>
-                            </li>
-                            <SidebarDropdown title="Security">
-                            <li className="mb-2">
-                                <Link href={route('modules')} className="block text-gray-700 hover:text-amber-400">
-                                    Moduless
-                                </Link>
-                            </li>
+            id="sidebar"
+            className={`absolute bg-lime-200 text-white w-56 min-h-screen overflow-y-auto transition-transform transform ${
+                sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+            } ease-in-out duration-300 shadow-lg`}
+        >
+            <div className="p-4">
+                <h1 className="text-2xl font-bold text-amber-500 mb-6">Pamona's Haven</h1>
+                <ul className="space-y-4">
+                    <li>
+                        <Link
+                            href={route('dashboard')}
+                            className="flex items-center p-2 text-base font-medium text-gray-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                        >
+                            <FontAwesomeIcon icon={faHouse} className="mr-2" />
+                            <span>Home</span>
+                        </Link>
+                    </li>
+                    <li>
+                        <a
+                            href="#"
+                            className="flex items-center p-2 text-base font-medium text-gray-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                        >
+                            <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
+                            <span>About</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="#"
+                            className="flex items-center p-2 text-base font-medium text-gray-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                        >
+                            <FontAwesomeIcon icon={faGear} className="mr-2" />
+                            <span>Services</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="#"
+                            className="flex items-center p-2 text-base font-medium text-gray-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                        >
+                            <FontAwesomeIcon icon={faAddressBook} className="mr-2" />
+                            <span>Contact</span>
+                        </a>
+                    </li>
+                    <SidebarDropdown title={<><FontAwesomeIcon icon={faLock} className="mr-2" /> Security</>} >
+                        <li>
+                            <Link
+                                href={route('modules')}
+                                className="flex items-center p-2 text-base font-medium text-gray-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            >
+                                -Modules
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href={route('permissions')}
+                                className="flex items-center p-2 text-base font-medium text-gray-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            >
+                                -Permissions
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href={route('modules_permissions')}
+                                className="flex items-center p-2 text-base font-medium text-gray-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            >
+                                -Module Permissions
+                            </Link>
+                        </li>
+                    </SidebarDropdown>
+                </ul>
+            </div>
+        </div>
 
-                                <li className="mb-2">
-                                <Link href={route('permissions')} className="block text-gray-700 hover:text-amber-400">
-                                    Permissions
-                                </Link>
-                                </li>
-                                <li className="mb-2">
-                                <Link href={route('modules_permissions')} className="block text-gray-700 hover:text-amber-400">
-                                    Module Permissions
-                                </Link>
-                                </li>
-                            </SidebarDropdown>
-                        </ul>
-                    </div>
-                </div>
 
                 {/* Main Content */}
                 <div className="flex-1 flex flex-col overflow-hidden">
