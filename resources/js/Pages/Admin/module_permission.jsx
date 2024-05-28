@@ -5,23 +5,87 @@ import { Head } from '@inertiajs/react';
 
 export default function Modules({ auth }) {
     const [roles, setRoles] = useState([]);
+    const [modules, setModules] = useState([]);
+    const [permissions, setPermissions] = useState([]);
     const [selectedRole, setSelectedRole] = useState('');
+    const [modulePermissions, setModulePermissions] = useState({});
 
     useEffect(() => {
-        fetchRoles();
+        fetchData();
     }, []);
 
-    const fetchRoles = async () => {
+    const fetchData = async () => {
         try {
             const response = await axios.get('/api/roles/modules/permissions/get');
             setRoles(response.data.roles);
+            setModules(response.data.modules);
+            setPermissions(response.data.permissions);
         } catch (error) {
-            console.error('Error fetching roles:', error);
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    const fetchPermissions = async (roleId) => {
+        try {
+            const response = await axios.get(`/api/module/permissions/${roleId}`);
+            const permissionsData = response.data;
+            const formattedPermissions = {};
+
+            permissionsData.forEach(permission => {
+                if (!formattedPermissions[permission.module_id]) {
+                    formattedPermissions[permission.module_id] = {};
+                }
+                formattedPermissions[permission.module_id][permission.permission_id] = true;
+            });
+
+            setModulePermissions(formattedPermissions);
+        } catch (error) {
+            console.error('Error fetching permissions:', error);
         }
     };
 
     const handleRoleChange = (e) => {
-        setSelectedRole(e.target.value);
+        const roleId = e.target.value;
+        setSelectedRole(roleId);
+        fetchPermissions(roleId);
+    };
+
+    const handleCheckboxChange = async (moduleId, permissionId) => {
+        if (!selectedRole) {
+            alert('Please select a role first.');
+            return;
+        }
+
+        const isChecked = modulePermissions[moduleId]?.[permissionId] || false;
+
+        setModulePermissions(prevState => ({
+            ...prevState,
+            [moduleId]: {
+                ...prevState[moduleId],
+                [permissionId]: !isChecked
+            }
+        }));
+
+        try {
+            if (!isChecked) {
+                await axios.post('/api/module/permissions/create', {
+                    role_id: selectedRole,
+                    module_id: moduleId,
+                    permission_id: permissionId,
+                    name: `${modules.find(module => module.id === parseInt(moduleId)).name}_${permissions.find(permission => permission.id === parseInt(permissionId)).name}`
+                });
+            } else {
+                await axios.delete(`/api/module/permissions/delete`, {
+                    data: {
+                        role_id: selectedRole,
+                        module_id: moduleId,
+                        permission_id: permissionId,
+                    }
+                });
+            }
+        } catch (error) {
+            console.error('Error updating permissions:', error);
+        }
     };
 
     return (
@@ -49,10 +113,41 @@ export default function Modules({ auth }) {
                                         </option>
                                     ))}
                                 </select>
+                            </div><br></br>
+                            <div className="overflow-x-auto">
+                                <table className="min-w-full divide-y divide-gray-200">
+                                    <thead>
+                                        <tr>
+                                            <th className="px-6 py-3 bg-amber-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Modules / Permissions
+                                            </th>
+                                            {permissions.map((permission) => (
+                                                <th key={permission.id} className="px-6 py-3 bg-amber-100 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                    {permission.name}
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody className="bg-white divide-y divide-gray-200">
+                                        {modules.map((module) => (
+                                            <tr key={module.id}>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                    {module.name}
+                                                </td>
+                                                {permissions.map((permission) => (
+                                                    <td key={permission.id} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={modulePermissions[module.id]?.[permission.id] || false}
+                                                            onChange={() => handleCheckboxChange(module.id, permission.id)}
+                                                        />
+                                                    </td>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
-
-
-
                         </div>
                     </div>
                 </div>

@@ -33,4 +33,6 @@ Route::delete('/permissions/delete/{id}', [PermissionController::class, 'destroy
 
 //Module Permissions
 Route::get('roles/modules/permissions/get', [ModulePermissionController::class, 'modulePermissionIndex']);
-
+Route::post('/module/permissions/create', [ModulePermissionController::class, 'store']);
+Route::delete('/module/permissions/delete', [ModulePermissionController::class, 'destroy']);
+Route::get('/module/permissions/{role}', [ModulePermissionController::class, 'fetchModulePermissions']);
