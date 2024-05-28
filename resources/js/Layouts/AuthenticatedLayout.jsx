@@ -33,14 +33,14 @@ export default function Authenticated({ user, header, children }) {
     return (
         <div className="min-h-screen bg-gray-100">
             <div className="flex overflow-hidden bg-gray-00">
-                {/* Sidebar */}
-                <div
-            id="sidebar"
-            className={`absolute bg-lime-200 text-white w-56 min-h-screen overflow-y-auto transition-transform transform ${
-                sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-            } ease-in-out duration-300 shadow-lg`}
-        >
+            {/* Sidebar */}
+                <div id="sidebar"className={`absolute bg-lime-200 text-white w-56 min-h-screen overflow-y-auto transition-transform transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                } ease-in-out duration-300 shadow-lg`}
+            >
             <div className="p-4">
+            <div className="flex items-center justify-center mb-2">
+            <img src="/images/logo1.jpg" alt="Logo" className="h-20 w-auto mb-2" />
+            </div>
                 <h1 className="text-2xl font-bold text-amber-500 mb-6">Pamona's Haven</h1>
                 <ul className="space-y-4">
                     <li>
