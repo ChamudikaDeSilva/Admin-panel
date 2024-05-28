@@ -33,9 +33,14 @@ class ModulePolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user)
+    public function create(User $user,Module $module)
     {
-        //
+        $permissionName='Module_Create';
+
+        return DB::table('module_permissions')
+        ->where('role_id',$user->role_id)
+        ->where('name',$permissionName)
+        ->exists();
     }
 
     /**

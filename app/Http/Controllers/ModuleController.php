@@ -28,16 +28,20 @@ class ModuleController extends Controller
         return response()->json(['modules' => $modules]);
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Module $module)
     {
         try
         {
+            //$this->authorize('create', $module);
+
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
             ]);
 
             $module = new Module();
             $module->name = $validatedData['name'];
+
+
 
             $module->save();
 

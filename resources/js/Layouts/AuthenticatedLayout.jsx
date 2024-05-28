@@ -49,7 +49,7 @@ export default function Authenticated({ user, header, children }) {
                             className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                         >
                             <FontAwesomeIcon icon={faHouse} className="mr-2" />
-                            <span>Home</span>
+                            <span>Dashboard</span>
                         </Link>
                     </li>
                     <li>
@@ -102,6 +102,48 @@ export default function Authenticated({ user, header, children }) {
                                 className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                             >
                                 -Module Permissions
+                            </Link>
+                        </li>
+                    </SidebarDropdown>
+                    <SidebarDropdown title={<><FontAwesomeIcon icon={faLock} className="mr-2" /> Users</>} >
+                        <li>
+                            <Link
+                                href={route('modules')}
+                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            >
+                                -Admins
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href={route('permissions')}
+                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            >
+                                -Roots
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href={route('modules_permissions')}
+                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            >
+                                -Customers
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href={route('modules_permissions')}
+                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            >
+                                -Suppliers
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href={route('modules_permissions')}
+                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            >
+                                -Delivery
                             </Link>
                         </li>
                     </SidebarDropdown>
@@ -230,7 +272,7 @@ export default function Authenticated({ user, header, children }) {
                     <main className="flex-1 overflow-auto p-4">
                         {children}
                     </main>
-                    
+
                 </div>
             </div>
         </div>
