@@ -10,9 +10,12 @@ use Illuminate\Support\Facades\Log;
 
 class ModuleController extends Controller
 {
-    public function index()
+    public function index(Module $module)
     {
         $modules = Module::all();
+
+        $this->authorize('view', $module);
+
 
         return Inertia::render('Admin/module', [
             'modules' => $modules,

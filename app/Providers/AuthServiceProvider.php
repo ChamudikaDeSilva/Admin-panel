@@ -5,7 +5,9 @@ namespace App\Providers;
 // use Illuminate\Support\Facades\Gate;
 
 use App\Models\Dashboard;
+use App\Models\Module;
 use App\Policies\DashboardPolicy;
+use App\Policies\ModulePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -17,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Dashboard::class => DashboardPolicy::class,
+        Module::class => ModulePolicy::class,
 
     ];
 
