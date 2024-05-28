@@ -39,8 +39,6 @@ class ModuleController extends Controller
             $module->save();
 
             //Log::info('Module created successfully.', ['module_id' => $module->id]);
-
-
             return response()->json($module, 201);
         }
         catch (\Exception $e)

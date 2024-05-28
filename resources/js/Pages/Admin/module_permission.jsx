@@ -85,7 +85,7 @@ export default function Modules({ auth }) {
             }
         } catch (error) {
             console.error('Error updating permissions:', error);
-            
+
         }
     };
 

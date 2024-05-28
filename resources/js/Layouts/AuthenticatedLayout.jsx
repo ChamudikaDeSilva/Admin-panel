@@ -38,15 +38,15 @@ export default function Authenticated({ user, header, children }) {
                 } ease-in-out duration-300 shadow-lg`}
             >
             <div className="p-4">
-            <div className="flex items-center justify-center mb-2">
-            <img src="/images/logo1.jpg" alt="Logo" className="h-20 w-auto mb-2" />
-            </div>
+                <div className="flex items-center justify-center mb-2">
+                    <img src="/images/logo1.jpg" alt="Logo" className="h-20 w-auto mb-2" />
+                </div>
                 <h1 className="text-2xl font-bold text-amber-500 mb-6">Pamona's Haven</h1>
                 <ul className="space-y-4">
                     <li>
                         <Link
                             href={route('dashboard')}
-                            className="flex items-center p-2 text-base font-medium text-gray-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                         >
                             <FontAwesomeIcon icon={faHouse} className="mr-2" />
                             <span>Home</span>
@@ -55,7 +55,7 @@ export default function Authenticated({ user, header, children }) {
                     <li>
                         <a
                             href="#"
-                            className="flex items-center p-2 text-base font-medium text-gray-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                         >
                             <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
                             <span>About</span>
@@ -64,7 +64,7 @@ export default function Authenticated({ user, header, children }) {
                     <li>
                         <a
                             href="#"
-                            className="flex items-center p-2 text-base font-medium text-gray-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                         >
                             <FontAwesomeIcon icon={faGear} className="mr-2" />
                             <span>Services</span>
@@ -73,7 +73,7 @@ export default function Authenticated({ user, header, children }) {
                     <li>
                         <a
                             href="#"
-                            className="flex items-center p-2 text-base font-medium text-gray-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                         >
                             <FontAwesomeIcon icon={faAddressBook} className="mr-2" />
                             <span>Contact</span>
@@ -83,7 +83,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('modules')}
-                                className="flex items-center p-2 text-base font-medium text-gray-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                             >
                                 -Modules
                             </Link>
@@ -91,7 +91,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('permissions')}
-                                className="flex items-center p-2 text-base font-medium text-gray-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                             >
                                 -Permissions
                             </Link>
@@ -99,7 +99,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('modules_permissions')}
-                                className="flex items-center p-2 text-base font-medium text-gray-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                             >
                                 -Module Permissions
                             </Link>
@@ -230,6 +230,7 @@ export default function Authenticated({ user, header, children }) {
                     <main className="flex-1 overflow-auto p-4">
                         {children}
                     </main>
+                    
                 </div>
             </div>
         </div>
