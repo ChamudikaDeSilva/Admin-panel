@@ -108,7 +108,7 @@ export default function Authenticated({ user, header, children }) {
                     <SidebarDropdown title={<><FontAwesomeIcon icon={faLock} className="mr-2" /> Users</>} >
                         <li>
                             <Link
-                                href={route('modules')}
+                                href={route('admin_management')}
                                 className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                             >
                                 -Admins

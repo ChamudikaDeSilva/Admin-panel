@@ -4,6 +4,7 @@ use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ModulePermissionController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserManagementController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -44,3 +45,6 @@ require __DIR__.'/auth.php';
 Route::get('/modules', [ModuleController::class, 'index'])->middleware(['auth', 'verified'])->name('modules');
 Route::get('/permissions', [PermissionController::class, 'index'])->middleware(['auth', 'verified'])->name('permissions');
 Route::get('/module/permissions', [ModulePermissionController::class, 'index'])->middleware(['auth', 'verified'])->name('modules_permissions');
+
+//User Management
+Route::get('/user/management/admins', [UserManagementController::class, 'adminIndex'])->middleware(['auth', 'verified'])->name('admin_management');

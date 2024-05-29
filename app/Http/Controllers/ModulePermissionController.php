@@ -15,7 +15,7 @@ class ModulePermissionController extends Controller
     {
         $roles = Role::all();
 
-        return Inertia::render('Admin/module_permission', [
+        return Inertia::render('Security/module_permission', [
             'roles' => $roles,
         ]);
     }

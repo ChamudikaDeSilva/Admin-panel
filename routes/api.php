@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ModulePermissionController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\UserManagementController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,3 +37,6 @@ Route::get('roles/modules/permissions/get', [ModulePermissionController::class, 
 Route::post('/module/permissions/create', [ModulePermissionController::class, 'store']);
 Route::delete('/module/permissions/delete', [ModulePermissionController::class, 'destroy']);
 Route::get('/module/permissions/{role}', [ModulePermissionController::class, 'fetchModulePermissions']);
+
+//User Management
+Route::post('/user/management/admins/create', [UserManagementController::class, 'createAdmin'])->name('admins.store');

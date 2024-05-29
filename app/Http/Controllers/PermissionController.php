@@ -14,7 +14,7 @@ class PermissionController extends Controller
     {
         $permissions=Permission::all();
 
-        return Inertia::render('Admin/permission',[
+        return Inertia::render('Security/permission',[
             'permissions' => $permissions,
         ]);
     }
@@ -37,7 +37,7 @@ class PermissionController extends Controller
             $permission->name = $validatedData['name'];
 
             $permission->save();
-            
+
             return response()->json($permission, 201);
         }
         catch (\Exception $e)
