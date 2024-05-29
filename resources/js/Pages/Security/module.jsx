@@ -79,7 +79,7 @@ export default function Modules({ auth,modules: initialModules }) {
                                     Add Module
                                 </button>
 
-                                <div className="mt-8">
+                            <div className="mt-8">
                                 <h2 className="text-xl font-semibold mb-4">Modules List</h2>
                                 <div className="overflow-x-auto">
                                     <table className="min-w-full divide-y divide-gray-200">
