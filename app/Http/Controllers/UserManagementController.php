@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class UserManagementController extends Controller
@@ -51,6 +52,18 @@ class UserManagementController extends Controller
 
         return response()->json(['message' => 'Admin created successfully'], 201);
     }
+    public function editAdmin($id)
+    {
+        $user = User::findOrFail($id);
+        $authUser = auth()->user();
+
+        return Inertia::render('UserManagement/admin_edit', [
+            'user' => $user,
+            'auth' => $authUser,
+        ]);
+    }
+
+
 
 
 

@@ -32,7 +32,8 @@ class ModuleController extends Controller
     {
         try
         {
-            //$this->authorize('create', $module);
+
+            $this->authorize('create', $module);
 
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
@@ -41,8 +42,6 @@ class ModuleController extends Controller
             $module = new Module();
             $module->name = $validatedData['name'];
 
-
-
             $module->save();
 
             //Log::info('Module created successfully.', ['module_id' => $module->id]);
@@ -50,6 +49,7 @@ class ModuleController extends Controller
         }
         catch (\Exception $e)
         {
+
             Log::error('Error adding module: ' . $e->getMessage());
             return response()->json(['error' => 'Internal Server Error'], 500);
         }

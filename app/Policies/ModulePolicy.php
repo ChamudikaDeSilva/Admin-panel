@@ -37,6 +37,7 @@ class ModulePolicy
     {
         $permissionName='Module_Create';
 
+
         return DB::table('module_permissions')
         ->where('role_id',$user->role_id)
         ->where('name',$permissionName)
