@@ -34,7 +34,7 @@ export default function Authenticated({ user, header, children }) {
         <div className="min-h-screen bg-gray-100">
             <div className="flex overflow-hidden bg-gray-00">
             {/* Sidebar */}
-                <div id="sidebar"className={`absolute bg-lime-200 text-white w-56 min-h-screen overflow-y-auto transition-transform transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                <div id="sidebar"className={`absolute bg-lime-800 text-white w-56 min-h-screen overflow-y-auto transition-transform transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
                 } ease-in-out duration-300 shadow-lg`}
             >
             <div className="p-4">
@@ -46,7 +46,7 @@ export default function Authenticated({ user, header, children }) {
                     <li>
                         <Link
                             href={route('dashboard')}
-                            className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            className="flex items-center p-2 text-base font-medium text-lime-500 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                         >
                             <FontAwesomeIcon icon={faHouse} className="mr-2" />
                             <span>Dashboard</span>
@@ -55,7 +55,7 @@ export default function Authenticated({ user, header, children }) {
                     <li>
                         <a
                             href="#"
-                            className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            className="flex items-center p-2 text-base font-medium text-lime-500 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                         >
                             <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
                             <span>About</span>
@@ -64,7 +64,7 @@ export default function Authenticated({ user, header, children }) {
                     <li>
                         <a
                             href="#"
-                            className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            className="flex items-center p-2 text-base font-medium text-lime-500 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                         >
                             <FontAwesomeIcon icon={faGear} className="mr-2" />
                             <span>Services</span>
@@ -73,7 +73,7 @@ export default function Authenticated({ user, header, children }) {
                     <li>
                         <a
                             href="#"
-                            className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            className="flex items-center p-2 text-base font-medium text-lime-500 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                         >
                             <FontAwesomeIcon icon={faAddressBook} className="mr-2" />
                             <span>Contact</span>
@@ -83,7 +83,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('modules')}
-                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-lime-500 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                             >
                                 -Modules
                             </Link>
@@ -91,7 +91,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('permissions')}
-                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-lime-500 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                             >
                                 -Permissions
                             </Link>
@@ -99,7 +99,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('modules_permissions')}
-                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-lime-500 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                             >
                                 -Module Permissions
                             </Link>
@@ -109,7 +109,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('admin_management')}
-                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-lime-500 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                             >
                                 -Admins
                             </Link>
@@ -117,7 +117,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('permissions')}
-                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-lime-500 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                             >
                                 -Roots
                             </Link>
@@ -125,7 +125,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('modules_permissions')}
-                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-lime-500 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                             >
                                 -Customers
                             </Link>
@@ -133,7 +133,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('modules_permissions')}
-                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-lime-500 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                             >
                                 -Suppliers
                             </Link>
@@ -141,7 +141,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('modules_permissions')}
-                                className="flex items-center p-2 text-base font-medium text-green-700 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-lime-500 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                             >
                                 -Delivery
                             </Link>
@@ -155,13 +155,13 @@ export default function Authenticated({ user, header, children }) {
                 {/* Main Content */}
                 <div className="flex-1 flex flex-col overflow-hidden">
                     {/* Navbar */}
-                    <nav className="bg-lime-200 shadow">
+                    <nav className="bg-lime-800 shadow">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                             <div className="flex justify-between h-16">
                                 <div className="flex items-left">
                                     {/* Sidebar Toggle Button */}
                                     <button
-                                        className="text-gray-500 hover:text-gray-600 mr-4"
+                                        className="text-lime-500 hover:text-lime-500 mr-4"
                                         id="open-sidebar"
                                         onClick={(e) => {
                                             e.stopPropagation();
@@ -229,7 +229,7 @@ export default function Authenticated({ user, header, children }) {
                                 <div className="-me-2 flex items-center sm:hidden">
                                     <button
                                         onClick={() => setShowingNavigationDropdown((previousState) => !previousState)}
-                                        className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
+                                        className="inline-flex items-center justify-center p-2 rounded-md text-lime-500 hover:text-lime-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
                                     >
                                         <svg className="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                                             <path

@@ -3,7 +3,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilePen,faForward, faBackward } from '@fortawesome/free-solid-svg-icons';
+import { faFilePen,faArrowRight,faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 
 export default function Modules({ auth }) {
@@ -139,7 +139,7 @@ export default function Modules({ auth }) {
                                     className="px-4 py-2 mr-2 bg-lime-500 text-white font-semibold rounded-md hover:bg-amber-500"
                                 >
                                     <FontAwesomeIcon
-                                    icon={faBackward}/>
+                                    icon={faArrowLeft}/>
                                 </button>
                                 <button
                                     onClick={() => paginate(currentPage + 1)}
@@ -147,7 +147,7 @@ export default function Modules({ auth }) {
                                     className="px-4 py-2 bg-lime-500 text-white font-semibold rounded-md hover:bg-amber-500"
                                 >
                                     <FontAwesomeIcon
-                                    icon={faForward}/>
+                                    icon={faArrowRight}/>
                                 </button>
                             </div>
 
