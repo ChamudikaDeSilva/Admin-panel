@@ -88,7 +88,23 @@ class UserManagementController extends Controller
         $user->save();
 
         // Return a success response
-        return response()->json(['message' => 'User updated successfully', 'user' => $user]);
+        return response()->json(['message' => 'The admin updated successfully', 'user' => $user]);
+    }
+
+    public function destroy($id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        try {
+            $user->delete();
+            return response()->json(['message' => 'User deleted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to delete user'], 500);
+        }
     }
 
 

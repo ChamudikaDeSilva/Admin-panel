@@ -12,7 +12,7 @@ export default function Modules({ auth }) {
     const [admins, setAdmins] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [adminsPerPage] = useState(5);
+    const [adminsPerPage] = useState(10);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
