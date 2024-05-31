@@ -25,13 +25,40 @@ export default function EditUser() {
         setData(e.target.name, e.target.value);
     };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        put(route('admins.update', user.id));
+//Updating the user
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        // Prepare the data to send to the backend
+        const userData = {
+            name: data.name,
+            email: data.email
+        };
+
+        // Check if password and confirm password fields are empty
+        const isPasswordEmpty = !data.password.trim();
+        const isConfirmPasswordEmpty = !data.confirmPassword.trim();
+
+        // If both password fields are not empty, add them to the userData object
+        if (!isPasswordEmpty && !isConfirmPasswordEmpty) {
+            userData.password = data.password;
+            userData.password_confirmation = data.confirmPassword;
+        }
+
+        try {
+            // Send a PUT request to the backend endpoint to update the user
+            const response = await axios.put(`/api/user/management/update/admin${user.id}`, userData);
+
+            // Handle successful response
+            console.log('User updated successfully:', response.data);
+        } catch (error) {
+            // Handle error
+            console.error('Error updating user:', error);
+        }
     };
 
 return (
-    <AuthenticatedLayout user={auth}>
+<AuthenticatedLayout user={auth}>
     <Head title="Edit User" />
     <div className="py-12">
         <div className="max-w-2xl mx-auto sm:px-6 lg:px-8">
@@ -109,5 +136,5 @@ return (
     </div>
 </AuthenticatedLayout>
 
-    );
+);
 }

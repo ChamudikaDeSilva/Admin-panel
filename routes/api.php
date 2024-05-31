@@ -42,3 +42,4 @@ Route::get('/module/permissions/{role}', [ModulePermissionController::class, 'fe
 Route::post('/user/management/admins/create', [UserManagementController::class, 'createAdmin'])->name('admins.store');
 Route::get('/user/management/fetch/admins', [UserManagementController::class, 'fetchAdmins']);
 Route::get('/user/management/admins/edit/{id}', [UserManagementController::class, 'editAdmin'])->name('admins.edit');
+Route::put('/user/management/update/admin/{id}', [UserManagementController::class, 'updateAdmin'])->name('admins.update');

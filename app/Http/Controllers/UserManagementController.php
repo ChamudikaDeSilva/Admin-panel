@@ -63,6 +63,34 @@ class UserManagementController extends Controller
         ]);
     }
 
+    public function updateAdmin(Request $request, $id)
+    {
+        // Find the user by id
+        $user = User::findOrFail($id);
+
+        // Validate the request data (you may customize the validation rules as needed)
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,'.$user->id,
+            'password' => 'sometimes|string|min:8|confirmed',
+        ]);
+
+        // Update the user's name and email
+        $user->name = $validatedData['name'];
+        $user->email = $validatedData['email'];
+
+        // If password is provided, update it
+        if ($request->filled('password')) {
+            $user->password = bcrypt($validatedData['password']);
+        }
+
+        // Save the user changes
+        $user->save();
+
+        // Return a success response
+        return response()->json(['message' => 'User updated successfully', 'user' => $user]);
+    }
+
 
 
 
