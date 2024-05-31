@@ -255,13 +255,13 @@ export default function Authenticated({ user, header, children }) {
                         <div className={(showingNavigationDropdown ? 'block' : 'hidden') + ' sm:hidden'}>
                             <div className="pt-4 pb-1 border-t border-gray-200">
                                 <div className="px-4">
-                                    <div className="font-medium text-base text-gray-800">{user.name}</div>
-                                    <div className="font-medium text-sm text-gray-500">{user.email}</div>
+                                    <div className="font-medium text-base text-gray-200">{user.name}</div>
+                                    <div className="font-medium text-sm text-gray-200">{user.email}</div>
                                 </div>
 
-                                <div className="mt-3 space-y-1">
-                                    <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink>
-                                    <ResponsiveNavLink method="post" href={route('logout')} as="button">
+                                <div className="mt-3 space-y-1 text-gray-200">
+                                    <ResponsiveNavLink className="text-gray-200" href={route('profile.edit')}>Profile</ResponsiveNavLink>
+                                    <ResponsiveNavLink className="text-gray-200" method="post" href={route('logout')} as="button">
                                         Log Out
                                     </ResponsiveNavLink>
                                 </div>
