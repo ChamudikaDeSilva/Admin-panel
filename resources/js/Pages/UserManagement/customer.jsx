@@ -22,12 +22,12 @@ export default function Modules({ auth }) {
     const [errors, setErrors] = useState({});
 
     useEffect(() => {
-        fetchAdmins();
+        fetchCustomers();
     }, []);
 
     const fetchAdmins = async () => {
         try {
-            const response = await axios.get('/api/user/management/fetch/admins');
+            const response = await axios.get('/api/user/management/fetch/cu');
             setAdmins(response.data.admins);
         } catch (error) {
             console.error('An error occurred while fetching admins:', error);
