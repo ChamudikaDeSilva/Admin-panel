@@ -33,7 +33,7 @@ export default function Modules({ auth }) {
             console.error('An error occurred while fetching admins:', error);
         }
     };
-
+//new
     const openModal = () => {
         setIsModalOpen(true);
     };
