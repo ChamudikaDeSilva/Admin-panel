@@ -127,6 +127,13 @@ class UserManagementController extends Controller
         }
     }
 
+    public function getAdminStatus($id)
+    {
+        $user = User::findOrFail($id);
+        return response()->json(['is_disabled' => $user->is_disabled], 200);
+    }
+
+
 
 
 

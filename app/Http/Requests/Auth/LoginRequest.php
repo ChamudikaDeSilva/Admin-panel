@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -37,7 +38,8 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
+
+    /*public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
 
@@ -46,6 +48,33 @@ class LoginRequest extends FormRequest
 
             throw ValidationException::withMessages([
                 'email' => trans('auth.failed'),
+            ]);
+        }
+
+        RateLimiter::clear($this->throttleKey());
+    }*/
+
+    public function authenticate()
+    {
+        $this->ensureIsNotRateLimited();
+
+        $credentials = $this->only('email', 'password');
+
+        // Attempt to get the user by email
+        $user = User::where('email', $credentials['email'])->first();
+
+        // Check if user exists and is disabled
+        if ($user && $user->is_disabled) {
+            throw ValidationException::withMessages([
+                'email' => __('Your account is disabled.'),
+            ]);
+        }
+
+        if (!Auth::attempt($credentials, $this->boolean('remember'))) {
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => __('auth.failed'),
             ]);
         }
 

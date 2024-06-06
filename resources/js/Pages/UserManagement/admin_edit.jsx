@@ -2,7 +2,7 @@ import { usePage, Link, useForm } from '@inertiajs/react';
 import { Inertia } from '@inertiajs/inertia';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from "@inertiajs/react";
-import React, { useState } from 'react';
+import React, { useState,useEffect  } from 'react';
 import axios from 'axios';
 //import { useState } from 'react';
 
@@ -15,12 +15,20 @@ export default function EditUser() {
     const [userToDelete, setUserToDelete] = useState(null);
     const [isDisabled, setIsDisabled] = useState(false);
 
-
-
     if (!user || !auth) {
         console.log('User or Auth data is not available');
         return <div>Loading...</div>;
     }
+
+    useEffect(() => {
+        axios.get(`/api/user/management/admin/status/ ${user.id}`)
+          .then(response => {
+            setIsDisabled(response.data.is_disabled);
+          })
+          .catch(error => {
+            console.error('Error fetching user data:', error);
+          });
+      }, [user.id]);
 
     const { data, setData, put, errors } = useForm({
         name: user.name || '',
@@ -85,6 +93,8 @@ export default function EditUser() {
           .then(response => {
             // Update the state to reflect the new user status
             setIsDisabled(prevState => !prevState);
+            setModalMessage(`The admin has been ${isDisabled ? 'enabled' : 'disabled'} successfully.`);
+            setShowModal(true);
           })
           .catch(error => {
             // Handle error
@@ -161,20 +171,24 @@ export default function EditUser() {
                                     </button>
                                     <label className="inline-flex items-center cursor-pointer border border-amber-500 bg-amber-500 rounded-full p-1">
                                         <input
-                                            type="checkbox"
-                                            id="toggleDisable"
-                                            checked={isDisabled}
-                                            onChange={() => handleToggle(user.id)}
-                                            className="sr-only peer"
+                                        type="checkbox"
+                                        id="toggleDisable"
+                                        checked={isDisabled}
+                                        onChange={() => handleToggle(user.id)}
+                                        className="sr-only peer"
                                         />
                                         <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gray-200 dark:peer-focus:ring-lime-500 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-lime-500"></div>
-                                        <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Disable Admin</span>
+                                        <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+                                        {isDisabled ? 'Enable Admin' : 'Disable Admin'}
+                                        </span>
                                     </label>
                                 </div>
                             </form>
                         </div>
                     </div>
                 </div>
+
+
                 {showModal && (
                     <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
                         <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
