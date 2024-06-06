@@ -4,6 +4,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from "@inertiajs/react";
 import React, { useState } from 'react';
 import axios from 'axios';
+//import { useState } from 'react';
 
 export default function EditUser() {
     const { props } = usePage();
@@ -12,6 +13,9 @@ export default function EditUser() {
     const [purgeModal, setPurgeModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
     const [userToDelete, setUserToDelete] = useState(null);
+    const [isDisabled, setIsDisabled] = useState(false);
+
+
 
     if (!user || !auth) {
         console.log('User or Auth data is not available');
@@ -74,6 +78,19 @@ export default function EditUser() {
             console.error('Error updating user:', error);
         }
     };
+
+    const handleToggle = () => {
+        // Make the PUT request to toggle user status
+        axios.put(`/api/user/management/disable/admin/${user.id}`)
+          .then(response => {
+            // Update the state to reflect the new user status
+            setIsDisabled(prevState => !prevState);
+          })
+          .catch(error => {
+            // Handle error
+            console.error('Error toggling user status:', error);
+          });
+      };
 
     return (
         <AuthenticatedLayout user={auth}>
@@ -142,9 +159,17 @@ export default function EditUser() {
                                     <button type="button" onClick={() => handlePurgeModalOpen(user.id)} className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm">
                                         Purge
                                     </button>
-                                    <button type="button" className="px-4 py-2 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 sm:w-auto sm:text-sm">
-                                        Disable
-                                    </button>
+                                    <label className="inline-flex items-center cursor-pointer border border-amber-500 bg-amber-500 rounded-full p-1">
+                                        <input
+                                            type="checkbox"
+                                            id="toggleDisable"
+                                            checked={isDisabled}
+                                            onChange={() => handleToggle(user.id)}
+                                            className="sr-only peer"
+                                        />
+                                        <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-gray-200 dark:peer-focus:ring-lime-500 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-lime-500"></div>
+                                        <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Disable Admin</span>
+                                    </label>
                                 </div>
                             </form>
                         </div>

@@ -107,6 +107,25 @@ class UserManagementController extends Controller
         }
     }
 
+    public function toggleUserStatus(Request $request, $id)
+    {
+        // Find the user by ID
+        $user = User::findOrFail($id);
+
+        try {
+            // Flip the value of isDisabled
+            $user->is_disabled = !$user->is_disabled; // Toggle the value
+
+            // Save the updated value to the database
+            $user->save();
+
+            // You can return a response indicating success if needed
+            return response()->json(['message' => 'User status toggled successfully', 'isDisabled' => $user->isDisabled], 200);
+        } catch (\Exception $e) {
+            // Return an error response if something went wrong
+            return response()->json(['error' => 'Failed to toggle user status', 'message' => $e->getMessage()], 500);
+        }
+    }
 
 
 

@@ -89,21 +89,22 @@ export default function Modules({ auth }) {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-12 bg-white border-b border-gray-200">
-                            <div className="mb-4 flex items-center justify-between">
-                                <button
-                                    className="px-4 py-2 bg-lime-500 text-white font-semibold rounded-md hover:bg-amber-500"
-                                    onClick={openModal}
-                                >
-                                    New Admin
-                                </button>
-                                <input
-                                    type="text"
-                                    placeholder="Search..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="border border-lime-500 focus:border-lime-500 focus:ring-0 rounded-md px-4 py-2"
-                                />
-                            </div>
+                        <div class="mb-4 flex flex-col sm:flex-row items-center justify-between">
+                            <button
+                                class="mb-2 sm:mb-0 px-4 py-2 bg-lime-500 text-white font-semibold rounded-md hover:bg-amber-500"
+                                onClick={openModal}
+                            >
+                                New Admin
+                            </button>
+                            <input
+                                type="text"
+                                placeholder="Search..."
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                class="border border-lime-500 focus:border-lime-500 focus:ring-0 rounded-md px-4 py-2 "
+                            />
+                        </div>
+
 
                             {/* Responsive Tailwind CSS table */}
                             <div className="overflow-x-auto">

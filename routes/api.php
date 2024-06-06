@@ -44,3 +44,5 @@ Route::get('/user/management/fetch/admins', [UserManagementController::class, 'f
 Route::get('/user/management/admins/edit/{id}', [UserManagementController::class, 'editAdmin'])->name('admins.edit');
 Route::put('/user/management/update/admin/{id}', [UserManagementController::class, 'updateAdmin'])->name('admins.update');
 Route::delete('/user/management/delete/admin/{id}', [UserManagementController::class, 'destroy'])->name('admins.delete');
+Route::put('/user/management/disable/admin/{id}', [UserManagementController::class, 'toggleUserStatus'])->name('admins.disable');
+

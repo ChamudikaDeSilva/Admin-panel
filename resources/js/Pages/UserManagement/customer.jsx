@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePen,faArrowRight,faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 
-
 export default function Modules({ auth }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [customers, setCustomers] = useState([]);
@@ -33,7 +32,7 @@ export default function Modules({ auth }) {
             console.error('An error occurred while fetching admins:', error);
         }
     };
-//new
+
     const openModal = () => {
         setIsModalOpen(true);
     };

@@ -14,7 +14,7 @@ class ModuleController extends Controller
     {
         $modules = Module::all();
 
-        $this->authorize('view', $module);
+        //$this->authorize('view', $module);
 
 
         return Inertia::render('Security/module', [
