@@ -169,17 +169,17 @@ export default function EditUser() {
                                     <button type="button" onClick={() => handlePurgeModalOpen(user.id)} className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm">
                                         Purge
                                     </button>
-                                    <label className="inline-flex items-center cursor-pointer border border-amber-500 bg-amber-500 rounded-full p-1">
+                                    <label className="inline-flex items-center cursor-pointer border border-blue-200 bg-blue-200 rounded-full p-1">
                                         <input
-                                        type="checkbox"
-                                        id="toggleDisable"
-                                        checked={isDisabled}
-                                        onChange={() => handleToggle(user.id)}
-                                        className="sr-only peer"
+                                            type="checkbox"
+                                            id="toggleDisable"
+                                            checked={isDisabled}
+                                            onChange={() => handleToggle(user.id)}
+                                            className="sr-only peer"
                                         />
-                                        <div className="relative w-11 h-6 bg-lime-500 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-lime-500 dark:peer-focus:ring-gray-200 rounded-full peer dark:bg-lime-500
+                                        <div className="relative w-11 h-6 bg-blue-500 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-500 dark:peer-focus:ring-gray-200 rounded-full peer dark:bg-blue-500
                                             peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px]
-                                            after:bg-white after:border-lime-500 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-lime-500 peer-checked:bg-gray-200">
+                                            after:bg-white after:border-blue-500 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-blue-500 peer-checked:bg-gray-200">
                                         </div>
                                         <span className="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
                                             {isDisabled ? 'Enable Admin' : 'Disable Admin'}
