@@ -33,7 +33,7 @@ class ModuleController extends Controller
         try
         {
 
-            $this->authorize('create', $module);
+            //$this->authorize('create', $module);
 
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
