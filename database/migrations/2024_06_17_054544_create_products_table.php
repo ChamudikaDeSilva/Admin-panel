@@ -15,10 +15,13 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('sub_category_id');
+            $table->string('slug')->unique();//A unique code for products
             $table->string('name');
-            $table->decimal('quantity');
+            $table->text('description');
+            $table->decimal('quantity')->default(0);
             $table->decimal('price');
             $table->boolean('isAvailable')->nullable()->default('true');
+            $table->string('image')->nullable();
 
             $table->timestamps();
 
