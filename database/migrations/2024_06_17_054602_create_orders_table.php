@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('sub_category_id');
             $table->string('order_code');
+            $table->date('date');
             $table->decimal('total_amount');
             $table->enum('status',['pending','processing','completed','cancelled'])->default('pending');
             $table->enum('payment_status',['paid','unpaid','refunded'])->default('unpaid');
