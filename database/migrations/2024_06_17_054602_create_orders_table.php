@@ -30,10 +30,10 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->foreign('category_id')->reference('id')->on('categories');
-            $table->foreign('product_id')->reference('id')->on('products');
-            $table->foreign('user_id')->reference('id')->on('users');
-            $table->foreign('sub_category_id')->reference('id')->on('sub_categories');
+            $table->foreign('category_id')->references('id')->on('categories');
+            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('sub_category_id')->references('id')->on('sub_categories');
         });
     }
 
