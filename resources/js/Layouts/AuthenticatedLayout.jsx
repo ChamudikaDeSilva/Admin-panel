@@ -10,8 +10,7 @@ import { faHouse, faCircleInfo, faGear, faAddressBook, faLock, faBars, faLockOpe
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-
+    const [sidebarOpen, setSidebarOpen] = useState(true);
 
 
     useEffect(() => {
@@ -19,7 +18,7 @@ export default function Authenticated({ user, header, children }) {
             const sidebar = document.getElementById('sidebar');
             const openSidebarButton = document.getElementById('open-sidebar');
             if (sidebar && !sidebar.contains(event.target) && !openSidebarButton.contains(event.target)) {
-                setSidebarOpen(false);
+                setSidebarOpen(true);
             }
         };
 
@@ -31,7 +30,7 @@ export default function Authenticated({ user, header, children }) {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gray-100" style={{ backgroundImage: 'url(/images/hero-img.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
+        <div className="min-h-screen bg-gray-100">
             <div className="flex overflow-hidden bg-gray-00">
             {/* Sidebar */}
                 <div id="sidebar"className={`absolute bg-lime-800 text-white w-56 min-h-screen overflow-y-auto transition-transform transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
