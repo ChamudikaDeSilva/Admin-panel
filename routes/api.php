@@ -49,8 +49,16 @@ Route::put('/user/management/disable/admin/{id}', [UserManagementController::cla
 Route::get('/user/management/admin/status/{id}', [UserManagementController::class, 'getAdminStatus'])->name('admins.getUserStatus');
 
 //Product Management
+//------Category Management
 Route::post('/product/management/category/create', [ProductManagementController::class, 'createCategory'])->name('categories.store');
 Route::get('/product/management/fetch/categories', [ProductManagementController::class, 'fetchCategories']);
 Route::get('/product/management/categories/edit/{id}', [ProductManagementController::class, 'editCategory'])->name('categories.edit');
 Route::put('/product/management/update/category/{id}', [ProductManagementController::class, 'updateCategory'])->name('category.update');
 Route::delete('/product/management/delete/category/{id}', [ProductManagementController::class, 'destroyCategory'])->name('admins.delete');
+
+//------Sub Category Management
+Route::post('/product/management/subcategory/create', [ProductManagementController::class, 'createSubCategory'])->name('subcategories.store');
+Route::get('/product/management/fetch/subcategories', [ProductManagementController::class, 'fetchSubCategories']);
+Route::get('/product/management/subcategories/edit/{id}', [ProductManagementController::class, 'editSubCategory'])->name('subcategories.edit');
+Route::put('/product/management/update/subcategory/{id}', [ProductManagementController::class, 'updateSubCategory'])->name('subcategory.update');
+Route::delete('/product/management/delete/subcategory/{id}', [ProductManagementController::class, 'destroySubCategory'])->name('subcategories.delete');

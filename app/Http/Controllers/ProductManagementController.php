@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\SubCategory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -10,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 
 class ProductManagementController extends Controller
 {
+//--------------------------------Category-------------------------------------------------------------------------------
     public function categoryIndex()
     {
         $categories = Category::all();
@@ -104,5 +106,60 @@ class ProductManagementController extends Controller
             return response()->json(['message' => 'Failed to delete category'], 500);
         }
     }
+
+//--------------------------------Sub Category-------------------------------------------------------------------------------
+    public function subcategoryIndex()
+    {
+        $subcategories = SubCategory::all();
+
+        return Inertia::render('Products/sub_category', [
+            'subcategories' => $subcategories,
+        ]);
+    }
+
+    public function fetchSubCategories()
+    {
+        $subcategories = SubCategory::with('category')->get();
+        return response()->json(['subcategories' => $subcategories]);
+    }
+
+
+    public function createSubCategory(Request $request)
+    {
+        // Validate the request
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id',
+        ]);
+
+        if ($validator->fails()) {
+            Log::error('Validation failed for createSubCategory', [
+                'errors' => $validator->errors()
+            ]);
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
+
+        try {
+            // Create the new subcategory
+            $subcategory = SubCategory::create([
+                'name' => $request->name,
+                'category_id' => $request->category_id,
+            ]);
+
+            Log::info('SubCategory created successfully', [
+                'subcategory' => $subcategory
+            ]);
+
+            return response()->json(['message' => 'SubCategory created successfully', 'subcategory' => $subcategory], 201);
+
+        } catch (\Exception $e) {
+            Log::error('Error creating subcategory', [
+                'exception' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            return response()->json(['message' => 'Internal Server Error'], 500);
+        }
+    }
+
 
 }

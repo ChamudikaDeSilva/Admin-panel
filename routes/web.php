@@ -50,3 +50,4 @@ Route::get('/module/permissions', [ModulePermissionController::class, 'index'])-
 //User Management
 Route::get('/user/management/admins', [UserManagementController::class, 'adminIndex'])->middleware(['auth', 'verified'])->name('admin_management');
 Route::get('/product/management/categories', [ProductManagementController::class, 'categoryIndex'])->middleware(['auth', 'verified'])->name('category_management');
+Route::get('/product/management/subcategories', [ProductManagementController::class, 'subcategoryIndex'])->middleware(['auth', 'verified'])->name('subcategory_management');
