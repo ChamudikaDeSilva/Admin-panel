@@ -6,7 +6,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 import SidebarDropdown from '@/Components/SidebarDropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse, faCircleInfo, faGear, faAddressBook, faLock, faBars, faLockOpen, faUserLock } from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faCircleInfo, faGear, faAddressBook, faLock, faBars, faLockOpen, faUserLock, faBoxesStacked, faSackDollar } from '@fortawesome/free-solid-svg-icons';
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
@@ -31,7 +31,7 @@ export default function Authenticated({ user, header, children }) {
     }, []);
 
     return (
-        <div className="min-h-screen bg-gray-100">
+        <div className="min-h-screen bg-gray-100" style={{ backgroundImage: 'url(/images/hero-img.jpg)', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}>
             <div className="flex overflow-hidden bg-gray-00">
             {/* Sidebar */}
                 <div id="sidebar"className={`absolute bg-lime-800 text-white w-56 min-h-screen overflow-y-auto transition-transform transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
@@ -61,24 +61,62 @@ export default function Authenticated({ user, header, children }) {
                             <span>About</span>
                         </a>
                     </li>
-                    <li>
-                        <a
-                            href="#"
-                            className="flex items-center p-2 text-base font-medium text-lime-300 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
-                        >
-                            <FontAwesomeIcon icon={faGear} className="mr-2" />
-                            <span>Services</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a
-                            href="#"
-                            className="flex items-center p-2 text-base font-medium text-lime-300 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
-                        >
-                            <FontAwesomeIcon icon={faAddressBook} className="mr-2" />
-                            <span>Contact</span>
-                        </a>
-                    </li>
+
+                    <SidebarDropdown title={<><FontAwesomeIcon icon={faBoxesStacked} className="mr-2" /> Products</>} >
+                        <li>
+                            <Link
+                                href={route('category_management')}
+                                className="flex items-center p-2 text-base font-medium text-lime-300 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            >
+                                -Categories
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href={route('permissions')}
+                                className="flex items-center p-2 text-base font-medium text-lime-300 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            >
+                                -Sub Categories
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href={route('modules_permissions')}
+                                className="flex items-center p-2 text-base font-medium text-lime-300 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            >
+                                -Products
+                            </Link>
+                        </li>
+                    </SidebarDropdown>
+
+                    <SidebarDropdown title={<><FontAwesomeIcon icon={faSackDollar} className="mr-2" /> Orders</>} >
+                        <li>
+                            <Link
+                                href={route('modules')}
+                                className="flex items-center p-2 text-base font-medium text-lime-300 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            >
+                                -Invoices
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href={route('permissions')}
+                                className="flex items-center p-2 text-base font-medium text-lime-300 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            >
+                                -Receipts
+                            </Link>
+                        </li>
+                        <li>
+                            <Link
+                                href={route('modules_permissions')}
+                                className="flex items-center p-2 text-base font-medium text-lime-300 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
+                            >
+                                -Payments
+                            </Link>
+                        </li>
+                    </SidebarDropdown>
+
+
                     <SidebarDropdown title={<><FontAwesomeIcon icon={faLock} className="mr-2" /> Security</>} >
                         <li>
                             <Link

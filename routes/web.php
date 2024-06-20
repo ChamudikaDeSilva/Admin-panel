@@ -3,6 +3,7 @@
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ModulePermissionController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ProductManagementController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserManagementController;
 use Illuminate\Foundation\Application;
@@ -48,3 +49,4 @@ Route::get('/module/permissions', [ModulePermissionController::class, 'index'])-
 
 //User Management
 Route::get('/user/management/admins', [UserManagementController::class, 'adminIndex'])->middleware(['auth', 'verified'])->name('admin_management');
+Route::get('/product/management/categories', [ProductManagementController::class, 'categoryIndex'])->middleware(['auth', 'verified'])->name('category_management');

@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ModulePermissionController;
 use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\ProductManagementController;
 use App\Http\Controllers\UserManagementController;
 
 /*
@@ -47,3 +48,7 @@ Route::delete('/user/management/delete/admin/{id}', [UserManagementController::c
 Route::put('/user/management/disable/admin/{id}', [UserManagementController::class, 'toggleUserStatus'])->name('admins.disable');
 Route::get('/user/management/admin/status/{id}', [UserManagementController::class, 'getAdminStatus'])->name('admins.getUserStatus');
 
+//Product Management
+Route::post('/product/management/category/create', [ProductManagementController::class, 'createCategory'])->name('categories.store');
+Route::get('/product/management/fetch/categories', [ProductManagementController::class, 'fetchCategories']);
+Route::get('/product/management/categories/edit/{id}', [ProductManagementController::class, 'editCategory'])->name('categories.edit');
