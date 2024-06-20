@@ -18,7 +18,7 @@ export default function Authenticated({ user, header, children }) {
             const sidebar = document.getElementById('sidebar');
             const openSidebarButton = document.getElementById('open-sidebar');
             if (sidebar && !sidebar.contains(event.target) && !openSidebarButton.contains(event.target)) {
-                setSidebarOpen(true);
+                setSidebarOpen(false);
             }
         };
 

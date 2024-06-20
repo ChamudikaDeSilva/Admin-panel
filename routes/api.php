@@ -52,3 +52,5 @@ Route::get('/user/management/admin/status/{id}', [UserManagementController::clas
 Route::post('/product/management/category/create', [ProductManagementController::class, 'createCategory'])->name('categories.store');
 Route::get('/product/management/fetch/categories', [ProductManagementController::class, 'fetchCategories']);
 Route::get('/product/management/categories/edit/{id}', [ProductManagementController::class, 'editCategory'])->name('categories.edit');
+Route::put('/product/management/update/category/{id}', [ProductManagementController::class, 'updateCategory'])->name('category.update');
+Route::delete('/product/management/delete/category/{id}', [ProductManagementController::class, 'destroyCategory'])->name('admins.delete');
