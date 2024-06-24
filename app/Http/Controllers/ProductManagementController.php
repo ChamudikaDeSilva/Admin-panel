@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ProductManagementController extends Controller
 {
@@ -219,47 +220,122 @@ class ProductManagementController extends Controller
     }
 
 
-    public function store(Request $request)
+    public function createProduct(Request $request)
     {
-        // Validate incoming request data
+        try {
+            // Validate incoming request data
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'quantity' => 'required|integer|min:1',
+                'price' => 'required|numeric|min:0',
+                'category_id' => 'required|exists:categories,id', // Ensure category exists
+                'subcategory_id' => 'nullable|exists:sub_categories,id', // Subcategory is optional
+                'isAvailable' => 'nullable|boolean',
+                'image' => 'required|image|max:2048', // Image is now required and must be an image file (max 2MB)
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+
+            // Handle image upload
+            $imagePath = null;
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $imagePath = $image->storeAs('products', $imageName, 'public'); // Store image in storage/app/public/products directory
+            }
+
+            // Generate unique slug based on product name
+            $slug = Str::slug($request->input('name'), '-'); // Example: "product-name" from "Product Name"
+            $slug = $this->makeUniqueSlug($slug); // Ensure slug is unique
+
+            // Create new product
+            $product = new Product();
+            $product->name = $request->input('name');
+            $product->description = $request->input('description');
+            $product->quantity = $request->input('quantity');
+            $product->price = $request->input('price');
+            $product->category_id = $request->input('category_id');
+            $product->sub_category_id = $request->input('subcategory_id');
+            $product->isAvailable = $request->has('isAvailable') ? true : false;
+            $product->image = $imagePath; // Store image path in database
+            $product->slug = $slug; // Assign unique slug to product
+
+            // Save product
+            $product->save();
+
+            return response()->json(['message' => 'Product created successfully', 'product' => $product], 201);
+        } catch (\Exception $e) {
+            // Log the exception
+            Log::error('Error creating product: ' . $e->getMessage());
+
+            // Return error response
+            return response()->json(['error' => 'Internal Server Error'], 500);
+        }
+    }
+
+    /**
+     * Helper function to make slug unique if already exists.
+     *
+     * @param string $slug
+     * @return string
+     */
+    private function makeUniqueSlug($slug)
+    {
+        $originalSlug = $slug;
+        $count = 1;
+
+        // Check if slug already exists in database
+        while (Product::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $count++;
+        }
+
+        return $slug;
+    }
+
+    public function editProduct(Product $product)
+{
+    // Load the categories and subcategories
+    $categories = Category::all();
+    $subcategories = SubCategory::all();
+
+    // Pass the necessary data to the frontend
+    return Inertia::render('Products/product_edit', [
+        'product' => $product,
+        'categories' => $categories,
+        'subcategories' => $subcategories,
+        'auth' => auth()->user(),
+    ]);
+}
+
+
+
+
+    public function updateProduct(Request $request, SubCategory $subcategory)
+    {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'quantity' => 'required|integer|min:1',
-            'price' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id', // Ensure category exists
-            'subcategory_id' => 'nullable|exists:subcategories,id', // Subcategory is optional
-            'isAvailable' => 'nullable|boolean',
-            'image' => 'nullable|image|max:2048', // Max size for image (2MB)
+            'category_id' => 'required|exists:categories,id'
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return back()->withErrors($validator)->withInput();
         }
 
-        // Handle image upload if present
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $imagePath = $image->storeAs('products', $imageName, 'public'); // Storage path: storage/app/public/products
-        }
+        $subcategory->update([
+            'name' => $request->name,
+            'category_id' => $request->category_id,
+        ]);
 
-        // Create new product
-        $product = new Product();
-        $product->name = $request->input('name');
-        $product->description = $request->input('description');
-        $product->quantity = $request->input('quantity');
-        $product->price = $request->input('price');
-        $product->category_id = $request->input('category_id');
-        $product->subcategory_id = $request->input('subcategory_id');
-        $product->isAvailable = $request->has('isAvailable') ? true : false;
-        $product->image = $imagePath; // Store image path in database
+        return response()->json(['message' => 'Subcategory updated successfully']);
+    }
 
-        // Save product
-        $product->save();
-
-        return response()->json(['message' => 'Product created successfully', 'product' => $product], 201);
+    public function destroyProduct(Product $product)
+    {
+        $product->delete();
+        return response()->json(['message' => 'Product deleted successfully']);
     }
 
 

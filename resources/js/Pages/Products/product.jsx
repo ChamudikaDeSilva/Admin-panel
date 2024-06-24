@@ -36,6 +36,8 @@ export default function Categories({ auth }) {
         try {
             const response = await axios.get('/api/product/management/fetch/products');
             setProducts(response.data.products);
+            //console.log(response.data.products);
+
         } catch (error) {
             console.error('An error occurred while fetching products:', error);
         }
@@ -201,30 +203,36 @@ export default function Categories({ auth }) {
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
-                                        {currentProducts.map((product) => (
-                                            <tr key={product.id}>
-                                                <td className="px-6 py-4 whitespace-nowrap">{product.category.name}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap">{product.subcategory.name}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap">{product.slug}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap">{product.description}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap">{product.quantity}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap">{product.price}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap">{product.isAvailable ? 'Yes' : 'No'}</td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <img src={product.image} alt="Product" className="h-12 w-12 object-cover" />
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">
-                                                    <FontAwesomeIcon
-                                                        icon={faFilePen}
-                                                        className="text-amber-600 hover:text-amber-900 cursor-pointer"
-                                                        onClick={() => {
-                                                            window.location.href = route('products.edit', { id: product.id });
-                                                        }}
-                                                    />
+                                        {currentProducts.length > 0 ? (
+                                            currentProducts.map(product => (
+                                                <tr key={product.id}>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.category ? product.category.name : 'No Category'}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.sub_category ? product.sub_category.name : 'No Subcategory'}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.slug}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.description}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.quantity}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.price}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.isAvailable ? 'Yes' : 'No'}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.image}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <FontAwesomeIcon
+                                                            icon={faFilePen}
+                                                            className="text-amber-600 hover:text-amber-900 cursor-pointer"
+                                                            onClick={() => {
+                                                                window.location.href = route('products.edit', { id: product.id });
+                                                            }}
+                                                        />
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        ) : (
+                                            <tr>
+                                                <td colSpan="9" className="px-6 py-4 text-center text-sm text-gray-500">
+                                                    No products found.
                                                 </td>
                                             </tr>
-                                        ))}
+                                        )}
                                     </tbody>
                                 </table>
                             </div>
