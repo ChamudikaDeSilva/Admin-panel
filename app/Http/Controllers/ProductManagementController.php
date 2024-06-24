@@ -219,43 +219,47 @@ class ProductManagementController extends Controller
     }
 
 
-    public function createProduct(Request $request)
+    public function store(Request $request)
     {
-        // Validate the request
+        // Validate incoming request data
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            'subcategory_id' => 'required|exists:subcategories,id',
-            'description'=>'',
+            'description' => 'required|string',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
+            'category_id' => 'required|exists:categories,id', // Ensure category exists
+            'subcategory_id' => 'nullable|exists:subcategories,id', // Subcategory is optional
+            'isAvailable' => 'nullable|boolean',
+            'image' => 'nullable|image|max:2048', // Max size for image (2MB)
         ]);
 
         if ($validator->fails()) {
-            Log::error('Validation failed for createSubCategory', [
-                'errors' => $validator->errors()
-            ]);
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        try {
-            // Create the new subcategory
-            $subcategory = SubCategory::create([
-                'name' => $request->name,
-                'category_id' => $request->category_id,
-            ]);
-
-            Log::info('SubCategory created successfully', [
-                'subcategory' => $subcategory
-            ]);
-
-            return response()->json(['message' => 'SubCategory created successfully', 'subcategory' => $subcategory], 201);
-
-        } catch (\Exception $e) {
-            Log::error('Error creating subcategory', [
-                'exception' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            return response()->json(['message' => 'Internal Server Error'], 500);
+        // Handle image upload if present
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $imagePath = $image->storeAs('products', $imageName, 'public'); // Storage path: storage/app/public/products
         }
+
+        // Create new product
+        $product = new Product();
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->quantity = $request->input('quantity');
+        $product->price = $request->input('price');
+        $product->category_id = $request->input('category_id');
+        $product->subcategory_id = $request->input('subcategory_id');
+        $product->isAvailable = $request->has('isAvailable') ? true : false;
+        $product->image = $imagePath; // Store image path in database
+
+        // Save product
+        $product->save();
+
+        return response()->json(['message' => 'Product created successfully', 'product' => $product], 201);
     }
 
 
