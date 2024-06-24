@@ -1,9 +1,9 @@
-import { usePage, Link, useForm } from '@inertiajs/react';
+import React, { useState } from 'react';
+import { usePage,useForm } from '@inertiajs/react';
+import axios from 'axios';
 import { Inertia } from '@inertiajs/inertia';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from "@inertiajs/react";
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { Head, Link } from '@inertiajs/react';
 
 export default function EditSubCategory() {
     const { props } = usePage();
@@ -12,6 +12,7 @@ export default function EditSubCategory() {
     const [purgeModal, setPurgeModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
     const [subcategoryToDelete, setSubCategoryToDelete] = useState(null);
+    const [isLoading, setIsLoading] = useState(false);
 
     if (!auth) {
         console.log('User or Auth data is not available');
@@ -38,18 +39,24 @@ export default function EditSubCategory() {
     };
 
     const handleDeleteSubCategory = async () => {
+        setIsLoading(true);
         try {
             await axios.delete(`/api/product/management/delete/subcategory/${subcategoryToDelete}`);
-            setModalMessage('The subcategory deleted successfully');
+            setModalMessage('The subcategory was deleted successfully.');
             setShowModal(true);
             setPurgeModal(false);
         } catch (error) {
             console.error('Error deleting subcategory:', error);
+            setModalMessage('Error deleting subcategory. Please try again.');
+            setShowModal(true);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setIsLoading(true);
 
         const subcategoryData = {
             name: data.name,
@@ -57,11 +64,15 @@ export default function EditSubCategory() {
         };
 
         try {
-            const response = await axios.put(`/api/product/management/update/subcategory/${subcategory.id}`, subcategoryData);
-            setModalMessage('The subcategory updated successfully');
+            await axios.put(`/api/product/management/update/subcategory/${subcategory.id}`, subcategoryData);
+            setModalMessage('The subcategory was updated successfully.');
             setShowModal(true);
         } catch (error) {
             console.error('Error updating subcategory:', error);
+            setModalMessage('Error updating subcategory. Please try again.');
+            setShowModal(true);
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -107,7 +118,7 @@ export default function EditSubCategory() {
                                 </div>
 
                                 <div className="flex justify-center space-x-2 mt-4">
-                                    <Link href="/product/management/subcategories" className="px-4 py-2 bg-white-500 hover:bg-gray-200 text-gray-700 text-base rounded-md border border-gray-300 hover:bg-white-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:w-auto sm:text-sm">
+                                    <Link href="/product/management/subcategories" className="px-4 py-2 bg-white-500 hover:bg-gray-200 text-gray-700 text-base rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:w-auto sm:text-sm">
                                         Cancel
                                     </Link>
                                     <button type="submit" className="px-4 py-2 bg-lime-500 text-white rounded-md hover:bg-lime-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:w-auto sm:text-sm">
@@ -182,7 +193,7 @@ export default function EditSubCategory() {
                                 </div>
                                 <div className="bg-gray-50 px-4 py-3 sm:px-6">
                                     <div className="flex flex-col sm:flex-row sm:justify-end">
-                                        <button onClick={() => setPurgeModal(false)} type="button" className="w-full sm:w-auto inline-flex justify-center rounded-md border border-gray-300 border-transparent shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:ml-3 sm:text-sm">
+                                        <button onClick={() => setPurgeModal(false)} type="button" className="w-full sm:w-auto inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:ml-3 sm:text-sm">
                                             Cancel
                                         </button>
                                         <button onClick={handleDeleteSubCategory} type="button" className="w-full sm:w-auto mb-2 sm:mb-0 inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-red-600 text-base font-medium text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:ml-3 sm:text-sm">

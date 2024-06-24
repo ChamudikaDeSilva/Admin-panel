@@ -161,5 +161,44 @@ class ProductManagementController extends Controller
         }
     }
 
+    public function editSubCategory(SubCategory $subcategory)
+    {
+        $categories = Category::all();
+
+        return Inertia::render('Products/sub_category_edit', [
+            'subcategory' => $subcategory,
+            'categories' => $categories,
+            'auth' => auth()->user()
+        ]);
+    }
+
+
+
+    public function updateSubCategory(Request $request, SubCategory $subcategory)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|exists:categories,id'
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $subcategory->update([
+            'name' => $request->name,
+            'category_id' => $request->category_id,
+        ]);
+
+        return response()->json(['message' => 'Subcategory updated successfully']);
+    }
+
+    public function destroySubCategory(SubCategory $subcategory)
+    {
+        $subcategory->delete();
+        return response()->json(['message' => 'Subcategory deleted successfully']);
+    }
+
+
 
 }

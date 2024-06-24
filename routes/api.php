@@ -59,6 +59,8 @@ Route::delete('/product/management/delete/category/{id}', [ProductManagementCont
 //------Sub Category Management
 Route::post('/product/management/subcategory/create', [ProductManagementController::class, 'createSubCategory'])->name('subcategories.store');
 Route::get('/product/management/fetch/subcategories', [ProductManagementController::class, 'fetchSubCategories']);
-Route::get('/product/management/subcategories/edit/{id}', [ProductManagementController::class, 'editSubCategory'])->name('subcategories.edit');
-Route::put('/product/management/update/subcategory/{id}', [ProductManagementController::class, 'updateSubCategory'])->name('subcategory.update');
-Route::delete('/product/management/delete/subcategory/{id}', [ProductManagementController::class, 'destroySubCategory'])->name('subcategories.delete');
+Route::get('/product/management/subcategories/edit/{subcategory}', [ProductManagementController::class, 'editSubCategory'])->name('subcategories.edit');
+Route::put('/product/management/update/subcategory/{subcategory}', [ProductManagementController::class, 'updateSubCategory'])->name('subcategory.update');
+Route::delete('/product/management/delete/subcategory/{subcategory}', [ProductManagementController::class, 'destroySubCategory'])->name('subcategories.delete');
+
+
