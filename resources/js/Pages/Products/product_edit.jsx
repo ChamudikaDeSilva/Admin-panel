@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { usePage,useForm } from '@inertiajs/react';
 import axios from 'axios';
 import { Inertia } from '@inertiajs/inertia';
@@ -14,8 +14,8 @@ export default function EditProduct() {
     const [productToDelete, setProductToDelete] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    if (!auth) {
-        console.log('User or Auth data is not available');
+    if (!auth || !product) {
+        console.log('User, Auth, or Product data is not available');
         return <div>Loading...</div>;
     }
 
@@ -30,16 +30,26 @@ export default function EditProduct() {
         image: null,
     });
 
+
+     // Log data and product to console
+     useEffect(() => {
+        console.log('Product:', product);
+        console.log('Form Data:', data);
+    }, [product, data]);
+
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
+
+        // Handle different input types
         if (type === 'checkbox') {
             setData(name, checked);
         } else if (type === 'file') {
-            setData(name, files[0]);
+            setData(name, files[0]); // Assuming single file upload
         } else {
             setData(name, value);
         }
     };
+
 
     const handleModalClose = () => {
         setShowModal(false);
@@ -66,6 +76,8 @@ export default function EditProduct() {
             setIsLoading(false);
         }
     };
+
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -224,13 +236,23 @@ export default function EditProduct() {
                                 </div>
 
                                 <div className="flex justify-center space-x-2 mt-4">
-                                    <Link href="/product/management/subcategories" className="px-4 py-2 bg-white-500 hover:bg-gray-200 text-gray-700 text-base rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:w-auto sm:text-sm">
+                                    <Link
+                                        href="/product/management/subcategories"
+                                        className="px-4 py-2 bg-white-500 hover:bg-gray-200 text-gray-700 text-base rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:w-auto sm:text-sm"
+                                    >
                                         Cancel
                                     </Link>
-                                    <button type="submit" className="px-4 py-2 bg-lime-500 text-white rounded-md hover:bg-lime-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:w-auto sm:text-sm">
+                                    <button
+                                        type="submit"
+                                        className="px-4 py-2 bg-lime-500 text-white rounded-md hover:bg-lime-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:w-auto sm:text-sm"
+                                    >
                                         Save
                                     </button>
-                                    <button type="button" onClick={() => handlePurgeModalOpen(product.id)} className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm">
+                                    <button
+                                        type="button"
+                                        onClick={() => handlePurgeModalOpen(product.id)}
+                                        className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 sm:w-auto sm:text-sm"
+                                    >
                                         Purge
                                     </button>
                                 </div>

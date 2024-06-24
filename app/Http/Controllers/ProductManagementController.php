@@ -296,19 +296,20 @@ class ProductManagementController extends Controller
     }
 
     public function editProduct(Product $product)
-{
-    // Load the categories and subcategories
-    $categories = Category::all();
-    $subcategories = SubCategory::all();
+    {
+        // Load the categories and subcategories
+        $categories = Category::all();
+        $subcategories = SubCategory::all();
+        $user = auth()->user();
 
-    // Pass the necessary data to the frontend
-    return Inertia::render('Products/product_edit', [
-        'product' => $product,
-        'categories' => $categories,
-        'subcategories' => $subcategories,
-        'auth' => auth()->user(),
-    ]);
-}
+        // Pass the necessary data to the frontend
+        return Inertia::render('Products/product_edit', [
+            'product' => $product,
+            'categories' => $categories,
+            'subcategories' => $subcategories,
+            'auth' => $user,
+        ]);
+    }
 
 
 
