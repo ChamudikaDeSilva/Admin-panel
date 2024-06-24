@@ -80,7 +80,7 @@ export default function Authenticated({ user, header, children }) {
                         </li>
                         <li>
                             <Link
-                                href={route('modules_permissions')}
+                                href={route('product_management')}
                                 className="flex items-center p-2 text-base font-medium text-lime-300 rounded-md hover:bg-lime-300 hover:text-amber-500 transition duration-150 ease-in-out"
                             >
                                 -Products

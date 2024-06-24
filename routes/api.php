@@ -63,4 +63,7 @@ Route::get('/product/management/subcategories/edit/{subcategory}', [ProductManag
 Route::put('/product/management/update/subcategory/{subcategory}', [ProductManagementController::class, 'updateSubCategory'])->name('subcategory.update');
 Route::delete('/product/management/delete/subcategory/{subcategory}', [ProductManagementController::class, 'destroySubCategory'])->name('subcategories.delete');
 
+//------Products Management
+Route::post('/product/management/product/create', [ProductManagementController::class, 'createProduct'])->name('products.store');
+Route::get('/product/management/fetch/products', [ProductManagementController::class, 'fetchProducts']);
 

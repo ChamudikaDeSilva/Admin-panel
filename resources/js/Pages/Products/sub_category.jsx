@@ -152,6 +152,7 @@ export default function Categories({ auth }) {
                                     <FontAwesomeIcon icon={faArrowRight} />
                                 </button>
                             </div>
+
                             {isModalOpen && (
                                <div className="fixed z-10 inset-0 overflow-y-auto">
                                 <div className="flex items-center justify-center min-h-screen">
@@ -223,6 +224,7 @@ export default function Categories({ auth }) {
                                 </div>
                            </div>
                             )}
+                            
                         </div>
                     </div>
                 </div>
