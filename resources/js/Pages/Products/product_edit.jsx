@@ -26,8 +26,9 @@ export default function EditProduct() {
         description: product.description || '',
         price: product.price || '',
         quantity: product.quantity || '',
-        availability: product.availability || false,
+        availability: product.isAvailable || false, // Ensure this reflects the backend data correctly
         image: null,
+        existingImage: product.image ? `/storage/public/products/${product.image}` : '', // Ensure correct path
     });
 
 
@@ -93,6 +94,8 @@ export default function EditProduct() {
         productData.append('availability', data.availability);
         if (data.image) {
             productData.append('image', data.image);
+        } else {
+            productData.append('existingImage', data.existingImage); // Use existing image if no new image is provided
         }
 
         try {
@@ -225,6 +228,11 @@ export default function EditProduct() {
 
                                 <div className="mt-4 w-full max-w-md">
                                     <label htmlFor="image" className="block text-sm font-medium text-gray-700">Image</label>
+                                    {data.existingImage && (
+                                        <div className="mt-2">
+                                            <img src={data.existingImage} alt="Product" className="max-h-32"/>
+                                        </div>
+                                    )}
                                     <input
                                         id="image"
                                         type="file"
