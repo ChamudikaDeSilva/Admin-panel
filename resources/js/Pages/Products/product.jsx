@@ -5,7 +5,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePen, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
 
-export default function Categories({ auth }) {
+export default function Products({ auth }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [products, setProducts] = useState([]);
     const [subcategories, setSubCategories] = useState([]);

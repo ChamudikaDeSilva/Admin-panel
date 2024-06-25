@@ -221,60 +221,61 @@ class ProductManagementController extends Controller
 
 
     public function createProduct(Request $request)
-    {
-        try {
-            // Validate incoming request data
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'description' => 'required|string',
-                'quantity' => 'required|integer|min:1',
-                'price' => 'required|numeric|min:0',
-                'category_id' => 'required|exists:categories,id', // Ensure category exists
-                'subcategory_id' => 'nullable|exists:sub_categories,id', // Subcategory is optional
-                'isAvailable' => 'nullable|boolean',
-                'image' => 'required|image|max:2048', // Image is now required and must be an image file (max 2MB)
-            ]);
+{
+    try {
+        // Validate incoming request data
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
+            'category_id' => 'required|exists:categories,id', // Ensure category exists
+            'subcategory_id' => 'nullable|exists:sub_categories,id', // Subcategory is optional
+            'isAvailable' => 'nullable|boolean',
+            'image' => 'required|image|max:2048', // Image is now required and must be an image file (max 2MB)
+        ]);
 
-            if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 422);
-            }
-
-            // Handle image upload
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '_' . $image->getClientOriginalName();
-                $imagePath = $image->storeAs('products', $imageName, 'public'); // Store image in storage/app/public/products directory
-            }
-
-            // Generate unique slug based on product name
-            $slug = Str::slug($request->input('name'), '-'); // Example: "product-name" from "Product Name"
-            $slug = $this->makeUniqueSlug($slug); // Ensure slug is unique
-
-            // Create new product
-            $product = new Product();
-            $product->name = $request->input('name');
-            $product->description = $request->input('description');
-            $product->quantity = $request->input('quantity');
-            $product->price = $request->input('price');
-            $product->category_id = $request->input('category_id');
-            $product->sub_category_id = $request->input('subcategory_id');
-            $product->isAvailable = $request->has('isAvailable') ? true : false;
-            $product->image = $imagePath; // Store image path in database
-            $product->slug = $slug; // Assign unique slug to product
-
-            // Save product
-            $product->save();
-
-            return response()->json(['message' => 'Product created successfully', 'product' => $product], 201);
-        } catch (\Exception $e) {
-            // Log the exception
-            Log::error('Error creating product: ' . $e->getMessage());
-
-            // Return error response
-            return response()->json(['error' => 'Internal Server Error'], 500);
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
         }
+
+        // Handle image upload
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $imagePath = $image->storeAs('products', $imageName, 'public'); // Store image in storage/app/public/products directory
+        }
+
+        // Generate unique slug based on product name
+        $slug = Str::slug($request->input('name'), '-'); // Example: "product-name" from "Product Name"
+        $slug = $this->makeUniqueSlug($slug); // Ensure slug is unique
+
+        // Create new product
+        $product = new Product();
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->quantity = $request->input('quantity');
+        $product->price = $request->input('price');
+        $product->category_id = $request->input('category_id');
+        $product->sub_category_id = $request->input('subcategory_id');
+        $product->isAvailable = $request->input('isAvailable', false); // Set availability based on checkbox
+        $product->image = $imagePath; // Store image path in database
+        $product->slug = $slug; // Assign unique slug to product
+
+        // Save product
+        $product->save();
+
+        return response()->json(['message' => 'Product created successfully', 'product' => $product], 201);
+    } catch (\Exception $e) {
+        // Log the exception
+        Log::error('Error creating product: ' . $e->getMessage());
+
+        // Return error response
+        return response()->json(['error' => 'Internal Server Error'], 500);
     }
+}
+
 
     /**
      * Helper function to make slug unique if already exists.
@@ -318,7 +319,14 @@ class ProductManagementController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id'
+            'description' => 'required|string',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
+            'category_id' => 'required|exists:categories,id', // Ensure category exists
+            'subcategory_id' => 'nullable|exists:sub_categories,id', // Subcategory is optional
+            'isAvailable' => 'nullable|boolean',
+            'image' => 'required|image|max:2048', // Image is now required and must be an image file (max 2MB)
+
         ]);
 
         if ($validator->fails()) {

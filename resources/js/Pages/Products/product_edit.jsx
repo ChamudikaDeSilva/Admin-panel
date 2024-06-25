@@ -64,7 +64,7 @@ export default function EditProduct() {
     const handleDeleteProduct = async () => {
         setIsLoading(true);
         try {
-            await axios.delete(`/api/product/management/delete/product/${productToDelete}`);
+            await axios.delete(`/api/product/management/delete/products/${productToDelete}`);
             setModalMessage('The product was deleted successfully.');
             setShowModal(true);
             setPurgeModal(false);
@@ -96,7 +96,7 @@ export default function EditProduct() {
         }
 
         try {
-            await axios.put(`/api/product/management/update/product/${product.id}`, productData, {
+            await axios.put(`/api/product/management/update/products/${product.id}`, productData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
@@ -237,7 +237,7 @@ export default function EditProduct() {
 
                                 <div className="flex justify-center space-x-2 mt-4">
                                     <Link
-                                        href="/product/management/subcategories"
+                                        href="/product/management/products"
                                         className="px-4 py-2 bg-white-500 hover:bg-gray-200 text-gray-700 text-base rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:w-auto sm:text-sm"
                                     >
                                         Cancel
