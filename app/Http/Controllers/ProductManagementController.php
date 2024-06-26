@@ -216,8 +216,13 @@ class ProductManagementController extends Controller
     public function fetchProducts()
     {
         $products = Product::with(['category', 'subCategory'])->get();
-        return response()->json(['products' => $products]);
+        $categories=Category::all();
+        $subcategories=SubCategory::all();
+
+        return response()->json(['products' => $products,'categories'=>$categories,'subcategories'=>$subcategories]);
     }
+
+
 
 
     public function createProduct(Request $request)
@@ -245,6 +250,7 @@ class ProductManagementController extends Controller
             $image = $request->file('image');
             $imageName = time() . '_' . $image->getClientOriginalName();
             $imagePath = $image->storeAs('products', $imageName, 'public'); // Store image in storage/app/public/products directory
+
         }
 
         // Generate unique slug based on product name

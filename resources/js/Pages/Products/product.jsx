@@ -28,38 +28,22 @@ export default function Products({ auth }) {
 
     useEffect(() => {
         fetchProducts();
-        fetchSubCategories();
-        fetchCategories();
     }, []);
 
     const fetchProducts = async () => {
         try {
             const response = await axios.get('/api/product/management/fetch/products');
             setProducts(response.data.products);
-            //console.log(response.data.products);
+            setSubCategories(response.data.subcategories);
+            setCategories(response.data.categories);
+            //console.log(response.data);
+
 
         } catch (error) {
             console.error('An error occurred while fetching products:', error);
         }
     };
 
-    const fetchSubCategories = async () => {
-        try {
-            const response = await axios.get('/api/product/management/fetch/subcategories');
-            setSubCategories(response.data.subcategories);
-        } catch (error) {
-            console.error('An error occurred while fetching subcategories:', error);
-        }
-    };
-
-    const fetchCategories = async () => {
-        try {
-            const response = await axios.get('/api/product/management/fetch/categories');
-            setCategories(response.data.categories);
-        } catch (error) {
-            console.error('An error occurred while fetching categories:', error);
-        }
-    };
 
     const openModal = () => {
         setIsModalOpen(true);
