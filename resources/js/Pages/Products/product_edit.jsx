@@ -31,10 +31,7 @@ export default function EditProduct() {
         existingImage: product.image || '',
     });
 
-    useEffect(() => {
-        console.log('Product:', product);
-        console.log('Form Data:', data);
-    }, [product, data]);
+
 
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
@@ -78,29 +75,23 @@ export default function EditProduct() {
         event.preventDefault();
         setIsLoading(true);
 
+        const productData = {
+            name: data.name,
+            category_id: data.category_id,
+            subcategory_id: data.subcategory_id,
+            description: data.description,
+            price: data.price,
+            quantity: data.quantity,
+            availability: data.availability,
+            // Set image to data.image if it exists, otherwise use existingImage
+            image: data.image ? data.image : data.existingImage,
+        };
+
+        console.log(productData);
+
         try {
-            const productData = new FormData();
-            productData.append('name', data.name);
-            productData.append('category_id', data.category_id);
-            productData.append('subcategory_id', data.subcategory_id);
-            productData.append('description', data.description);
-            productData.append('price', data.price);
-            productData.append('quantity', data.quantity);
-            productData.append('availability', data.availability);
-
-            if (data.image) {
-                productData.append('image', data.image);
-            } else {
-                productData.append('existingImage', data.existingImage);
-            }
-
             const productId = product.id; // Assuming product.id is accessible here
-
-            const response = await axios.put(`/api/product/management/update/products/${productId}`, productData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+            const response = await axios.put(`/api/product/management/update/products/${productId}`, productData);
 
             // Handle success response
             setModalMessage('The product was updated successfully.');
@@ -108,13 +99,19 @@ export default function EditProduct() {
         } catch (error) {
             console.error('Error updating product:', error);
             console.error('Backend errors:', error.response?.data?.errors);
-            setModalMessage('Error updating product. Please try again.');
+            //setModalMessage('Error updating product. Please try again.');
+            //setShowModal(true);
         } finally {
             setIsLoading(false);
         }
     };
 
 
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setFormData({ ...formData, image: file });
+        setImagePreview(URL.createObjectURL(file));
+    };
 
     return (
         <AuthenticatedLayout user={auth}>
@@ -229,18 +226,19 @@ export default function EditProduct() {
 
                                 <div className="mt-4 w-full max-w-md">
                                     <label htmlFor="image" className="block text-sm font-medium text-gray-700">Image</label>
+
+                                    <input
+                                        id="image"
+                                        type="file"
+                                        name="image"
+                                        onChange={handleImageChange}
+                                        className="mt-1 block w-full border-gray-300 focus:border-lime-500 focus:outline-none focus:ring-lime-500 rounded-md shadow-sm"
+                                    />
                                     {data.existingImage && (
                                         <div className="mt-2">
                                             <img src={data.existingImage} alt="Product" className="max-h-32"/>
                                         </div>
                                     )}
-                                    <input
-                                        id="image"
-                                        type="file"
-                                        name="image"
-                                        onChange={handleChange}
-                                        className="mt-1 block w-full border-gray-300 focus:border-lime-500 focus:outline-none focus:ring-lime-500 rounded-md shadow-sm"
-                                    />
                                     {errors.image && <div className="text-red-600">{errors.image}</div>}
                                 </div>
 
