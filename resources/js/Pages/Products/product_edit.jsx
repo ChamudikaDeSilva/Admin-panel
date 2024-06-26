@@ -26,14 +26,12 @@ export default function EditProduct() {
         description: product.description || '',
         price: product.price || '',
         quantity: product.quantity || '',
-        availability: product.isAvailable || false, // Ensure this reflects the backend data correctly
+        availability: product.isAvailable || false,
         image: null,
-        existingImage: product.image ? `/storage/public/products/${product.image}` : '', // Ensure correct path
+        existingImage: product.image || '',
     });
 
-
-     // Log data and product to console
-     useEffect(() => {
+    useEffect(() => {
         console.log('Product:', product);
         console.log('Form Data:', data);
     }, [product, data]);
@@ -41,16 +39,14 @@ export default function EditProduct() {
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
 
-        // Handle different input types
         if (type === 'checkbox') {
             setData(name, checked);
         } else if (type === 'file') {
-            setData(name, files[0]); // Assuming single file upload
+            setData(name, files[0]);
         } else {
             setData(name, value);
         }
     };
-
 
     const handleModalClose = () => {
         setShowModal(false);
@@ -78,42 +74,47 @@ export default function EditProduct() {
         }
     };
 
-
-
     const handleSubmit = async (event) => {
         event.preventDefault();
         setIsLoading(true);
 
-        const productData = new FormData();
-        productData.append('name', data.name);
-        productData.append('category_id', data.category_id);
-        productData.append('subcategory_id', data.subcategory_id);
-        productData.append('description', data.description);
-        productData.append('price', data.price);
-        productData.append('quantity', data.quantity);
-        productData.append('availability', data.availability);
-        if (data.image) {
-            productData.append('image', data.image);
-        } else {
-            productData.append('existingImage', data.existingImage); // Use existing image if no new image is provided
-        }
-
         try {
-            await axios.put(`/api/product/management/update/products/${product.id}`, productData, {
+            const productData = new FormData();
+            productData.append('name', data.name);
+            productData.append('category_id', data.category_id);
+            productData.append('subcategory_id', data.subcategory_id);
+            productData.append('description', data.description);
+            productData.append('price', data.price);
+            productData.append('quantity', data.quantity);
+            productData.append('availability', data.availability);
+
+            if (data.image) {
+                productData.append('image', data.image);
+            } else {
+                productData.append('existingImage', data.existingImage);
+            }
+
+            const productId = product.id; // Assuming product.id is accessible here
+
+            const response = await axios.put(`/api/product/management/update/products/${productId}`, productData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                 },
             });
+
+            // Handle success response
             setModalMessage('The product was updated successfully.');
             setShowModal(true);
         } catch (error) {
             console.error('Error updating product:', error);
+            console.error('Backend errors:', error.response?.data?.errors);
             setModalMessage('Error updating product. Please try again.');
-            setShowModal(true);
         } finally {
             setIsLoading(false);
         }
     };
+
+
 
     return (
         <AuthenticatedLayout user={auth}>

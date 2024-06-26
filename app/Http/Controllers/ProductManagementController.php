@@ -226,61 +226,61 @@ class ProductManagementController extends Controller
 
 
     public function createProduct(Request $request)
-{
-    try {
-        // Validate incoming request data
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'quantity' => 'required|integer|min:1',
-            'price' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id', // Ensure category exists
-            'subcategory_id' => 'nullable|exists:sub_categories,id', // Subcategory is optional
-            'isAvailable' => 'nullable|boolean',
-            'image' => 'required|image|max:2048', // Image is now required and must be an image file (max 2MB)
-        ]);
+    {
+        try {
+            // Validate incoming request data
+            $validator = Validator::make($request->all(), [
+                'name' => 'required|string|max:255',
+                'description' => 'required|string',
+                'quantity' => 'required|integer|min:1',
+                'price' => 'required|numeric|min:0',
+                'category_id' => 'required|exists:categories,id', // Ensure category exists
+                'subcategory_id' => 'nullable|exists:sub_categories,id', // Subcategory is optional
+                'isAvailable' => 'nullable|boolean',
+                'image' => 'required|image|max:2048', // Image is required and must be an image file (max 2MB)
+            ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = $image->getClientOriginalName(); // Consider using a unique name to avoid conflicts
+                $imagePath = $image->storeAs('products', $imageName, 'public'); // Store image in storage/app/public/products
+                $imageUrl = Storage::url($imagePath); // Generate URL for the stored image
+            } else {
+                return response()->json(['error' => 'Image file is required.'], 422);
+            }
+
+            // Generate unique slug based on product name
+            $slug = Str::slug($request->input('name'), '-');
+            $slug = $this->makeUniqueSlug($slug);
+
+            // Create new product
+            $product = new Product();
+            $product->name = $request->input('name');
+            $product->description = $request->input('description');
+            $product->quantity = $request->input('quantity');
+            $product->price = $request->input('price');
+            $product->category_id = $request->input('category_id');
+            $product->sub_category_id = $request->input('subcategory_id');
+            $product->isAvailable = $request->input('isAvailable', false);
+            $product->image = $imageUrl; // Save the URL of the image
+            $product->slug = $slug;
+
+            // Save product
+            $product->save();
+
+            return response()->json(['message' => 'Product created successfully', 'product' => $product], 201);
+        } catch (\Exception $e) {
+            // Log the exception
+            Log::error('Error creating product: ' . $e->getMessage());
+
+            return response()->json(['error' => 'Internal Server Error'], 500);
         }
-
-        // Handle image upload
-        $imagePath = null;
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $imagePath = $image->storeAs('products', $imageName, 'public'); // Store image in storage/app/public/products directory
-
-        }
-
-        // Generate unique slug based on product name
-        $slug = Str::slug($request->input('name'), '-'); // Example: "product-name" from "Product Name"
-        $slug = $this->makeUniqueSlug($slug); // Ensure slug is unique
-
-        // Create new product
-        $product = new Product();
-        $product->name = $request->input('name');
-        $product->description = $request->input('description');
-        $product->quantity = $request->input('quantity');
-        $product->price = $request->input('price');
-        $product->category_id = $request->input('category_id');
-        $product->sub_category_id = $request->input('subcategory_id');
-        $product->isAvailable = $request->input('isAvailable', false); // Set availability based on checkbox
-        $product->image = $imagePath; // Store image path in database
-        $product->slug = $slug; // Assign unique slug to product
-
-        // Save product
-        $product->save();
-
-        return response()->json(['message' => 'Product created successfully', 'product' => $product], 201);
-    } catch (\Exception $e) {
-        // Log the exception
-        Log::error('Error creating product: ' . $e->getMessage());
-
-        // Return error response
-        return response()->json(['error' => 'Internal Server Error'], 500);
     }
-}
 
 
     /**
@@ -302,12 +302,34 @@ class ProductManagementController extends Controller
         return $slug;
     }
 
+    /*public function editProduct(Product $product)
+    {
+        // Load the categories and subcategories
+        $categories = Category::all();
+        $subcategories = SubCategory::all();
+        $user = auth()->user();
+
+        // Ensure the image URL is correct
+        $imageUrl = $product->image ? url($product->image) : null;
+
+        // Pass the necessary data to the frontend
+        return Inertia::render('Products/product_edit', [
+            'product' => array_merge($product->toArray(), ['image' => $imageUrl]), //Pass the image url to frontend
+            'categories' => $categories,
+            'subcategories' => $subcategories,
+            'auth' => $user,
+        ]);
+    }*/
+
     public function editProduct(Product $product)
     {
         // Load the categories and subcategories
         $categories = Category::all();
         $subcategories = SubCategory::all();
         $user = auth()->user();
+
+        // Ensure the image URL is correct
+        //$imageUrl = $product->image ? url($product->image) : null;
 
         // Pass the necessary data to the frontend
         return Inertia::render('Products/product_edit', [
@@ -319,34 +341,59 @@ class ProductManagementController extends Controller
     }
 
 
-
-
-    public function updateProduct(Request $request, SubCategory $subcategory)
+    public function updateProduct(Request $request, Product $product)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'quantity' => 'required|integer|min:1',
-            'price' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:categories,id', // Ensure category exists
-            'subcategory_id' => 'nullable|exists:sub_categories,id', // Subcategory is optional
-            'isAvailable' => 'nullable|boolean',
-            'image' => 'required|image|max:2048', // Image is now required and must be an image file (max 2MB)
+        try {
+            
+            // Log the incoming request data for debugging
+            Log::info('Update product request data: ', $request->all());
 
-        ]);
+            // Validation rules
+            $rules = [
+                'name' => 'sometimes|required|string|max:255',
+                'description' => 'sometimes|required|string',
+                'quantity' => 'sometimes|required|integer|min:1',
+                'price' => 'sometimes|required|numeric|min:0',
+                'category_id' => 'sometimes|required|exists:categories,id',
+                'subcategory_id' => 'nullable|exists:sub_categories,id',
+                'isAvailable' => 'nullable|boolean',
+                'image' => 'nullable|image|max:2048',
+            ];
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
+            // Validate incoming request data
+            $validator = Validator::make($request->all(), $rules);
+
+            // Log any validation errors
+            if ($validator->fails()) {
+                Log::error('Validation errors: ', $validator->errors()->toArray());
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = time() . '_' . $image->getClientOriginalName(); // Unique name generation
+                $imagePath = $image->storeAs('products', $imageName, 'public'); // Store image in storage/app/public/products
+                $product->image = $imagePath; // Save image path
+            }
+
+            // Merge existing product data with the request data
+            $product->fill($request->only([
+                'name', 'description', 'quantity', 'price', 'category_id', 'subcategory_id', 'isAvailable'
+            ]));
+
+            // Save updated product
+            $product->save();
+
+            return response()->json(['message' => 'Product updated successfully', 'product' => $product], 200);
+        } catch (\Exception $e) {
+            // Log the exception
+            Log::error('Error updating product: ' . $e->getMessage());
+
+            // Return error response
+            return response()->json(['error' => 'Internal Server Error'], 500);
         }
-
-        $subcategory->update([
-            'name' => $request->name,
-            'category_id' => $request->category_id,
-        ]);
-
-        return response()->json(['message' => 'Subcategory updated successfully']);
     }
-
     public function destroyProduct(Product $product)
     {
         $product->delete();
