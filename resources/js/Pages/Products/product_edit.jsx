@@ -13,6 +13,8 @@ export default function EditProduct() {
     const [modalMessage, setModalMessage] = useState('');
     const [productToDelete, setProductToDelete] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [imagePreview, setImagePreview] = useState(product.image || '');
+    const [imageName, setImageName] = useState(product.image ? product.image.split('/').pop() : ''); // Extract the file name from the image URL
 
     if (!auth || !product) {
         console.log('User, Auth, or Product data is not available');
@@ -30,8 +32,6 @@ export default function EditProduct() {
         image: null,
         existingImage: product.image || '',
     });
-
-
 
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
@@ -75,23 +75,30 @@ export default function EditProduct() {
         event.preventDefault();
         setIsLoading(true);
 
-        const productData = {
-            name: data.name,
-            category_id: data.category_id,
-            subcategory_id: data.subcategory_id,
-            description: data.description,
-            price: data.price,
-            quantity: data.quantity,
-            availability: data.availability,
-            // Set image to data.image if it exists, otherwise use existingImage
-            image: data.image ? data.image : data.existingImage,
-        };
+        const productId = product.id; // Extract product ID from product object
 
-        console.log(productData);
+        const productData = new FormData();
+        productData.append('name', data.name);
+        productData.append('category_id', data.category_id);
+        productData.append('subcategory_id', data.subcategory_id || '');
+        productData.append('description', data.description);
+        productData.append('price', data.price);
+        productData.append('quantity', data.quantity);
+        productData.append('availability', data.availability);
+
+        // Append image or existingImage based on conditions
+        if (data.image instanceof File) {
+            productData.append('image', data.image);
+        } else {
+            productData.append('existingImage', data.existingImage);
+        }
 
         try {
-            const productId = product.id; // Assuming product.id is accessible here
-            const response = await axios.put(`/api/product/management/update/products/${productId}`, productData);
+            const response = await axios.put(`/api/product/management/update/products/${productId}`, productData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
 
             // Handle success response
             setModalMessage('The product was updated successfully.');
@@ -99,18 +106,22 @@ export default function EditProduct() {
         } catch (error) {
             console.error('Error updating product:', error);
             console.error('Backend errors:', error.response?.data?.errors);
-            //setModalMessage('Error updating product. Please try again.');
-            //setShowModal(true);
+            setModalMessage('Error updating product. Please try again.');
+            setShowModal(true);
         } finally {
             setIsLoading(false);
         }
     };
 
 
+
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        setFormData({ ...formData, image: file });
-        setImagePreview(URL.createObjectURL(file));
+        if (file) {
+            setData('image', file);
+            setImagePreview(URL.createObjectURL(file));
+            setImageName(file.name);
+        }
     };
 
     return (
@@ -134,7 +145,6 @@ export default function EditProduct() {
                                     />
                                     {errors.name && <div className="text-red-600">{errors.name}</div>}
                                 </div>
-
                                 <div className="mt-4 w-full max-w-md">
                                     <label htmlFor="category_id" className="block text-sm font-medium text-gray-700">Category</label>
                                     <select
@@ -226,18 +236,26 @@ export default function EditProduct() {
 
                                 <div className="mt-4 w-full max-w-md">
                                     <label htmlFor="image" className="block text-sm font-medium text-gray-700">Image</label>
-
-                                    <input
-                                        id="image"
-                                        type="file"
-                                        name="image"
-                                        onChange={handleImageChange}
-                                        className="mt-1 block w-full border-gray-300 focus:border-lime-500 focus:outline-none focus:ring-lime-500 rounded-md shadow-sm"
-                                    />
-                                    {data.existingImage && (
-                                        <div className="mt-2">
-                                            <img src={data.existingImage} alt="Product" className="max-h-32"/>
-                                        </div>
+                                    <div className="flex items-center mt-1">
+                                        <input
+                                            id="image"
+                                            type="file"
+                                            name="image"
+                                            accept="image/*"
+                                            onChange={handleImageChange}
+                                            className="hidden"
+                                        />
+                                        <label htmlFor="image" className="px-4 py-2 bg-gray-300 text-black rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 cursor-pointer">
+                                            Choose File
+                                        </label>
+                                        <span className="ml-2">{imageName || 'No file chosen'}</span>
+                                    </div>
+                                    {imagePreview && (
+                                        <img
+                                            src={imagePreview}
+                                            alt="Product Preview"
+                                            className="mt-2 h-32 w-auto object-contain"
+                                        />
                                     )}
                                     {errors.image && <div className="text-red-600">{errors.image}</div>}
                                 </div>

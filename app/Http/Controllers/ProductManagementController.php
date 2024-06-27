@@ -342,62 +342,63 @@ class ProductManagementController extends Controller
 
 
     public function updateProduct(Request $request, Product $product)
-{
-    try {
-        // Log the incoming request data for debugging
-        Log::info('Update product request data: ', $request->all());
+    {
+        try {
+            // Log the incoming request data for debugging
+            Log::info('Update product request data: ', $request->all());
 
-        // Validation rules
-        $rules = [
-            'name' => 'sometimes|required|string|max:255',
-            'description' => 'sometimes|required|string',
-            'quantity' => 'sometimes|required|integer|min:1',
-            'price' => 'sometimes|required|numeric|min:0',
-            'category_id' => 'sometimes|required|exists:categories,id',
-            'subcategory_id' => 'nullable|exists:sub_categories,id',
-            'isAvailable' => 'nullable|boolean',
-            'image' => 'nullable|image|max:2048',
-        ];
+            // Validation rules
+            $rules = [
+                'name' => 'sometimes|required|string|max:255',
+                'description' => 'sometimes|required|string',
+                'quantity' => 'sometimes|required|integer|min:1',
+                'price' => 'sometimes|required|numeric|min:0',
+                'category_id' => 'sometimes|required|exists:categories,id',
+                'subcategory_id' => 'nullable|exists:sub_categories,id',
+                'isAvailable' => 'nullable|boolean',
+                'image' => 'nullable|image|max:2048',
+            ];
 
-        // Validate incoming request data
-        $validator = Validator::make($request->all(), $rules);
+            // Validate incoming request data
+            $validator = Validator::make($request->all(), $rules);
 
-        // Log any validation errors
-        if ($validator->fails()) {
-            Log::error('Validation errors: ', $validator->errors()->toArray());
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Delete previous image if it exists
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
+            // Log any validation errors
+            if ($validator->fails()) {
+                Log::error('Validation errors: ', $validator->errors()->toArray());
+                return response()->json(['errors' => $validator->errors()], 422);
             }
 
-            $image = $request->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName(); // Unique name generation
-            $imagePath = $image->storeAs('products', $imageName, 'public'); // Store image in storage/app/public/products
-            $product->image = $imagePath; // Save image path
+            // Handle image upload
+            if ($request->hasFile('image')) {
+                // Delete previous image if it exists
+                if ($product->image) {
+                    Storage::disk('public')->delete($product->image);
+                }
+
+                $image = $request->file('image');
+                $imageName = time() . '_' . $image->getClientOriginalName(); // Unique name generation
+                $imagePath = $image->storeAs('products', $imageName, 'public'); // Store image in storage/app/public/products
+                $product->image = $imagePath; // Save image path
+            }
+
+            // Merge existing product data with the request data
+            $product->fill($request->only([
+                'name', 'description', 'quantity', 'price', 'category_id', 'subcategory_id', 'isAvailable'
+            ]));
+
+            // Save updated product
+            $product->save();
+
+            return response()->json(['message' => 'Product updated successfully', 'product' => $product], 200);
+        } catch (\Exception $e) {
+            // Log the exception
+            Log::error('Error updating product: ' . $e->getMessage());
+
+            // Return error response
+            return response()->json(['error' => 'Internal Server Error'], 500);
         }
-
-        // Merge existing product data with the request data
-        $product->fill($request->only([
-            'name', 'description', 'quantity', 'price', 'category_id', 'subcategory_id', 'isAvailable'
-        ]));
-
-        // Save updated product
-        $product->save();
-
-        return response()->json(['message' => 'Product updated successfully', 'product' => $product], 200);
-    } catch (\Exception $e) {
-        // Log the exception
-        Log::error('Error updating product: ' . $e->getMessage());
-
-        // Return error response
-        return response()->json(['error' => 'Internal Server Error'], 500);
     }
-}
+
 
 
 
