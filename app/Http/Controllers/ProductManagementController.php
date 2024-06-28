@@ -156,6 +156,8 @@ class ProductManagementController extends Controller
 
     public function updateProduct(Request $request, $productId)
 {
+    Log::info('Received request data:', ['request' => $request->all()]);
+
     // Validate incoming request data
     $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
@@ -165,7 +167,7 @@ class ProductManagementController extends Controller
         'price' => 'required|numeric|min:0',
         'quantity' => 'required|integer|min:0',
         'availability' => 'required|boolean',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Adjust file size limit as needed
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
     ]);
 
     if ($validator->fails()) {
@@ -191,12 +193,15 @@ class ProductManagementController extends Controller
         if ($request->hasFile('image')) {
             // Remove existing image if present
             if ($product->image) {
-                Storage::delete($product->image);
+                Storage::disk('public')->delete($product->image);
             }
 
-            $imageName = time() . '.' . $request->image->getClientOriginalExtension();
-            $path = Storage::disk('public')->put('products', $request->image);
-            $product->image = $path;
+            $image = $request->file('image');
+            $imageName = $image->getClientOriginalName(); // Consider using a unique name to avoid conflicts
+            $imagePath = $image->storeAs('products', $imageName, 'public'); // Store image in storage/app/public/products
+            $imageUrl = Storage::url($imagePath); // Generate URL for the stored image
+
+            $product->image = $imageUrl; // Store the path in the database
         }
 
         $product->save();
@@ -213,6 +218,7 @@ class ProductManagementController extends Controller
         return response()->json(['message' => 'Internal server error'], 500);
     }
 }
+
 
 
 

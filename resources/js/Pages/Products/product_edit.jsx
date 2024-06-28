@@ -14,7 +14,7 @@ export default function EditProduct() {
     const [productToDelete, setProductToDelete] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [imagePreview, setImagePreview] = useState(product.image || '');
-    const [imageName, setImageName] = useState(product.image ? product.image.split('/').pop() : ''); // Extract the file name from the image URL
+    const [imageName, setImageName] = useState(product.image ? product.image.split('/').pop() : '');
 
     if (!auth || !product) {
         console.log('User, Auth, or Product data is not available');
@@ -39,7 +39,7 @@ export default function EditProduct() {
         if (type === 'checkbox') {
             setData(name, checked);
         } else if (type === 'file') {
-            setData(name, files[0]); // Assuming single file upload
+            setData(name, files[0]);
         } else {
             setData(name, value);
         }
@@ -74,7 +74,6 @@ export default function EditProduct() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        setIsLoading(true);
 
         const productId = product.id;
 
@@ -93,22 +92,17 @@ export default function EditProduct() {
             formData.append('existingImage', data.existingImage);
         }
 
-        put(`/api/product/management/update/products/${productId}`, formData, {
-            onSuccess: (response) => {
+        Inertia.post(`/api/product/management/update/products/${productId}`, formData, {
+            onSuccess: () => {
                 setIsLoading(false);
-                setModalMessage('The product was updated successfully.');
+                setModalMessage(response.props.message || 'The product was updated successfully.');
                 setShowModal(true);
             },
-            onError: (error) => {
-                setIsLoading(false);
-                console.error('Error updating product:', error);
+            onError: (errors) => {
+                console.error('Error updating product:', errors);
             },
         });
     };
-
-
-
-
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
