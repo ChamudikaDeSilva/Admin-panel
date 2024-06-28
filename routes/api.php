@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ModulePermissionController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductManagementController;
+use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\UserManagementController;
 
 /*
@@ -50,22 +52,22 @@ Route::get('/user/management/admin/status/{id}', [UserManagementController::clas
 
 //Product Management
 //------Category Management
-Route::post('/product/management/category/create', [ProductManagementController::class, 'createCategory'])->name('categories.store');
-Route::get('/product/management/fetch/categories', [ProductManagementController::class, 'fetchCategories']);
-Route::get('/product/management/categories/edit/{id}', [ProductManagementController::class, 'editCategory'])->name('categories.edit');
-Route::put('/product/management/update/category/{id}', [ProductManagementController::class, 'updateCategory'])->name('category.update');
-Route::delete('/product/management/delete/category/{id}', [ProductManagementController::class, 'destroyCategory'])->name('admins.delete');
+Route::post('/product/management/category/create', [CategoryController::class, 'createCategory'])->name('categories.store');
+Route::get('/product/management/fetch/categories', [CategoryController::class, 'fetchCategories']);
+Route::get('/product/management/categories/edit/{id}', [CategoryController::class, 'editCategory'])->name('categories.edit');
+Route::put('/product/management/update/category/{id}', [CategoryController::class, 'updateCategory'])->name('category.update');
+Route::delete('/product/management/delete/category/{id}', [CategoryController::class, 'destroyCategory'])->name('admins.delete');
 
 //------Sub Category Management
-Route::post('/product/management/subcategory/create', [ProductManagementController::class, 'createSubCategory'])->name('subcategories.store');
-Route::get('/product/management/fetch/subcategories', [ProductManagementController::class, 'fetchSubCategories']);
-Route::get('/product/management/subcategories/edit/{subcategory}', [ProductManagementController::class, 'editSubCategory'])->name('subcategories.edit');
-Route::put('/product/management/update/subcategory/{subcategory}', [ProductManagementController::class, 'updateSubCategory'])->name('subcategory.update');
-Route::delete('/product/management/delete/subcategory/{subcategory}', [ProductManagementController::class, 'destroySubCategory'])->name('subcategories.delete');
+Route::post('/product/management/subcategory/create', [SubCategoryController::class, 'createSubCategory'])->name('subcategories.store');
+Route::get('/product/management/fetch/subcategories', [SubCategoryController::class, 'fetchSubCategories']);
+Route::get('/product/management/subcategories/edit/{subcategory}', [SubCategoryController::class, 'editSubCategory'])->name('subcategories.edit');
+Route::put('/product/management/update/subcategory/{subcategory}', [SubCategoryController::class, 'updateSubCategory'])->name('subcategory.update');
+Route::delete('/product/management/delete/subcategory/{subcategory}', [SubCategoryController::class, 'destroySubCategory'])->name('subcategories.delete');
 
 //------Products Management
 Route::post('/product/management/product/create', [ProductManagementController::class, 'createProduct'])->name('products.store');
 Route::get('/product/management/fetch/products', [ProductManagementController::class, 'fetchProducts']);
 Route::get('/product/management/products/edit/{product}', [ProductManagementController::class, 'editProduct'])->name('products.edit');
-Route::put('/product/management/update/products/{product}', [ProductManagementController::class, 'updateProduct'])->name('product.update');
+Route::put('/product/management/update/products/{productId}', [ProductManagementController::class, 'updateProduct'])->name('product.update');
 Route::delete('/product/management/delete/products/{product}', [ProductManagementController::class, 'destroyProduct'])->name('products.delete');

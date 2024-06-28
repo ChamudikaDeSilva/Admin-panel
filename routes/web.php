@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ModulePermissionController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductManagementController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\UserManagementController;
+use App\Models\SubCategory;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -51,6 +54,6 @@ Route::get('/module/permissions', [ModulePermissionController::class, 'index'])-
 Route::get('/user/management/admins', [UserManagementController::class, 'adminIndex'])->middleware(['auth', 'verified'])->name('admin_management');
 
 //Product Management
-Route::get('/product/management/categories', [ProductManagementController::class, 'categoryIndex'])->middleware(['auth', 'verified'])->name('category_management');
-Route::get('/product/management/subcategories', [ProductManagementController::class, 'subcategoryIndex'])->middleware(['auth', 'verified'])->name('subcategory_management');
+Route::get('/product/management/categories', [CategoryController::class, 'categoryIndex'])->middleware(['auth', 'verified'])->name('category_management');
+Route::get('/product/management/subcategories', [SubCategoryController::class, 'subcategoryIndex'])->middleware(['auth', 'verified'])->name('subcategory_management');
 Route::get('/product/management/products', [ProductManagementController::class, 'productIndex'])->middleware(['auth', 'verified'])->name('product_management');

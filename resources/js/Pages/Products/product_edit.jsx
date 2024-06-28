@@ -39,11 +39,12 @@ export default function EditProduct() {
         if (type === 'checkbox') {
             setData(name, checked);
         } else if (type === 'file') {
-            setData(name, files[0]);
+            setData(name, files[0]); // Assuming single file upload
         } else {
             setData(name, value);
         }
     };
+
 
     const handleModalClose = () => {
         setShowModal(false);
@@ -71,47 +72,41 @@ export default function EditProduct() {
         }
     };
 
-    const handleSubmit = async (event) => {
+    const handleSubmit = (event) => {
         event.preventDefault();
         setIsLoading(true);
 
-        const productId = product.id; // Extract product ID from product object
+        const productId = product.id;
 
-        const productData = new FormData();
-        productData.append('name', data.name);
-        productData.append('category_id', data.category_id);
-        productData.append('subcategory_id', data.subcategory_id || '');
-        productData.append('description', data.description);
-        productData.append('price', data.price);
-        productData.append('quantity', data.quantity);
-        productData.append('availability', data.availability);
+        const formData = new FormData();
+        formData.append('name', data.name);
+        formData.append('category_id', data.category_id);
+        formData.append('subcategory_id', data.subcategory_id || '');
+        formData.append('description', data.description);
+        formData.append('price', data.price);
+        formData.append('quantity', data.quantity);
+        formData.append('availability', data.availability);
 
-        // Append image or existingImage based on conditions
         if (data.image instanceof File) {
-            productData.append('image', data.image);
+            formData.append('image', data.image);
         } else {
-            productData.append('existingImage', data.existingImage);
+            formData.append('existingImage', data.existingImage);
         }
 
-        try {
-            const response = await axios.put(`/api/product/management/update/products/${productId}`, productData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-
-            // Handle success response
-            setModalMessage('The product was updated successfully.');
-            setShowModal(true);
-        } catch (error) {
-            console.error('Error updating product:', error);
-            console.error('Backend errors:', error.response?.data?.errors);
-            setModalMessage('Error updating product. Please try again.');
-            setShowModal(true);
-        } finally {
-            setIsLoading(false);
-        }
+        put(`/api/product/management/update/products/${productId}`, formData, {
+            onSuccess: (response) => {
+                setIsLoading(false);
+                setModalMessage('The product was updated successfully.');
+                setShowModal(true);
+            },
+            onError: (error) => {
+                setIsLoading(false);
+                console.error('Error updating product:', error);
+            },
+        });
     };
+
+
 
 
 
@@ -132,7 +127,7 @@ export default function EditProduct() {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 bg-white border-b border-gray-200">
                             <h2 className="font-semibold text-xl text-gray-800 leading-tight text-center mb-6">Edit Product</h2>
-                            <form onSubmit={handleSubmit} className="flex flex-col items-center pb-20">
+                            <form onSubmit={handleSubmit} className="flex flex-col items-center pb-20" encType="multipart/form-data">
                                 <div className="mt-4 w-full max-w-md">
                                     <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
                                     <input
