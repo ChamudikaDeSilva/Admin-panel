@@ -198,7 +198,13 @@ export default function Products({ auth }) {
                                                     <td className="px-6 py-4 whitespace-nowrap">{product.quantity}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{product.price}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{product.isAvailable ? 'Yes' : 'No'}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.image}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <img
+                                                            src={product.image}
+                                                            alt={product.name}
+                                                            className="h-12 w-12 object-cover rounded"
+                                                        />
+                                                    </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         <FontAwesomeIcon
                                                             icon={faFilePen}
