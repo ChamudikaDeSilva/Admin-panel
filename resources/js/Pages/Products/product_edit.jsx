@@ -21,10 +21,10 @@ export default function EditProduct() {
         return <div>Loading...</div>;
     }
 
-    const { data, setData, put, errors } = useForm({
+    const { data, setData, errors } = useForm({
         name: product.name || '',
         category_id: product.category_id || '',
-        subcategory_id: product.subcategory_id || '',
+        subcategory_id: product.sub_category_id || '',
         description: product.description || '',
         price: product.price || '',
         quantity: product.quantity || '',
@@ -44,7 +44,6 @@ export default function EditProduct() {
             setData(name, value);
         }
     };
-
 
     const handleModalClose = () => {
         setShowModal(false);
@@ -72,8 +71,9 @@ export default function EditProduct() {
         }
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
+        setIsLoading(true);
 
         const productId = product.id;
 
@@ -92,16 +92,15 @@ export default function EditProduct() {
             formData.append('existingImage', data.existingImage);
         }
 
-        Inertia.post(`/api/product/management/update/products/${productId}`, formData, {
-            onSuccess: () => {
-                setIsLoading(false);
-                setModalMessage(response.props.message || 'The product was updated successfully.');
-                setShowModal(true);
-            },
-            onError: (errors) => {
-                console.error('Error updating product:', errors);
-            },
-        });
+        try {
+            await axios.post(`/api/product/management/update/products/${productId}`, formData);
+            setModalMessage('The product was updated successfully.');
+            setShowModal(true);
+        } catch (errors) {
+            console.error('Error updating product:', errors);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleImageChange = (e) => {

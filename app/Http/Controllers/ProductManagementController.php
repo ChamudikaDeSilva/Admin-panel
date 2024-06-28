@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\SubCategory;
-use Exception;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -155,69 +154,66 @@ class ProductManagementController extends Controller
 
 
     public function updateProduct(Request $request, $productId)
-{
-    Log::info('Received request data:', ['request' => $request->all()]);
+    {
+        //Log::info('Received request data:', ['request' => $request->all()]);
 
-    // Validate incoming request data
-    $validator = Validator::make($request->all(), [
-        'name' => 'required|string|max:255',
-        'category_id' => 'required|integer|exists:categories,id',
-        'subcategory_id' => 'nullable|integer|exists:subcategories,id',
-        'description' => 'required|string',
-        'price' => 'required|numeric|min:0',
-        'quantity' => 'required|integer|min:0',
-        'availability' => 'required|boolean',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json($validator->errors(), 422);
-    }
-
-    try {
-        // Find the product by ID
-        $product = Product::findOrFail($productId);
-
-        // Update product details (except image)
-        $product->update([
-            'name' => $request->name,
-            'category_id' => $request->category_id,
-            'sub_category_id' => $request->subcategory_id,
-            'description' => $request->description,
-            'price' => $request->price,
-            'quantity' => $request->quantity,
-            'isAvailable' => $request->availability,
+        // Validate incoming request data
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|integer|exists:categories,id',
+            'subcategory_id' => 'nullable|integer|exists:sub_categories,id',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'quantity' => 'required|integer|min:0',
+            'availability' => 'required|boolean',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Handle image upload (if provided)
-        if ($request->hasFile('image')) {
-            // Remove existing image if present
-            if ($product->image) {
-                Storage::disk('public')->delete($product->image);
-            }
-
-            $image = $request->file('image');
-            $imageName = $image->getClientOriginalName(); // Consider using a unique name to avoid conflicts
-            $imagePath = $image->storeAs('products', $imageName, 'public'); // Store image in storage/app/public/products
-            $imageUrl = Storage::url($imagePath); // Generate URL for the stored image
-
-            $product->image = $imageUrl; // Store the path in the database
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
         }
 
-        $product->save();
+        try {
+            $product = Product::findOrFail($productId);
 
-        return response()->json([
-            'message' => 'Product updated successfully!',
-            'product' => $product,
-        ]);
-    } catch (\Exception $e) {
-        Log::error('Error updating product:', [
-            'exception' => $e->getMessage(),
-            'request_data' => $request->all(),
-        ]);
-        return response()->json(['message' => 'Internal server error'], 500);
+            // Update product details (except image)
+            $product->update([
+                'name' => $request->name,
+                'category_id' => $request->category_id,
+                'sub_category_id' => $request->subcategory_id,
+                'description' => $request->description,
+                'price' => $request->price,
+                'quantity' => $request->quantity,
+                'isAvailable' => $request->availability,
+            ]);
+
+            // Handle image upload (if provided)
+            if ($request->hasFile('image')) {
+                // Remove existing image if present
+                if ($product->image) {
+                    Storage::disk('public')->delete($product->image);
+                }
+
+                $image = $request->file('image');
+                $imageName = $image->getClientOriginalName();
+                $imagePath = $image->storeAs('products', $imageName, 'public');
+                $imageUrl = Storage::url($imagePath);
+
+                $product->image = $imageUrl;
+            }
+
+            $product->save();
+
+            return response()->json(['message' => 'Product updated successfully', 'product' => $product], 201);
+        }
+        catch (\Exception $e) {
+            Log::error('Error updating product:', [
+                'exception' => $e->getMessage(),
+                'request_data' => $request->all(),
+            ]);
+            return response()->json(['message' => 'Internal server error'], 500);
+        }
     }
-}
 
 
 
