@@ -133,7 +133,7 @@ export default function Categories({ auth }) {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-12 bg-white border-b border-gray-200">
                         <div className="mb-4">
-                            <h1 className="text-2xl font-semibold text-gray-700 mb-4 text-decoration: underline italic">Category Management</h1>
+                            <h1 className="text-2xl font-semibold text-gray-700 mb-4 text-decoration: underline italic">Sub Category Management</h1>
                             <div className="flex flex-col sm:flex-row items-center justify-between">
                                 <div className="flex flex-col sm:flex-row items-center">
                                     <button

@@ -50,6 +50,8 @@ Route::delete('/user/management/delete/admin/{id}', [UserManagementController::c
 Route::put('/user/management/disable/admin/{id}', [UserManagementController::class, 'toggleUserStatus'])->name('admins.disable');
 Route::get('/user/management/admin/status/{id}', [UserManagementController::class, 'getAdminStatus'])->name('admins.getUserStatus');
 
+
+
 //Product Management
 //------Category Management
 Route::post('/product/management/category/create', [CategoryController::class, 'createCategory'])->name('categories.store');
