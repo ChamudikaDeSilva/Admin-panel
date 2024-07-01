@@ -111,6 +111,7 @@ export default function Modules({ auth }) {
                                         <tr>
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Is Active</th>
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                                         </tr>
                                     </thead>
@@ -120,14 +121,24 @@ export default function Modules({ auth }) {
                                                 <td className="px-6 py-4 whitespace-nowrap">{admin.name}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap">{admin.email}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
-                                                    <FontAwesomeIcon icon={faFilePen} className="text-amber-600 hover:text-amber-900 cursor-pointer" onClick={() => {
-                                                        // Assuming route('admins.edit', { id: admin.id }) will navigate to the edit page
-                                                        window.location.href = route('admins.edit', { id: admin.id });
-                                                    }} />
+                                                    <span className={admin.is_disabled ? "text-red-500" : "text-blue-500"}>
+                                                        {admin.is_disabled ? "Disabled" : "Active"}
+                                                    </span>
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                    <FontAwesomeIcon
+                                                        icon={faFilePen}
+                                                        className="text-amber-600 hover:text-amber-900 cursor-pointer"
+                                                        onClick={() => {
+                                                            // Assuming route('admins.edit', { id: admin.id }) will navigate to the edit page
+                                                            window.location.href = route('admins.edit', { id: admin.id });
+                                                        }}
+                                                    />
                                                 </td>
                                             </tr>
                                         ))}
                                     </tbody>
+
                                 </table>
                             </div>
 
