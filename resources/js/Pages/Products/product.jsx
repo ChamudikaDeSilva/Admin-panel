@@ -182,32 +182,34 @@ export default function Products({ auth }) {
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg ">
                         <div className="p-12 bg-white border-b border-gray-200">
                         <div className="mb-4">
-                            <h1 className="text-2xl font-semibold text-gray-700 mb-4 text-decoration: underline italic">Product Management</h1>
-                            <div className="flex flex-col sm:flex-row items-center justify-between">
-                                <div className="flex flex-col sm:flex-row items-center">
-                                    <button
-                                        className="mb-2 sm:mb-0 px-4 py-2 bg-lime-500 text-white font-semibold rounded-md hover:bg-amber-500 sm:mr-2"
-                                        onClick={openModal}
-                                    >
-                                        Add Product
-                                    </button>
-                                    <button
-                                        className="mb-2 sm:mb-0 px-4 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-700 sm:mr-2"
-                                        onClick={handleDeleteSelectedProducts}
-                                        disabled={selectedProducts.length === 0}
-                                    >
-                                        Delete Selected
-                                    </button>
+                            <h1 className="text-2xl font-semibold text-gray-700 mb-4 italic">Products</h1>
+                                <hr className="border-lime-500 mb-4" /> {/* Added hr element */}
+                                    <div className="flex flex-col sm:flex-row items-center justify-between">
+                                        <div className="flex flex-col sm:flex-row items-center">
+                                            <button
+                                                className="mb-2 sm:mb-0 px-4 py-2 bg-lime-500 text-white font-semibold rounded-md hover:bg-lime-700 sm:mr-2"
+                                                onClick={openModal}
+                                            >
+                                                New
+                                            </button>
+                                            <button
+                                                className="mb-2 sm:mb-0 px-4 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-700 sm:mr-2"
+                                                onClick={handleDeleteSelectedProducts}
+                                                disabled={selectedProducts.length === 0}
+                                            >
+                                                Delete Selected
+                                            </button>
+                                        </div>
+                                        <input
+                                            type="text"
+                                            placeholder="Search..."
+                                            value={searchTerm}
+                                            onChange={(e) => setSearchTerm(e.target.value)}
+                                            className="border border-lime-500 focus:border-lime-500 focus:ring-0 rounded-md mb-2 sm:mb-0 px-4 py-2"
+                                        />
+                                    </div>
                                 </div>
-                                <input
-                                    type="text"
-                                    placeholder="Search..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="border border-lime-500 focus:border-lime-500 focus:ring-0 rounded-md mb-2 sm:mb-0 px-4 py-2"
-                                />
-                            </div>
-                        </div>
+
 
 
                             {/* Responsive Tailwind CSS table */}
@@ -511,7 +513,7 @@ export default function Products({ auth }) {
                                                                 </button>
                                                                 <button
                                                                     type="submit"
-                                                                    className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-lime-500 text-base font-medium text-white hover:bg-amber-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:w-auto sm:text-sm"
+                                                                    className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-lime-500 text-base font-medium text-white hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:w-auto sm:text-sm"
                                                                 >
                                                                     Create
                                                                 </button>

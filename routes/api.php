@@ -49,6 +49,8 @@ Route::put('/user/management/update/admin/{id}', [UserManagementController::clas
 Route::delete('/user/management/delete/admin/{id}', [UserManagementController::class, 'destroy'])->name('admins.delete');
 Route::put('/user/management/disable/admin/{id}', [UserManagementController::class, 'toggleUserStatus'])->name('admins.disable');
 Route::get('/user/management/admin/status/{id}', [UserManagementController::class, 'getAdminStatus'])->name('admins.getUserStatus');
+Route::post('/user/management/admin/delete/multiple', [UserManagementController::class, 'deleteMultiple'])->name('admins.deleteMultiple');
+
 
 
 

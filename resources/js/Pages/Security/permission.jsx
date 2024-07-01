@@ -75,7 +75,7 @@ export default function Modules({ auth,permissions: initialPermissions }) {
                             <div className="p-12 bg-white border-b border-gray-200">
                                 <button
                                     onClick={openModal}
-                                    className="bg-lime-500 hover:bg-amber-500 text-white font-bold py-2 px-4 rounded">
+                                    className="bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded">
                                     Add Permission
                                 </button>
 

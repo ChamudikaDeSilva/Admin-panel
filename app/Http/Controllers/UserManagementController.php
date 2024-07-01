@@ -133,6 +133,22 @@ class UserManagementController extends Controller
         return response()->json(['is_disabled' => $user->is_disabled], 200);
     }
 
+    public function deleteMultiple(Request $request)
+    {
+        $userIds = $request->input('admin_ids');
+
+        // Debugging line
+        Log::info('Received admin_ids:', $userIds);
+
+        if (is_array($userIds) && count($userIds) > 0) {
+            User::whereIn('id', $userIds)->delete();
+            return response()->json(['message' => 'Admins deleted successfully']);
+        }
+
+        return response()->json(['message' => 'No admins selected'], 400);
+    }
+
+
 
 
 
