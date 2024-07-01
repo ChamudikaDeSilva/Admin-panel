@@ -225,5 +225,17 @@ class ProductManagementController extends Controller
         return response()->json(['message' => 'Product deleted successfully']);
     }
 
+    public function deleteMultiple(Request $request)
+    {
+        $productIds = $request->input('product_ids');
+
+        if (is_array($productIds) && count($productIds) > 0) {
+            Product::whereIn('id', $productIds)->delete();
+            return response()->json(['message' => 'Products deleted successfully']);
+        }
+
+        return response()->json(['message' => 'No products selected'], 400);
+    }
+
 
 }

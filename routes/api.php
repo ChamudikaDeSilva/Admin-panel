@@ -71,3 +71,4 @@ Route::get('/product/management/fetch/products', [ProductManagementController::c
 Route::get('/product/management/products/edit/{product}', [ProductManagementController::class, 'editProduct'])->name('products.edit');
 Route::post('/product/management/update/products/{productId}', [ProductManagementController::class, 'updateProduct'])->name('product.update');
 Route::delete('/product/management/delete/products/{product}', [ProductManagementController::class, 'destroyProduct'])->name('products.delete');
+Route::post('/product/management/delete/multiple/products', [ProductManagementController::class, 'deleteMultiple'])->name('products.deleteMultiple');
