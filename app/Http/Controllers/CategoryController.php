@@ -104,4 +104,16 @@ class CategoryController extends Controller
             return response()->json(['message' => 'Failed to delete category'], 500);
         }
     }
+
+    public function deleteMultiple(Request $request)
+    {
+        $categoryIds = $request->input('category_ids');
+
+        if (is_array($categoryIds) && count($categoryIds) > 0) {
+            Category::whereIn('id', $categoryIds)->delete();
+            return response()->json(['message' => 'Categories deleted successfully']);
+        }
+
+        return response()->json(['message' => 'No categories selected'], 400);
+    }
 }

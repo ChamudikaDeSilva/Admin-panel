@@ -57,6 +57,7 @@ Route::get('/product/management/fetch/categories', [CategoryController::class, '
 Route::get('/product/management/categories/edit/{id}', [CategoryController::class, 'editCategory'])->name('categories.edit');
 Route::put('/product/management/update/category/{id}', [CategoryController::class, 'updateCategory'])->name('category.update');
 Route::delete('/product/management/delete/category/{id}', [CategoryController::class, 'destroyCategory'])->name('admins.delete');
+Route::post('/product/management/delete/multiple/categories', [CategoryController::class, 'deleteMultiple'])->name('categories.deleteMultiple');
 
 //------Sub Category Management
 Route::post('/product/management/subcategory/create', [SubCategoryController::class, 'createSubCategory'])->name('subcategories.store');
@@ -64,6 +65,7 @@ Route::get('/product/management/fetch/subcategories', [SubCategoryController::cl
 Route::get('/product/management/subcategories/edit/{subcategory}', [SubCategoryController::class, 'editSubCategory'])->name('subcategories.edit');
 Route::put('/product/management/update/subcategory/{subcategory}', [SubCategoryController::class, 'updateSubCategory'])->name('subcategory.update');
 Route::delete('/product/management/delete/subcategory/{subcategory}', [SubCategoryController::class, 'destroySubCategory'])->name('subcategories.delete');
+Route::post('/product/management/delete/multiple/subcategories', [SubCategoryController::class, 'deleteMultiple'])->name('subcategories.deleteMultiple');
 
 //------Products Management
 Route::post('/product/management/product/create', [ProductManagementController::class, 'createProduct'])->name('products.store');

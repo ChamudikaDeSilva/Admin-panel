@@ -11,6 +11,10 @@ export default function Categories({ auth }) {
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [categoriesPerPage] = useState(5);
+    const [selectedCategories, setSelectedCategories] = useState([]);
+    const [isPurgeModalOpen, setIsPurgeModalOpen] = useState(false);
+    const [showModal, setShowModal] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
     const [formData, setFormData] = useState({
         name: '',
     });
@@ -49,6 +53,8 @@ export default function Categories({ auth }) {
         try {
             const response = await axios.post(route('categories.store'), formData);
             console.log('Form data submitted:', response.data);
+            setModalMessage('The category is created successfully.');
+            setShowModal(true);
             closeModal();
             fetchCategories ();
         } catch (error) {
@@ -77,6 +83,44 @@ export default function Categories({ auth }) {
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
 
+    // Handle checkbox selection for multiple deletion
+    const handleSelectCategory = (categoryId) => {
+        setSelectedCategories((prevSelectedCategories) =>
+            prevSelectedCategories.includes(categoryId)
+                ? prevSelectedCategories.filter((id) => id !== categoryId)
+                : [...prevSelectedCategories, categoryId]
+            );
+        };
+
+        const handleSelectAllCategories = (e) => {
+            if (e.target.checked) {
+                const allCategoryIds = currentCategories.map((category) => category.id);
+                setSelectedCategories(allCategoryIds);
+            } else {
+                setSelectedCategories([]);
+            }
+        };
+
+        const handleDeleteSelectedCategories = async () => {
+            setIsPurgeModalOpen(true);
+        };
+
+        const confirmDeleteCategories = async () => {
+            try {
+                await axios.post(route('categories.deleteMultiple'), { category_ids: selectedCategories });
+                setSelectedCategories([]);
+                fetchCategories();
+                setIsPurgeModalOpen(false);
+            } catch (error) {
+                console.error('An error occurred while deleting categories:', error);
+            }
+        };
+
+        const handleModalClose = () => {
+            setShowModal(false);
+        };
+
+
     return (
         <AuthenticatedLayout user={auth.user}>
             <Head title="Categories" />
@@ -84,28 +128,46 @@ export default function Categories({ auth }) {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg ">
                         <div className="p-12 bg-white border-b border-gray-200">
-                        <div class="mb-4 flex flex-col sm:flex-row items-center justify-between">
-                            <button
-                                class="mb-2 sm:mb-0 px-4 py-2 bg-lime-500 text-white font-semibold rounded-md hover:bg-amber-500"
-                                onClick={openModal}
-                            >
-                                Add Category
-                            </button>
-                            <input
-                                type="text"
-                                placeholder="Search..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
-                                class="border border-lime-500 focus:border-lime-500 focus:ring-0 rounded-md px-4 py-2 "
-                            />
+                        <div className="mb-4">
+                            <h1 className="text-2xl font-semibold text-gray-700 mb-4 text-decoration: underline italic">Category Management</h1>
+                            <div className="flex flex-col sm:flex-row items-center justify-between">
+                                <div className="flex flex-col sm:flex-row items-center">
+                                    <button
+                                        className="mb-2 sm:mb-0 px-4 py-2 bg-lime-500 text-white font-semibold rounded-md hover:bg-amber-500 sm:mr-2"
+                                        onClick={openModal}
+                                    >
+                                        Add category
+                                    </button>
+                                    <button
+                                        className="mb-2 sm:mb-0 px-4 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-700 sm:mr-2"
+                                        onClick={handleDeleteSelectedCategories}
+                                        disabled={selectedCategories.length === 0}
+                                    >
+                                        Delete Selected
+                                    </button>
+                                </div>
+                                <input
+                                    type="text"
+                                    placeholder="Search..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="border border-lime-500 focus:border-lime-500 focus:ring-0 rounded-md mb-2 sm:mb-0 px-4 py-2"
+                                />
+                            </div>
                         </div>
-
 
                             {/* Responsive Tailwind CSS table */}
                             <div className="overflow-x-auto">
                                 <table className="min-w-full divide-y divide-gray-200">
                                     <thead className="bg-amber-100 ">
                                         <tr>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                <input
+                                                    type="checkbox"
+                                                    onChange={handleSelectAllCategories}
+                                                    checked={selectedCategories.length === currentCategories.length}
+                                                />
+                                            </th>
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Name</th>
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
@@ -114,6 +176,13 @@ export default function Categories({ auth }) {
                                     <tbody className="bg-white divide-y divide-gray-200">
                                         {currentCategories.map(category => (
                                             <tr key={category.id}>
+                                                <td className="px-6 py-4 whitespace-nowrap">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={selectedCategories.includes(category.id)}
+                                                            onChange={() => handleSelectCategory(category.id)}
+                                                        />
+                                                    </td>
                                                 <td className="px-6 py-4 whitespace-nowrap">{category.id}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap">{category.name}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
@@ -196,6 +265,65 @@ export default function Categories({ auth }) {
                                                         </form>
                                                     </div>
                                                 </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* Purge Modal */}
+                            {isPurgeModalOpen && (
+                                <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+                                    <div className="bg-white p-6 rounded-lg shadow-lg">
+                                        <h2 className="text-xl font-semibold mb-4">Confirm Deletion</h2>
+                                        <p>Are you sure you want to delete the selected categories?</p>
+                                        <div className="mt-4 flex justify-end">
+                                            <button
+                                                className="mr-2 px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
+                                                onClick={() => setIsPurgeModalOpen(false)}
+                                            >
+                                                Cancel
+                                            </button>
+                                            <button
+                                                className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-700"
+                                                onClick={confirmDeleteCategories}
+                                            >
+                                                Confirm
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {showModal && (
+                                <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                                    <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                                        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                                        <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                                        <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+                                            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                                                <div className="sm:flex sm:items-start">
+                                                    <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                                                        <svg className="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </div>
+                                                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                                                        <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                                            Success
+                                                        </h3>
+                                                        <div className="mt-2">
+                                                            <p className="text-sm text-gray-500">
+                                                                {modalMessage}
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                                                <button onClick={handleModalClose} type="button" className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-lime-600 text-base font-medium text-white hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:ml-3 sm:w-auto sm:text-sm">
+                                                    OK
+                                                </button>
                                             </div>
                                         </div>
                                     </div>

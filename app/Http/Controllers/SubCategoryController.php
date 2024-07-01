@@ -101,4 +101,16 @@ class SubCategoryController extends Controller
         $subcategory->delete();
         return response()->json(['message' => 'Subcategory deleted successfully']);
     }
+
+    public function deleteMultiple(Request $request)
+    {
+        $subcategoryIds = $request->input('subcategory_ids');
+
+        if (is_array($subcategoryIds) && count($subcategoryIds) > 0) {
+            SubCategory::whereIn('id', $subcategoryIds)->delete();
+            return response()->json(['message' => 'Sub Categories deleted successfully']);
+        }
+
+        return response()->json(['message' => 'No sub categories selected'], 400);
+    }
 }
