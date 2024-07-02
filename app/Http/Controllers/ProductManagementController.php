@@ -215,9 +215,6 @@ class ProductManagementController extends Controller
         }
     }
 
-
-
-
     public function destroyProduct(Product $product)
     {
         $product->delete();

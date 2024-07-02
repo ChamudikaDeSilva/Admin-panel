@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ModulePermissionController;
 use App\Http\Controllers\PermissionController;
@@ -57,3 +58,4 @@ Route::get('/user/management/admins', [UserManagementController::class, 'adminIn
 Route::get('/product/management/categories', [CategoryController::class, 'categoryIndex'])->middleware(['auth', 'verified'])->name('category_management');
 Route::get('/product/management/subcategories', [SubCategoryController::class, 'subcategoryIndex'])->middleware(['auth', 'verified'])->name('subcategory_management');
 Route::get('/product/management/products', [ProductManagementController::class, 'productIndex'])->middleware(['auth', 'verified'])->name('product_management');
+Route::get('/product/management/discounts', [DiscountController::class, 'discountIndex'])->middleware(['auth', 'verified'])->name('discount_management');
