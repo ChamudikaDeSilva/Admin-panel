@@ -69,8 +69,8 @@ export default function Categories({ auth }) {
     // Search function
     const searchCategories = (categories) => {
         return categories.filter(category =>
-            category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            category.email.toLowerCase().includes(searchTerm.toLowerCase())
+            category.name.toLowerCase().includes(searchTerm.toLowerCase()) 
+            //category.email.toLowerCase().includes(searchTerm.toLowerCase())
         );
     };
 
@@ -184,7 +184,7 @@ export default function Categories({ auth }) {
                                                             onChange={() => handleSelectCategory(category.id)}
                                                         />
                                                     </td>
-                                                
+
                                                 <td className="px-6 py-4 whitespace-nowrap">{category.name}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <FontAwesomeIcon icon={faFilePen} className="text-amber-600 hover:text-amber-900 cursor-pointer" onClick={() => {
