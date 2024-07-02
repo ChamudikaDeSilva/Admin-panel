@@ -268,7 +268,9 @@ export default function Products({ auth }) {
                                                         />
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{product.category ? product.category.name : 'No Category'}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.sub_category ? product.sub_category.name : 'No Subcategory'}</td>
+                                                    <td className={`px-6 py-4 whitespace-nowrap ${product.sub_category ? '' : 'text-blue-500'}`}>
+                                                        {product.sub_category ? product.sub_category.name : 'No Subcategory'}
+                                                    </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{product.slug}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{product.description}</td>

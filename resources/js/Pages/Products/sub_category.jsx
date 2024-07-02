@@ -171,7 +171,7 @@ export default function Categories({ auth }) {
                                                     checked={selectedSubCategories.length === currentSubCategories.length}
                                                 />
                                             </th>
-                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                            
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sub Category</th>
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
@@ -187,7 +187,7 @@ export default function Categories({ auth }) {
                                                             onChange={() => handleSelectSubCategory(subcategory.id)}
                                                         />
                                                     </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">{subcategory.id}</td>
+
                                                 <td className="px-6 py-4 whitespace-nowrap">{subcategory.category.name}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap">{subcategory.name}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap">

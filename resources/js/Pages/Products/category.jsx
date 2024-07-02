@@ -169,7 +169,7 @@ export default function Categories({ auth }) {
                                                     checked={selectedCategories.length === currentCategories.length}
                                                 />
                                             </th>
-                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category Name</th>
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
                                         </tr>
@@ -184,7 +184,7 @@ export default function Categories({ auth }) {
                                                             onChange={() => handleSelectCategory(category.id)}
                                                         />
                                                     </td>
-                                                <td className="px-6 py-4 whitespace-nowrap">{category.id}</td>
+                                                
                                                 <td className="px-6 py-4 whitespace-nowrap">{category.name}</td>
                                                 <td className="px-6 py-4 whitespace-nowrap">
                                                     <FontAwesomeIcon icon={faFilePen} className="text-amber-600 hover:text-amber-900 cursor-pointer" onClick={() => {
