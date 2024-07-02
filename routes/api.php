@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DiscountController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ModuleController;
@@ -78,3 +79,9 @@ Route::get('/product/management/products/edit/{product}', [ProductManagementCont
 Route::post('/product/management/update/products/{productId}', [ProductManagementController::class, 'updateProduct'])->name('product.update');
 Route::delete('/product/management/delete/products/{product}', [ProductManagementController::class, 'destroyProduct'])->name('products.delete');
 Route::post('/product/management/delete/multiple/products', [ProductManagementController::class, 'deleteMultiple'])->name('products.deleteMultiple');
+
+//------Discounts Management
+Route::get('/product/management/fetch/discounts', [DiscountController::class, 'fetchDiscounts']);
+Route::post('/product/management/discount/create', [DiscountController::class, 'createDiscount'])->name('discounts.store');
+Route::post('/product/management/delete/multiple/discounts', [DiscountController::class, 'deleteMultiple'])->name('discounts.deleteMultiple');
+
