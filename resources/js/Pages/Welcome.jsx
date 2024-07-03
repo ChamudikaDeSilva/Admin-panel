@@ -17,7 +17,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                             </nav>
                             <header className="container px-4 lg:flex mt-10 items-center h-full lg:mt-0">
                                 <div className="w-full">
-                                    <h1 className="text-4xl lg:text-6xl font-bold">Find your <span className="text-lime-500">greeny</span> stuff for your kitchen</h1>
+                                    <h1 className="text-4xl lg:text-6xl font-bold">Find your <span className="text-green-700">greeny</span> stuff for your kitchen</h1>
                                     <div className="w-20 h-2 bg-amber-500 my-4"></div>
                                     <p className="text-xl mb-10 text-gray-600">Welcome to Pamona's Harvest Haven. Discover premium greenery and accessories to transform your home into a serene oasis.
                                         Elevate your living space with our curated selection designed to bring life and tranquility.</p>
