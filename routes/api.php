@@ -84,4 +84,7 @@ Route::post('/product/management/delete/multiple/products', [ProductManagementCo
 Route::get('/product/management/fetch/discounts', [DiscountController::class, 'fetchDiscounts']);
 Route::post('/product/management/discount/create', [DiscountController::class, 'createDiscount'])->name('discounts.store');
 Route::post('/product/management/delete/multiple/discounts', [DiscountController::class, 'deleteMultiple'])->name('discounts.deleteMultiple');
+Route::get('/product/management/discounts/edit/{product}', [DiscountController::class, 'editDiscount'])->name('discounts.edit');
+Route::put('/product/management/update/discounts/{discountId}', [DiscountController::class, 'updateDiscount'])->name('discount.update');
+Route::delete('/product/management/delete/discounts/{discount}', [DiscountController::class, 'destroyDiscount'])->name('discounts.delete');
 

@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\SubCategory;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
@@ -40,8 +41,8 @@ class ProductManagementController extends Controller
     public function createProduct(Request $request)
     {
         try {
-
             Log::info('create product request data: ', $request->all());
+
             // Validate incoming request data
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
@@ -52,6 +53,8 @@ class ProductManagementController extends Controller
                 'subcategory_id' => 'nullable|exists:sub_categories,id',
                 'isAvailable' => 'nullable|boolean',
                 'image' => 'required|image|max:2048',
+                'discounts' => 'array', // Validate discounts as an array
+                'discounts.*' => 'exists:discounts,id', // Validate each discount ID exists in the discounts table
             ]);
 
             if ($validator->fails()) {
@@ -84,17 +87,27 @@ class ProductManagementController extends Controller
             $product->image = $imageUrl;
             $product->slug = $slug;
 
-
             $product->save();
+
+            // Attach discounts to the product
+            if ($request->has('discounts')) {
+                $discounts = $request->input('discounts');
+                foreach ($discounts as $discountId) {
+                    DB::table('discount_products')->insert([
+                        'product_id' => $product->id,
+                        'discount_id' => $discountId,
+                    ]);
+                }
+            }
 
             return response()->json(['message' => 'Product created successfully', 'product' => $product], 201);
         } catch (\Exception $e) {
-
             Log::error('Error creating product: ' . $e->getMessage());
 
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
     }
+
 
 
     /**

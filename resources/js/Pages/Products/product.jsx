@@ -4,6 +4,7 @@ import axios from 'axios';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePen, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import Select from 'react-select';
 
 export default function Products({ auth }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,6 +28,7 @@ export default function Products({ auth }) {
         image: null,
         category_id: '',
         subcategory_id: '', // New state for subcategory selection
+        discounts: [],
     });
 
     const [errors, setErrors] = useState({});
@@ -66,6 +68,7 @@ export default function Products({ auth }) {
             image: null,
             category_id: '',
             subcategory_id: '',
+            discounts: '',
         });
         setErrors({});
         setImagePreview(null);
@@ -103,10 +106,15 @@ export default function Products({ auth }) {
             formDataToSend.append('image', formData.image);
         }
 
+        // Append discounts to the formDataToSend
+        formData.discounts.forEach((discount, index) => {
+            formDataToSend.append(`discounts[${index}]`, discount);
+        });
+
         try {
             const response = await axios.post(route('products.store'), formDataToSend);
 
-            //console.log('Form data submitted:', response.data);
+            // Close modal and show success message
             closeModal();
             setModalMessage('The product is created successfully.');
             setShowModal(true);
@@ -119,6 +127,7 @@ export default function Products({ auth }) {
             }
         }
     };
+
 
     // Search function
     const searchProducts = (products) => {
@@ -173,6 +182,10 @@ export default function Products({ auth }) {
 
     const handleModalClose = () => {
         setShowModal(false);
+    };
+
+    const handleDiscountChange = (selectedOptions) => {
+        setFormData({ ...formData, discounts: selectedOptions.map(option => option.value) });
     };
 
     return (
@@ -467,6 +480,24 @@ export default function Products({ auth }) {
                                                                     ))}
                                                                 </select>
                                                             </div>
+
+                                                            <div className="mb-4">
+                                            <label
+                                                htmlFor="discounts"
+                                                className="block text-sm font-medium text-gray-700 mb-1"
+                                            >
+                                                Discounts
+                                            </label>
+                                            <Select
+                                                id="discounts"
+                                                name="discounts"
+                                                isMulti
+                                                options={discounts.map(discount => ({ value: discount.id, label: discount.code }))}
+                                                onChange={handleDiscountChange}
+                                                className="mt-1"
+                                            />
+                                        </div>
+
                                                             <div className="mb-4">
                                                                 <label
                                                                     htmlFor="isAvailable"

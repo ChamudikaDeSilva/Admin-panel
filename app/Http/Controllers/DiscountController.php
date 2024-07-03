@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Discount;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Product;
 use App\Models\SubCategory;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
@@ -80,6 +82,70 @@ class DiscountController extends Controller
         }
 
         return response()->json(['message' => 'No discounts selected'], 400);
+    }
+
+    public function editDiscount($id)
+    {
+        $discount = Discount::findOrFail($id);
+        $authUser = auth()->user();
+
+        return Inertia::render('Products/discount_edit', [
+            'discount' => $discount,
+            'auth' => $authUser,
+        ]);
+    }
+
+    public function updateDiscount(Request $request, $id)
+    {
+        try {
+            // Validate incoming request data
+            $validator = Validator::make($request->all(), [
+                'type' => 'required|in:percentage,fixed',
+                'value' => 'required|numeric',
+                'description' => 'required|string',
+                'start_date' => 'required|date',
+                'end_date' => 'required|date|after_or_equal:start_date',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['errors' => $validator->errors()], 422);
+            }
+
+            // Find the discount by ID
+            $discount = Discount::findOrFail($id);
+
+            // Update discount fields
+            $discount->type = $request->input('type');
+            $discount->value = $request->input('value');
+            $discount->description = $request->input('description');
+            $discount->start_date = Carbon::parse($request->input('start_date'))->format('Y-m-d');
+            $discount->end_date = Carbon::parse($request->input('end_date'))->format('Y-m-d');
+
+            // Save the updated discount
+            $discount->save();
+
+            return response()->json(['message' => 'Discount updated successfully', 'discount' => $discount], 200);
+        } catch (\Exception $e) {
+            Log::error('Error updating discount: ' . $e->getMessage());
+            return response()->json(['error' => 'Internal Server Error'], 500);
+        }
+    }
+
+
+    public function destroyDiscount($id)
+    {
+        $discount = Discount::find($id);
+
+        if (!$discount) {
+            return response()->json(['message' => 'Discount not found'], 404);
+        }
+
+        try {
+            $discount->delete();
+            return response()->json(['message' => 'Discount deleted successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Failed to delete discount'], 500);
+        }
     }
 
 
