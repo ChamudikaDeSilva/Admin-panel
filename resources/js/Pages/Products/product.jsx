@@ -10,6 +10,7 @@ export default function Products({ auth }) {
     const [products, setProducts] = useState([]);
     const [subcategories, setSubCategories] = useState([]);
     const [categories, setCategories] = useState([]);
+    const [discounts, setDiscounts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [productsPerPage] = useState(5);
@@ -41,8 +42,8 @@ export default function Products({ auth }) {
             setProducts(response.data.products);
             setSubCategories(response.data.subcategories);
             setCategories(response.data.categories);
+            setDiscounts(response.data.discounts);
             //console.log(response.data);
-
 
         } catch (error) {
             console.error('An error occurred while fetching products:', error);

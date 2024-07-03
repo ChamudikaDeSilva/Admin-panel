@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Discount;
 use App\Models\Product;
 use App\Models\SubCategory;
 use Illuminate\Support\Facades\Validator;
@@ -30,8 +31,9 @@ class ProductManagementController extends Controller
         $products = Product::with(['category', 'subCategory'])->get();
         $categories=Category::all();
         $subcategories=SubCategory::all();
+        $discounts=Discount::all();
 
-        return response()->json(['products' => $products,'categories'=>$categories,'subcategories'=>$subcategories]);
+        return response()->json(['products' => $products,'categories'=>$categories,'subcategories'=>$subcategories, 'discounts'=>$discounts	]);
     }
 
 
