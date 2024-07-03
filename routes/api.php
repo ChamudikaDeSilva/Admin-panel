@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DiscountController;
+use App\Http\Controllers\FrontendProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ModuleController;
@@ -88,3 +89,5 @@ Route::get('/product/management/discounts/edit/{product}', [DiscountController::
 Route::put('/product/management/update/discounts/{discountId}', [DiscountController::class, 'updateDiscount'])->name('discount.update');
 Route::delete('/product/management/delete/discounts/{discount}', [DiscountController::class, 'destroyDiscount'])->name('discounts.delete');
 
+//------Frontend API--------------------------------
+Route::get('/shop/data/fetch', [FrontendProductController::class, 'shopIndex']);

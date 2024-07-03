@@ -33,7 +33,7 @@ export default function Authenticated({ user, header, children }) {
         <div className="min-h-screen bg-gray-100">
             <div className="flex overflow-hidden bg-gray-00">
             {/* Sidebar */}
-                <div id="sidebar"className={`absolute bg-gray-700 text-white w-56 min-h-screen overflow-y-auto transition-transform transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                <div id="sidebar"className={`absolute bg-gray-900 text-white w-56 min-h-screen overflow-y-auto transition-transform transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
                 } ease-in-out duration-300 shadow-lg`}
             >
             <div className="p-4">
@@ -200,7 +200,7 @@ export default function Authenticated({ user, header, children }) {
                 {/* Main Content */}
                 <div className="flex-1 flex flex-col overflow-hidden">
                     {/* Navbar */}
-                    <nav className="bg-gray-700 shadow">
+                    <nav className="bg-gray-900 shadow">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                             <div className="flex justify-between h-16">
                                 <div className="flex items-left">

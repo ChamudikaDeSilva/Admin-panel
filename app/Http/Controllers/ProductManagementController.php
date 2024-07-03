@@ -129,25 +129,6 @@ class ProductManagementController extends Controller
         return $slug;
     }
 
-    /*public function editProduct(Product $product)
-    {
-        // Load the categories and subcategories
-        $categories = Category::all();
-        $subcategories = SubCategory::all();
-        $user = auth()->user();
-
-        // Ensure the image URL is correct
-        $imageUrl = $product->image ? url($product->image) : null;
-
-        // Pass the necessary data to the frontend
-        return Inertia::render('Products/product_edit', [
-            'product' => array_merge($product->toArray(), ['image' => $imageUrl]), //Pass the image url to frontend
-            'categories' => $categories,
-            'subcategories' => $subcategories,
-            'auth' => $user,
-        ]);
-    }*/
-
     public function editProduct(Product $product)
     {
         // Load the categories and subcategories
@@ -166,7 +147,6 @@ class ProductManagementController extends Controller
             'auth' => $user,
         ]);
     }
-
 
     public function updateProduct(Request $request, $productId)
     {
