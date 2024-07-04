@@ -91,3 +91,4 @@ Route::delete('/product/management/delete/discounts/{discount}', [DiscountContro
 
 //------Frontend API--------------------------------
 Route::get('/shop/data/fetch', [FrontendProductController::class, 'shopIndex']);
+Route::get('/shop/product/fetch', [FrontendProductController::class, 'fetchProducts']);

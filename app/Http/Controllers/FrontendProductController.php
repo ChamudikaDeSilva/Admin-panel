@@ -7,6 +7,7 @@ use App\Models\Discount;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class FrontendProductController extends Controller
 {
@@ -39,5 +40,36 @@ class FrontendProductController extends Controller
             'discountTypes' => $discountTypes,
         ]);
     }
+
+    public function fetchProducts(Request $request)
+    {
+        $categoryId = $request->input('category_id');
+        $priceRange = $request->input('price_range');
+        $discountType = $request->input('discount_type');
+        $page = $request->input('page', 1);
+        $perPage = 9; // Number of products per page
+
+        $query = Product::query();
+
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        if ($priceRange) {
+            $query->whereBetween('price', [$priceRange['min'], $priceRange['max']]);
+        }
+
+        if ($discountType) {
+            $discountIds = Discount::where('type', $discountType)->pluck('id');
+            $query->whereHas('discounts', function ($query) use ($discountIds) {
+                $query->whereIn('id', $discountIds);
+            });
+        }
+
+        $products = $query->paginate($perPage, ['*'], 'page', $page);
+
+        return response()->json($products);
+    }
+
 
 }
