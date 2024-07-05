@@ -53,7 +53,7 @@ class ProductManagementController extends Controller
                 'subcategory_id' => 'nullable|exists:sub_categories,id',
                 'isAvailable' => 'nullable|boolean',
                 'image' => 'required|image|max:2048',
-                'discounts' => 'array', // Validate discounts as an array
+                'discounts' => 'nullable|array', // Validate discounts as an array
                 'discounts.*' => 'exists:discounts,id', // Validate each discount ID exists in the discounts table
             ]);
 
@@ -150,7 +150,8 @@ class ProductManagementController extends Controller
 
     public function updateProduct(Request $request, $productId)
     {
-        //Log::info('Received request data:', ['request' => $request->all()]);
+        // Log incoming request data
+        Log::info('Received request data:', ['request' => $request->all()]);
 
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
@@ -159,12 +160,13 @@ class ProductManagementController extends Controller
             'subcategory_id' => 'nullable|integer|exists:sub_categories,id',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'quantity' => 'required|integer|min:0',
+            'quantity' => 'required|numeric|min:0',
             'availability' => 'required|boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         if ($validator->fails()) {
+            Log::error('Validation errors:', ['errors' => $validator->errors()]);
             return response()->json($validator->errors(), 422);
         }
 
@@ -209,6 +211,7 @@ class ProductManagementController extends Controller
             return response()->json(['message' => 'Internal server error'], 500);
         }
     }
+
 
     public function destroyProduct(Product $product)
     {
