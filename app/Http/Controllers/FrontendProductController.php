@@ -43,39 +43,39 @@ class FrontendProductController extends Controller
     }
 
     public function fetchProducts(Request $request)
-{
-    $categoryId = $request->input('category_id');
-    $minPrice = $request->input('min_price');
-    $maxPrice = $request->input('max_price');
-    $discountType = $request->input('discount_type');
-    $page = $request->input('page', 1);
-    $perPage = 9; // Number of products per page
+    {
+        $categoryId = $request->input('category_id');
+        $minPrice = $request->input('min_price');
+        $maxPrice = $request->input('max_price');
+        $discountType = $request->input('discount_type');
+        $page = $request->input('page', 1);
+        $perPage = 9; // Number of products per page
 
-    $query = Product::query();
+        $query = Product::query();
 
-    if ($categoryId) {
-        $query->where('category_id', $categoryId);
+        if ($categoryId) {
+            $query->where('category_id', $categoryId);
+        }
+
+        if ($minPrice !== null && $maxPrice !== null) {
+            $query->whereBetween('price', [$minPrice, $maxPrice]);
+        }
+
+        if ($discountType) {
+            // Fetch discount IDs based on selected discount type
+            $discountIds = Discount::where('type', $discountType)->pluck('id');
+
+            // Fetch product IDs associated with the selected discount IDs
+            $productIds = DiscountProduct::whereIn('discount_id', $discountIds)->pluck('product_id');
+
+            // Filter products by the fetched product IDs
+            $query->whereIn('id', $productIds);
+        }
+
+        $products = $query->paginate($perPage, ['*'], 'page', $page);
+
+        return response()->json($products);
     }
-
-    if ($minPrice !== null && $maxPrice !== null) {
-        $query->whereBetween('price', [$minPrice, $maxPrice]);
-    }
-
-    if ($discountType) {
-        // Fetch discount IDs based on selected discount type
-        $discountIds = Discount::where('type', $discountType)->pluck('id');
-
-        // Fetch product IDs associated with the selected discount IDs
-        $productIds = DiscountProduct::whereIn('discount_id', $discountIds)->pluck('product_id');
-
-        // Filter products by the fetched product IDs
-        $query->whereIn('id', $productIds);
-    }
-
-    $products = $query->paginate($perPage, ['*'], 'page', $page);
-
-    return response()->json($products);
-}
 
 
 
