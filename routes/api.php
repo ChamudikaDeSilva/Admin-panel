@@ -54,8 +54,6 @@ Route::get('/user/management/admin/status/{id}', [UserManagementController::clas
 Route::post('/user/management/admin/delete/multiple', [UserManagementController::class, 'deleteMultiple'])->name('admins.deleteMultiple');
 
 
-
-
 //Product Management
 //------Category Management
 Route::post('/product/management/category/create', [CategoryController::class, 'createCategory'])->name('categories.store');
@@ -88,6 +86,11 @@ Route::post('/product/management/delete/multiple/discounts', [DiscountController
 Route::get('/product/management/discounts/edit/{product}', [DiscountController::class, 'editDiscount'])->name('discounts.edit');
 Route::put('/product/management/update/discounts/{discountId}', [DiscountController::class, 'updateDiscount'])->name('discount.update');
 Route::delete('/product/management/delete/discounts/{discount}', [DiscountController::class, 'destroyDiscount'])->name('discounts.delete');
+
+
+
+
+
 
 //------Frontend API--------------------------------
 Route::get('/shop/data/fetch', [FrontendProductController::class, 'shopIndex']);
