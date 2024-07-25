@@ -24,9 +24,10 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => bcrypt($request->password)
+            'password' => bcrypt($request->password),
         ]);
 
+        // Generate JWT token
         $token = Auth::login($user);
 
         return response()->json([
@@ -37,6 +38,8 @@ class AuthController extends Controller
             ]
         ], 201);
     }
+
+
 
     public function login(Request $request)
     {
@@ -53,11 +56,20 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            return response()->json(['message' => 'Login successful', 'user' => $user], 200);
+            $token = Auth::tokenById($user->id); // Generate JWT token
+
+            return response()->json([
+                'message' => 'Login successful',
+                'user' => $user,
+                'token' => $token
+            ], 200);
         } else {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
     }
+
+
+
     public function logout()
     {
         Auth::logout();
