@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 
+
 class AuthController extends Controller
 {
     public function register(Request $request)
@@ -42,31 +43,38 @@ class AuthController extends Controller
 
 
     public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
+        {
+            $request->validate([
+                'email' => 'required|string|email',
+                'password' => 'required|string',
+            ]);
 
-        $validator = Validator::make($credentials, [
-            'email' => 'required|email',
-            'password' => 'required',
-        ]);
+            $credentials = $request->only('email', 'password');
+            $token = Auth::attempt($credentials);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+            if (!$token) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Unauthorized',
+                ], 401);
+            }
 
-        if (Auth::attempt($credentials)) {
             $user = Auth::user();
-            $token = Auth::tokenById($user->id); // Generate JWT token
-
             return response()->json([
-                'message' => 'Login successful',
-                'user' => $user,
-                'token' => $token
-            ], 200);
-        } else {
-            return response()->json(['message' => 'Invalid credentials'], 401);
+                'status' => 'success',
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    // Include any additional fields as needed
+                ],
+                'authorisation' => [
+                    'token' => $token,
+                    'type' => 'bearer',
+                ]
+            ]);
         }
-    }
+
 
 
 
