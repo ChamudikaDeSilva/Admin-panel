@@ -61,7 +61,7 @@ Route::post('/product/management/category/create', [CategoryController::class, '
 Route::get('/product/management/fetch/categories', [CategoryController::class, 'fetchCategories']);
 Route::get('/product/management/categories/edit/{id}', [CategoryController::class, 'editCategory'])->name('categories.edit');
 Route::put('/product/management/update/category/{id}', [CategoryController::class, 'updateCategory'])->name('category.update');
-Route::delete('/product/management/delete/category/{id}', [CategoryController::class, 'destroyCategory'])->name('admins.delete');
+Route::delete('/product/management/delete/category/{id}', [CategoryController::class, 'destroyCategory'])->name('category.delete');
 Route::post('/product/management/delete/multiple/categories', [CategoryController::class, 'deleteMultiple'])->name('categories.deleteMultiple');
 
 //------Sub Category Management
@@ -98,12 +98,7 @@ Route::get('/shop/data/fetch', [FrontendProductController::class, 'shopIndex']);
 Route::get('/shop/product/fetch', [FrontendProductController::class, 'fetchProducts']);
 
 
-Route::group([
-    'prefix' => 'auth'
-], function ($router) {
-    Route::post('login', [AuthController::class, 'login']);
-    Route::post('register', [AuthController::class, 'register']);
-    Route::post('logout', [AuthController::class, 'logout']);
-    Route::post('refresh', [AuthController::class, 'refresh']);
-    Route::get('me', [AuthController::class, 'me']);
+Route::middleware(['api'])->group(function () {
+    Route::post('auth/register', [AuthController::class, 'register']);
+    Route::post('auth/login', [AuthController::class, 'login']);
 });
