@@ -56,9 +56,17 @@ Route::get('/module/permissions', [ModulePermissionController::class, 'index'])-
 
 //User Management
 Route::get('/user/management/admins', [UserManagementController::class, 'adminIndex'])->middleware(['auth', 'verified'])->name('admin_management');
+Route::get('/user/management/admins/edit/{id}', [UserManagementController::class, 'editAdmin'])->middleware(['auth', 'verified'])->name('admins.edit');
 
 //Product Management
 Route::get('/product/management/categories', [CategoryController::class, 'categoryIndex'])->middleware(['auth', 'verified'])->name('category_management');
+Route::get('/product/management/categories/edit/{id}', [CategoryController::class, 'editCategory'])->middleware(['auth', 'verified'])->name('categories.edit');
+
 Route::get('/product/management/subcategories', [SubCategoryController::class, 'subcategoryIndex'])->middleware(['auth', 'verified'])->name('subcategory_management');
+Route::get('/product/management/subcategories/edit/{subcategory}', [SubCategoryController::class, 'editSubCategory'])->middleware(['auth', 'verified'])->name('subcategories.edit');
+
 Route::get('/product/management/products', [ProductManagementController::class, 'productIndex'])->middleware(['auth', 'verified'])->name('product_management');
+Route::get('/product/management/products/edit/{product}', [ProductManagementController::class, 'editProduct'])->middleware(['auth', 'verified'])->name('products.edit');
+
 Route::get('/product/management/discounts', [DiscountController::class, 'discountIndex'])->middleware(['auth', 'verified'])->name('discount_management');
+Route::get('/product/management/discounts/edit/{product}', [DiscountController::class, 'editDiscount'])->middleware(['auth', 'verified'])->name('discounts.edit');

@@ -14,6 +14,8 @@ export default function EditCategory() {
     const [modalMessage, setModalMessage] = useState('');
     const [categoryToDelete, setCategoryToDelete] = useState(null);
 
+    console.log(auth);
+
 
     if (!auth) {
         console.log('User or Auth data is not available');

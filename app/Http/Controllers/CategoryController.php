@@ -62,15 +62,17 @@ class CategoryController extends Controller
     }
 
     public function editCategory($id)
-    {
-        $category = Category::findOrFail($id);
-        $authUser = auth()->user();
+{
+    $category = Category::findOrFail($id);
+    $authUser = auth()->guard('web')->user();
 
-        return Inertia::render('Products/category_edit', [
-            'category' => $category,
-            'auth' => $authUser,
-        ]);
-    }
+    Log::info('Authenticated User Data: ', ['authUser' => $authUser]);
+
+    return Inertia::render('Products/category_edit', [
+        'category' => $category,
+        'auth' => $authUser,
+    ]);
+}
 
     public function updateCategory(Request $request, $id)
     {
