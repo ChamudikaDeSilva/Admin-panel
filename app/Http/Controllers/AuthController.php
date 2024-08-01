@@ -67,7 +67,7 @@ public function login(Request $request)
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-           
+
         ],
         'authorisation' => [
             'token' => $token,
@@ -75,6 +75,11 @@ public function login(Request $request)
         ]
     ]);
 }
+
+    public function getCurrentUser(Request $request)
+    {
+        return response()->json(Auth::user());
+    }
 
 
 

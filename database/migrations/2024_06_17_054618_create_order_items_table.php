@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->unsignedBigInteger('product_id');
+            $table->unsignedBigInteger('category_id');
+            $table->unsignedBigInteger('sub_category_id');
             $table->decimal('quantity');
             $table->decimal('price');
             $table->decimal('discount')->nullable();
@@ -24,6 +26,8 @@ return new class extends Migration
 
             $table->timestamps();
 
+            $table->foreign('category_id')->references('id')->on('categories');
+            $table->foreign('sub_category_id')->references('id')->on('sub_categories')->nullable();
             $table->foreign('order_id')->references('id')->on('orders');
             $table->foreign('product_id')->references('id')->on('products');
         });
