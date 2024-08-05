@@ -51,6 +51,14 @@ class FrontendPaymentController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
+        // Check if the email address in the request matches the authenticated user's email
+        $authenticatedUserEmail = Auth::user()->email;
+        $requestEmail = $validated['email'];
+
+        if ($authenticatedUserEmail !== $requestEmail) {
+            return response()->json(['message' => 'Email mismatch'], 400);
+        }
+
         // Create the PaymentIntent
         $paymentIntent = PaymentIntent::create([
             'amount' => $request->total_amount * 100, // Amount in cents
@@ -83,20 +91,21 @@ class FrontendPaymentController extends Controller
         $order->shipping_address = $validated['shippingAddress'];
         $order->total_amount = $request->input('total_amount');
         $order->payment_type = $request->input('payment_type');
-        $order->status='completed';
-        $order->payment_status='paid';
+        //$order->status='completed';
+        $order->payment_status = 'paid';
         $order->payment_currency = $request->input('payment_currency', 'LKR');
 
         $order->save();
 
         // Log the order creation
-        Log::info('Order Created', [
+        /*Log::info('Order Created', [
             'order_id' => $order->id,
             'order_code' => $order->order_code,
-        ]);
+        ]);*/
 
         return response()->json(['client_secret' => $paymentIntent->client_secret]);
     }
+
 
     public function placeOrder(Request $request)
     {
@@ -131,6 +140,14 @@ class FrontendPaymentController extends Controller
         // Check if user is authenticated
         if (!Auth::check()) {
             return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        // Check if the email address in the request matches the authenticated user's email
+        $authenticatedUserEmail = Auth::user()->email;
+        $requestEmail = $validated['email'];
+
+        if ($authenticatedUserEmail !== $requestEmail) {
+            return response()->json(['message' => 'Email mismatch'], 400);
         }
 
         // Create order
