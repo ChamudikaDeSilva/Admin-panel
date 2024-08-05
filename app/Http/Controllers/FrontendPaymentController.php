@@ -13,46 +13,20 @@ use Stripe\Stripe;
 
 class FrontendPaymentController extends Controller
 {
-    public function processPayment(Request $request)
+    public function createPaymentIntent(Request $request)
     {
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        try {
-            // Use the total amount passed from the frontend
-            $amount = $request->total_amount * 100; // Convert to cents
+        $paymentIntent = PaymentIntent::create([
+            'amount' => $request->total_amount * 100, // Amount in cents
+            'currency' => 'usd',
+            'automatic_payment_methods' => [
+                'enabled' => true,
+                'allow_redirects' => 'never',
+            ],
+        ]);
 
-            $paymentIntent = PaymentIntent::create([
-                'amount' => $amount,
-                'currency' => 'usd',
-                'payment_method' => $request->payment_method_id,
-                'confirmation_method' => 'manual',
-                'confirm' => true,
-            ]);
-
-            // Store order details in the database
-            $order = Order::create([
-                'user_id' => $request->user()->id,
-                'order_code' => $this->generateOrderCode(),
-                'date' => Carbon::now()->toDateString(),
-                'total_amount' => $amount, // Convert to appropriate currency unit
-                'billing_address' => $request->formData['billingAddress'],
-                'shipping_address' => $request->formData['shippingAddress'],
-                'payment_type' => 'card',
-                'payment_currency' => 'USD', // or whatever currency you prefer
-                'status' => 'pending',
-                'payment_status' => 'unpaid'
-            ]);
-
-            return response()->json([
-                'success' => true,
-                'paymentIntent' => $paymentIntent,
-                'order' => $order
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => $e->getMessage()
-            ]);
-        }
+        return response()->json(['client_secret' => $paymentIntent->client_secret]);
     }
 
     public function placeOrder(Request $request)

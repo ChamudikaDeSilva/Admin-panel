@@ -107,6 +107,6 @@ Route::middleware('auth:api')->get('auth/user', [AuthController::class, 'getCurr
 
 Route::middleware('auth:api')->group(function () {
 
-    Route::post('process-payment', [FrontendPaymentController::class, 'processPayment']);
+    Route::post('/create-payment-intent', [FrontendPaymentController::class, 'createPaymentIntent']);
     Route::post('place-order', [FrontendPaymentController::class, 'placeOrder']);
 });
