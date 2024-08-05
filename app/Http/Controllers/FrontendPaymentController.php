@@ -17,6 +17,41 @@ class FrontendPaymentController extends Controller
     {
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
+        // Log the incoming request data for debugging
+        /*Log::info('Create Payment Intent Request', [
+            'total_amount' => $request->input('total_amount'),
+            'payment_type' => $request->input('payment_type'),
+            'formData' => $request->input('formData'),
+        ]);*/
+
+        // Validate request data
+        $request->validate([
+            'total_amount' => 'required|numeric',
+            'payment_type' => 'required|string',
+            'payment_currency' => 'string|default:LKR',
+            'formData' => 'required|array', // Ensure formData is validated as an array
+        ]);
+
+        // Extract and validate form data
+        $formData = $request->input('formData');
+        $validated = Validator::make($formData, [
+            'firstName' => 'required|string|max:255',
+            'lastName' => 'required|string|max:255',
+            'billingAddress' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'postalCode' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'shippingAddress' => 'required|string|max:255',
+        ])->validate();
+
+        // Check if the user is authenticated
+        if (!Auth::check()) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        // Create the PaymentIntent
         $paymentIntent = PaymentIntent::create([
             'amount' => $request->total_amount * 100, // Amount in cents
             'currency' => 'usd',
@@ -24,6 +59,40 @@ class FrontendPaymentController extends Controller
                 'enabled' => true,
                 'allow_redirects' => 'never',
             ],
+        ]);
+
+        // Log the payment intent creation
+        /*Log::info('Payment Intent Created', [
+            'payment_intent_id' => $paymentIntent->id,
+            'client_secret' => $paymentIntent->client_secret,
+        ]);*/
+
+        // Create order in the database
+        $order = new Order();
+        $order->user_id = Auth::id();
+        $order->date = Carbon::now()->toDateString();
+        $order->first_name = $validated['firstName'];
+        $order->last_name = $validated['lastName'];
+        $order->order_code = 'ORD-' . strtoupper(uniqid());
+        $order->billing_address = $validated['billingAddress'];
+        $order->city = $validated['city'];
+        $order->country = $validated['country'];
+        $order->postal_code = $validated['postalCode'];
+        $order->phone = $validated['phone'];
+        $order->email = $validated['email'];
+        $order->shipping_address = $validated['shippingAddress'];
+        $order->total_amount = $request->input('total_amount');
+        $order->payment_type = $request->input('payment_type');
+        $order->status='completed';
+        $order->payment_status='paid';
+        $order->payment_currency = $request->input('payment_currency', 'LKR');
+
+        $order->save();
+
+        // Log the order creation
+        Log::info('Order Created', [
+            'order_id' => $order->id,
+            'order_code' => $order->order_code,
         ]);
 
         return response()->json(['client_secret' => $paymentIntent->client_secret]);
