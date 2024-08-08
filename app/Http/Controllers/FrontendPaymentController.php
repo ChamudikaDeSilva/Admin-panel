@@ -109,13 +109,10 @@ class FrontendPaymentController extends Controller
 
     public function placeOrder(Request $request)
     {
-        //Log::info('Request Data:', [$request->all()]);
+        //Log::info('Received placeOrder request');
 
-        // Extract formData from the request
-        $formData = $request->input('formData');
-
-        // Validate formData array
-        $validated = Validator::make($formData, [
+        // Validate the form data
+        $validated = Validator::make($request->input('formData'), [
             'firstName' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
             'billingAddress' => 'required|string|max:255',
@@ -127,30 +124,45 @@ class FrontendPaymentController extends Controller
             'shippingAddress' => 'required|string|max:255',
         ])->validate();
 
-        // Validate other fields
+        //Log::info('Form data validated successfully', $validated);
+
+        // Validate the rest of the request data
         $request->validate([
             'total_amount' => 'required|numeric',
             'payment_type' => 'required|string',
             'payment_currency' => 'string|default:LKR',
-
         ]);
 
-        //Log::info('Validated Data:', $validated);
+        //Log::info('Total amount, payment type, and currency validated successfully');
 
-        // Check if user is authenticated
+        // Check if the user is authenticated
         if (!Auth::check()) {
+            Log::error('User is not authenticated');
             return response()->json(['message' => 'Unauthorized'], 401);
         }
 
-        // Check if the email address in the request matches the authenticated user's email
+        //Log::info('User is authenticated', ['user_id' => Auth::id()]);
+
+        // Ensure the email in the request matches the authenticated user's email
         $authenticatedUserEmail = Auth::user()->email;
         $requestEmail = $validated['email'];
 
-        if ($authenticatedUserEmail !== $requestEmail) {
+        /*Log::info('Checking email match', [
+            'authenticated_email' => $authenticatedUserEmail,
+            'request_email' => $requestEmail
+        ]);*/
+
+        if (strtolower($authenticatedUserEmail) !== strtolower($requestEmail)) {
+            Log::error('Email mismatch', [
+                'authenticated_email' => $authenticatedUserEmail,
+                'request_email' => $requestEmail
+            ]);
             return response()->json(['message' => 'Email mismatch'], 400);
         }
 
-        // Create order
+        //Log::info('Emails match, proceeding to create order');
+
+        // Create a new order
         $order = new Order();
         $order->user_id = Auth::id();
         $order->date = Carbon::now()->toDateString();
@@ -168,10 +180,16 @@ class FrontendPaymentController extends Controller
         $order->payment_type = $request->input('payment_type');
         $order->payment_currency = $request->input('payment_currency', 'LKR');
 
+        //Log::info('Saving order', ['order' => $order->toArray()]);
+
+        // Save the order
         $order->save();
+
+        //Log::info('Order placed successfully', ['order_id' => $order->id]);
 
         return response()->json(['message' => 'Order placed successfully!', 'order' => $order], 201);
     }
+
 
     private function generateOrderCode()
     {
