@@ -97,6 +97,8 @@ class FrontendPaymentController extends Controller
 
         $order->save();
 
+        
+
         // Log the order creation
         /*Log::info('Order Created', [
             'order_id' => $order->id,
