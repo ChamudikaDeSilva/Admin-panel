@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,19 +18,13 @@ class FrontendPaymentController extends Controller
     {
         Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        // Log the incoming request data for debugging
-        /*Log::info('Create Payment Intent Request', [
-            'total_amount' => $request->input('total_amount'),
-            'payment_type' => $request->input('payment_type'),
-            'formData' => $request->input('formData'),
-        ]);*/
-
         // Validate request data
         $request->validate([
             'total_amount' => 'required|numeric',
             'payment_type' => 'required|string',
             'payment_currency' => 'string|default:LKR',
-            'formData' => 'required|array', // Ensure formData is validated as an array
+            'formData' => 'required|array',
+            'cartData' => 'required|array', // Ensure cartData is validated as an array
         ]);
 
         // Extract and validate form data
@@ -69,12 +64,6 @@ class FrontendPaymentController extends Controller
             ],
         ]);
 
-        // Log the payment intent creation
-        /*Log::info('Payment Intent Created', [
-            'payment_intent_id' => $paymentIntent->id,
-            'client_secret' => $paymentIntent->client_secret,
-        ]);*/
-
         // Create order in the database
         $order = new Order();
         $order->user_id = Auth::id();
@@ -91,106 +80,117 @@ class FrontendPaymentController extends Controller
         $order->shipping_address = $validated['shippingAddress'];
         $order->total_amount = $request->input('total_amount');
         $order->payment_type = $request->input('payment_type');
-        //$order->status='completed';
         $order->payment_status = 'paid';
         $order->payment_currency = $request->input('payment_currency', 'LKR');
 
         $order->save();
 
-        
+        // Deduct the quantity from each product in the order
+        $cartItems = $request->input('cartData')['items'];
 
-        // Log the order creation
-        /*Log::info('Order Created', [
-            'order_id' => $order->id,
-            'order_code' => $order->order_code,
-        ]);*/
+        foreach ($cartItems as $cartItem) {
+            $product = Product::find($cartItem['id']);
+            if ($product) {
+                // Extract the numeric part of the unit
+                preg_match('/\d+/', $product->unit, $matches);
+                $unitValue = $matches[0] ?? 1; // Default to 1 if no numeric value is found
+
+                // Calculate the new quantity
+                $newQuantity = $product->quantity - ($cartItem['quantity'] * $unitValue);
+
+                if ($newQuantity >= 0) {
+                    $product->quantity = $newQuantity;
+                    $product->save();
+                } else {
+                    // Handle case where there's not enough stock
+                    return response()->json(['message' => 'Insufficient stock for product ID: ' . $cartItem['id']], 400);
+                }
+            }
+        }
+
+
 
         return response()->json(['client_secret' => $paymentIntent->client_secret]);
     }
-
-
     public function placeOrder(Request $request)
-    {
-        //Log::info('Received placeOrder request');
+{
+    // Validate the form data
+    $validated = Validator::make($request->input('formData'), [
+        'firstName' => 'required|string|max:255',
+        'lastName' => 'required|string|max:255',
+        'billingAddress' => 'required|string|max:255',
+        'city' => 'required|string|max:255',
+        'country' => 'required|string|max:255',
+        'postalCode' => 'required|string|max:255',
+        'phone' => 'required|string|max:255',
+        'email' => 'required|email|max:255',
+        'shippingAddress' => 'required|string|max:255',
+    ])->validate();
 
-        // Validate the form data
-        $validated = Validator::make($request->input('formData'), [
-            'firstName' => 'required|string|max:255',
-            'lastName' => 'required|string|max:255',
-            'billingAddress' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'country' => 'required|string|max:255',
-            'postalCode' => 'required|string|max:255',
-            'phone' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'shippingAddress' => 'required|string|max:255',
-        ])->validate();
+    // Validate the rest of the request data
+    $request->validate([
+        'total_amount' => 'required|numeric',
+        'payment_type' => 'required|string',
+        'payment_currency' => 'string|default:LKR',
+    ]);
 
-        //Log::info('Form data validated successfully', $validated);
-
-        // Validate the rest of the request data
-        $request->validate([
-            'total_amount' => 'required|numeric',
-            'payment_type' => 'required|string',
-            'payment_currency' => 'string|default:LKR',
-        ]);
-
-        //Log::info('Total amount, payment type, and currency validated successfully');
-
-        // Check if the user is authenticated
-        if (!Auth::check()) {
-            Log::error('User is not authenticated');
-            return response()->json(['message' => 'Unauthorized'], 401);
-        }
-
-        //Log::info('User is authenticated', ['user_id' => Auth::id()]);
-
-        // Ensure the email in the request matches the authenticated user's email
-        $authenticatedUserEmail = Auth::user()->email;
-        $requestEmail = $validated['email'];
-
-        /*Log::info('Checking email match', [
-            'authenticated_email' => $authenticatedUserEmail,
-            'request_email' => $requestEmail
-        ]);*/
-
-        if (strtolower($authenticatedUserEmail) !== strtolower($requestEmail)) {
-            Log::error('Email mismatch', [
-                'authenticated_email' => $authenticatedUserEmail,
-                'request_email' => $requestEmail
-            ]);
-            return response()->json(['message' => 'Email mismatch'], 400);
-        }
-
-        //Log::info('Emails match, proceeding to create order');
-
-        // Create a new order
-        $order = new Order();
-        $order->user_id = Auth::id();
-        $order->date = Carbon::now()->toDateString();
-        $order->first_name = $validated['firstName'];
-        $order->last_name = $validated['lastName'];
-        $order->order_code = 'ORD-' . strtoupper(uniqid());
-        $order->billing_address = $validated['billingAddress'];
-        $order->city = $validated['city'];
-        $order->country = $validated['country'];
-        $order->postal_code = $validated['postalCode'];
-        $order->phone = $validated['phone'];
-        $order->email = $validated['email'];
-        $order->shipping_address = $validated['shippingAddress'];
-        $order->total_amount = $request->input('total_amount');
-        $order->payment_type = $request->input('payment_type');
-        $order->payment_currency = $request->input('payment_currency', 'LKR');
-
-        //Log::info('Saving order', ['order' => $order->toArray()]);
-
-        // Save the order
-        $order->save();
-
-        //Log::info('Order placed successfully', ['order_id' => $order->id]);
-
-        return response()->json(['message' => 'Order placed successfully!', 'order' => $order], 201);
+    // Check if the user is authenticated
+    if (!Auth::check()) {
+        return response()->json(['message' => 'Unauthorized'], 401);
     }
+
+    // Ensure the email in the request matches the authenticated user's email
+    $authenticatedUserEmail = Auth::user()->email;
+    $requestEmail = $validated['email'];
+
+    if (strtolower($authenticatedUserEmail) !== strtolower($requestEmail)) {
+        return response()->json(['message' => 'Email mismatch'], 400);
+    }
+
+    // Create a new order
+    $order = new Order();
+    $order->user_id = Auth::id();
+    $order->date = Carbon::now()->toDateString();
+    $order->first_name = $validated['firstName'];
+    $order->last_name = $validated['lastName'];
+    $order->order_code = 'ORD-' . strtoupper(uniqid());
+    $order->billing_address = $validated['billingAddress'];
+    $order->city = $validated['city'];
+    $order->country = $validated['country'];
+    $order->postal_code = $validated['postalCode'];
+    $order->phone = $validated['phone'];
+    $order->email = $validated['email'];
+    $order->shipping_address = $validated['shippingAddress'];
+    $order->total_amount = $request->input('total_amount');
+    $order->payment_type = $request->input('payment_type');
+    $order->payment_currency = $request->input('payment_currency', 'LKR');
+
+    // Save the order
+    $order->save();
+
+    // Deduct quantity from the products
+    foreach ($request->input('cartData.items') as $cartItem) {
+        $product = Product::find($cartItem['id']);
+        if ($product) {
+            // Extract the numeric part of the unit
+            preg_match('/\d+/', $product->unit, $matches);
+            $unitValue = $matches[0] ?? 1; // Default to 1 if no numeric value is found
+
+            // Calculate the new quantity
+            $newQuantity = $product->quantity - ($cartItem['quantity'] * $unitValue);
+
+            if ($newQuantity >= 0) {
+                $product->quantity = $newQuantity;
+                $product->save();
+            } else {
+                return response()->json(['message' => 'Insufficient stock for product ID: ' . $cartItem['id']], 400);
+            }
+        }
+    }
+
+    return response()->json(['message' => 'Order placed successfully!', 'order' => $order], 201);
+}
+
 
 
     private function generateOrderCode()
