@@ -19,8 +19,9 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->decimal('quantity')->default(0);
-            $table->decimal('price');
+            $table->decimal('unit_price');
             $table->boolean('isAvailable')->nullable()->default('0');
+            $table->string('unit');
             $table->string('image')->nullable();
 
             $table->timestamps();

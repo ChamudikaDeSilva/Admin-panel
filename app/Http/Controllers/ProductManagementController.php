@@ -41,7 +41,7 @@ class ProductManagementController extends Controller
     public function createProduct(Request $request)
     {
         try {
-            Log::info('create product request data: ', $request->all());
+            //Log::info('create product request data: ', $request->all());
 
             // Validate incoming request data
             $validator = Validator::make($request->all(), [
@@ -55,6 +55,7 @@ class ProductManagementController extends Controller
                 'image' => 'required|image|max:2048',
                 'discounts' => 'nullable|array', // Validate discounts as an array
                 'discounts.*' => 'exists:discounts,id', // Validate each discount ID exists in the discounts table
+                'unit' => 'required|string',
             ]);
 
             if ($validator->fails()) {
@@ -80,7 +81,8 @@ class ProductManagementController extends Controller
             $product->name = $request->input('name');
             $product->description = $request->input('description');
             $product->quantity = $request->input('quantity');
-            $product->price = $request->input('price');
+            $product->unit_price = $request->input('price');
+            $product->unit=$request->input('unit');
             $product->category_id = $request->input('category_id');
             $product->sub_category_id = $request->input('subcategory_id');
             $product->isAvailable = $request->input('isAvailable', false);
@@ -159,10 +161,11 @@ class ProductManagementController extends Controller
             'category_id' => 'required|integer|exists:categories,id',
             'subcategory_id' => 'nullable|integer|exists:sub_categories,id',
             'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
+            'unit_price' => 'required|numeric|min:0',
             'quantity' => 'required|numeric|min:0',
             'availability' => 'required|boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'unit'=> 'required|string',
         ]);
 
         if ($validator->fails()) {
@@ -179,9 +182,11 @@ class ProductManagementController extends Controller
                 'category_id' => $request->category_id,
                 'sub_category_id' => $request->subcategory_id,
                 'description' => $request->description,
-                'price' => $request->price,
+                'unit_price' => $request->unit_price,
                 'quantity' => $request->quantity,
                 'isAvailable' => $request->availability,
+                'unit'=>$request->unit,
+
             ]);
 
             // Handle image upload (if provided)

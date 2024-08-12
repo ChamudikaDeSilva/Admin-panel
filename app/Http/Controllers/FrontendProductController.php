@@ -21,8 +21,8 @@ class FrontendProductController extends Controller
 
         // Fetch price range from products
         $priceRange = Product::select(
-            DB::raw('MIN(price) as min_price'),
-            DB::raw('MAX(price) as max_price')
+            DB::raw('MIN(unit_price) as min_price'),
+            DB::raw('MAX(unit_price) as max_price')
         )->first();
 
         // Fetch discount types from the 'discounts' table enum field 'type'
@@ -58,7 +58,7 @@ class FrontendProductController extends Controller
         }
 
         if ($minPrice !== null && $maxPrice !== null) {
-            $query->whereBetween('price', [$minPrice, $maxPrice]);
+            $query->whereBetween('unit_price', [$minPrice, $maxPrice]);
         }
 
         if ($discountType) {

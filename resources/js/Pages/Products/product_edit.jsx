@@ -26,11 +26,12 @@ export default function EditProduct() {
         category_id: product.category_id || '',
         subcategory_id: product.sub_category_id || '',
         description: product.description || '',
-        price: product.price || '',
+        unit_price: product.unit_price || '',
         quantity: product.quantity || '',
         availability: product.isAvailable || false,
         image: null,
         existingImage: product.image || '',
+        unit:product.unit || '',
     });
 
     const handleChange = (e) => {
@@ -82,9 +83,10 @@ export default function EditProduct() {
         formData.append('category_id', data.category_id);
         formData.append('subcategory_id', data.subcategory_id || '');
         formData.append('description', data.description);
-        formData.append('price', data.price);
+        formData.append('unit_price', data.unit_price);
         formData.append('quantity', data.quantity);
         formData.append('availability', data.availability);
+        formData.append('unit', data.unit);
 
         if (data.image instanceof File) {
             formData.append('image', data.image);
@@ -185,16 +187,16 @@ export default function EditProduct() {
                                 </div>
 
                                 <div className="mt-4 w-full max-w-md">
-                                    <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
+                                    <label htmlFor="price" className="block text-sm font-medium text-gray-700">Unit Price</label>
                                     <input
                                         id="price"
                                         type="number"
-                                        name="price"
-                                        value={data.price}
+                                        name="unit_price"
+                                        value={data.unit_price}
                                         onChange={handleChange}
                                         className="mt-1 block w-full border-gray-300 focus:border-lime-500 focus:outline-none focus:ring-lime-500 rounded-md shadow-sm"
                                     />
-                                    {errors.price && <div className="text-red-600">{errors.price}</div>}
+                                    {errors.unit_price && <div className="text-red-600">{errors.unit_price}</div>}
                                 </div>
 
                                 <div className="mt-4 w-full max-w-md">
@@ -208,6 +210,18 @@ export default function EditProduct() {
                                         className="mt-1 block w-full border-gray-300 focus:border-lime-500 focus:outline-none focus:ring-lime-500 rounded-md shadow-sm"
                                     />
                                     {errors.quantity && <div className="text-red-600">{errors.quantity}</div>}
+                                </div>
+
+                                <div className="mt-4 w-full max-w-md">
+                                    <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">Unit</label>
+                                    <input
+                                        id="unit"
+                                        name="unit"
+                                        value={data.unit}
+                                        onChange={handleChange}
+                                        className="mt-1 block w-full border-gray-300 focus:border-lime-500 focus:outline-none focus:ring-lime-500 rounded-md shadow-sm"
+                                    />
+                                    {errors.unit && <div className="text-red-600">{errors.unit}</div>}
                                 </div>
 
                                 <div className="mt-4 w-full max-w-md">
