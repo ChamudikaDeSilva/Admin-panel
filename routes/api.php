@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DiscountController;
+use App\Http\Controllers\FrontendOrdersController;
 use App\Http\Controllers\FrontendPaymentController;
 use App\Http\Controllers\FrontendProductController;
 use Illuminate\Http\Request;
@@ -103,10 +104,11 @@ Route::middleware(['api'])->group(function () {
     Route::post('auth/login', [AuthController::class, 'login']);
 });
 
-Route::middleware('auth:api')->get('auth/user', [AuthController::class, 'getCurrentUser']);
+//Route::middleware('auth:api')->get('auth/user', [AuthController::class, 'getCurrentUser']);
 
 Route::middleware('auth:api')->group(function () {
-
+    Route::post('auth/user', [AuthController::class, 'getCurrentUser']);
     Route::post('/create-payment-intent', [FrontendPaymentController::class, 'createPaymentIntent']);
     Route::post('place-order', [FrontendPaymentController::class, 'placeOrder']);
+    Route::get('/fetch-order', [FrontendOrdersController::class, 'fetchorders']);
 });
