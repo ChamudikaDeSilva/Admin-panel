@@ -15,6 +15,9 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('discount_id');
             $table->unsignedBigInteger('product_id');
+            $table->decimal('discount_amount');
+            $table->decimal('previous_price');
+            $table->decimal('current_price');
             $table->timestamps();
 
             $table->foreign('discount_id')->references('id')->on('discounts');
