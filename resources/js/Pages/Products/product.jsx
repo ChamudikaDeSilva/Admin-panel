@@ -110,9 +110,11 @@ export default function Products({ auth }) {
         }
 
         // Append discounts to the formDataToSend
-        formData.discounts.forEach((discount, index) => {
-            formDataToSend.append(`discounts[${index}]`, discount);
-        });
+        if (formData.discounts && formData.discounts.length > 0) {
+            formData.discounts.forEach((discount, index) => {
+                formDataToSend.append(`discounts[${index}]`, discount);
+            });
+        }
 
         try {
             const response = await axios.post(route('products.store'), formDataToSend);

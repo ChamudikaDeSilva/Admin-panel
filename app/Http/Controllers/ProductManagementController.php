@@ -41,8 +41,6 @@ class ProductManagementController extends Controller
     public function createProduct(Request $request)
     {
         try {
-            //Log::info('create product request data: ', $request->all());
-
             // Validate incoming request data
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
@@ -53,8 +51,8 @@ class ProductManagementController extends Controller
                 'subcategory_id' => 'nullable|exists:sub_categories,id',
                 'isAvailable' => 'nullable|boolean',
                 'image' => 'required|image|max:2048',
-                'discounts' => 'nullable|array', // Validate discounts as an array
-                'discounts.*' => 'exists:discounts,id', // Validate each discount ID exists in the discounts table
+                'discounts' => 'nullable|array',
+                'discounts.*' => 'exists:discounts,id',
                 'unit' => 'required|string',
             ]);
 
@@ -65,14 +63,14 @@ class ProductManagementController extends Controller
             // Handle image upload
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = $image->getClientOriginalName(); // Consider using a unique name to avoid conflicts
-                $imagePath = $image->storeAs('products', $imageName, 'public'); // Store image in storage/app/public/products
-                $imageUrl = Storage::url($imagePath); // Generate URL for the stored image
+                $imageName = $image->getClientOriginalName();
+                $imagePath = $image->storeAs('products', $imageName, 'public');
+                $imageUrl = Storage::url($imagePath);
             } else {
                 return response()->json(['error' => 'Image file is required.'], 422);
             }
 
-            // Generate unique slug based on product name
+            // Generate unique slug
             $slug = Str::slug($request->input('name'), '-');
             $slug = $this->makeUniqueSlug($slug);
 
@@ -82,7 +80,7 @@ class ProductManagementController extends Controller
             $product->description = $request->input('description');
             $product->quantity = $request->input('quantity');
             $product->unit_price = $request->input('price');
-            $product->unit=$request->input('unit');
+            $product->unit = $request->input('unit');
             $product->category_id = $request->input('category_id');
             $product->sub_category_id = $request->input('subcategory_id');
             $product->isAvailable = $request->input('isAvailable', false);
@@ -94,10 +92,37 @@ class ProductManagementController extends Controller
             // Attach discounts to the product
             if ($request->has('discounts')) {
                 $discounts = $request->input('discounts');
+
                 foreach ($discounts as $discountId) {
+                    $discount = Discount::find($discountId);
+
+                    // Check if product already has a discount
+                    $existingDiscount = DB::table('discount_products')
+                        ->where('product_id', $product->id)
+                        ->first();
+
+                    if ($existingDiscount) {
+                        $previousPrice = $existingDiscount->current_price;
+                    } else {
+                        $previousPrice = $product->unit_price;
+                    }
+
+                    // Calculate discount amount and current price
+                    if ($discount->type == 'fixed') {
+                        $discountAmount = $previousPrice - $discount->value;
+                    } elseif ($discount->type == 'percentage') {
+                        $discountAmount = $previousPrice * ($discount->value / 100);
+                    }
+
+                    $currentPrice = $previousPrice - $discountAmount;
+
+                    // Insert into discount_products table
                     DB::table('discount_products')->insert([
                         'product_id' => $product->id,
                         'discount_id' => $discountId,
+                        'discount_amount' => $discountAmount,
+                        'previous_price' => $previousPrice,
+                        'current_price' => $currentPrice,
                     ]);
                 }
             }
@@ -109,6 +134,7 @@ class ProductManagementController extends Controller
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
     }
+
 
 
 
