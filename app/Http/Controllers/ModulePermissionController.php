@@ -23,23 +23,23 @@ class ModulePermissionController extends Controller
     public function modulePermissionIndex()
     {
         $roles = Role::all();
-        $modules=Module::all();
-        $permissions=Permission::all();
+        $modules = Module::all();
+        $permissions = Permission::all();
 
         return response()->json([
             'roles' => $roles,
             'modules' => $modules,
-            'permissions'=>$permissions,
+            'permissions' => $permissions,
         ]);
     }
 
     public function store(Request $request)
     {
-        $data = $request->only(['role_id','module_id','permission_id','name']);
+        $data = $request->only(['role_id', 'module_id', 'permission_id', 'name']);
 
         ModulePermission::create($data);
 
-        return response()->json(['message' => 'Permission added Successfully!'],200);
+        return response()->json(['message' => 'Permission added Successfully!'], 200);
     }
 
     public function destroy(Request $request)
@@ -57,6 +57,7 @@ class ModulePermissionController extends Controller
     public function fetchModulePermissions($roleId)
     {
         $permissions = ModulePermission::where('role_id', $roleId)->get();
+
         return response()->json($permissions);
     }
 }

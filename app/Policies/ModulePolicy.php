@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Module;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\DB;
 
 class ModulePolicy
@@ -22,26 +21,25 @@ class ModulePolicy
      */
     public function view(User $user, Module $module)
     {
-        $permissionName='Module_View';
+        $permissionName = 'Module_View';
 
         return DB::table('module_permissions')
-        ->where('role_id',$user->role_id)
-        ->where('name',$permissionName)
-        ->exists();
+            ->where('role_id', $user->role_id)
+            ->where('name', $permissionName)
+            ->exists();
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user,Module $module)
+    public function create(User $user, Module $module)
     {
-        $permissionName='Module_Create';
-
+        $permissionName = 'Module_Create';
 
         return DB::table('module_permissions')
-        ->where('role_id',$user->role_id)
-        ->where('name',$permissionName)
-        ->exists();
+            ->where('role_id', $user->role_id)
+            ->where('name', $permissionName)
+            ->exists();
     }
 
     /**

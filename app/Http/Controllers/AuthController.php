@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -26,7 +25,7 @@ class AuthController extends Controller
 
         $user = User::create([
             'name' => $request->name,
-            'role_id'=>'3',
+            'role_id' => '3',
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
@@ -35,8 +34,6 @@ class AuthController extends Controller
 
         return response()->json(compact('user', 'token'));
     }
-
-
 
     public function login(Request $request)
     {
@@ -49,9 +46,8 @@ class AuthController extends Controller
         // Extract the credentials from the request
         $credentials = $request->only('email', 'password');
 
-
         // Attempt to authenticate the user
-        if (!$token = JWTAuth::attempt($credentials)) {
+        if (! $token = JWTAuth::attempt($credentials)) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Unauthorized',
@@ -73,7 +69,7 @@ class AuthController extends Controller
             'authorisation' => [
                 'token' => $token,
                 'type' => 'bearer',
-            ]
+            ],
         ]);
     }
 
@@ -99,7 +95,7 @@ class AuthController extends Controller
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => Auth::factory()->getTTL() * 60
+            'expires_in' => Auth::factory()->getTTL() * 60,
         ]);
     }
 

@@ -4,9 +4,7 @@ namespace App\Policies;
 
 use App\Models\Dashboard;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\DB;
-
 
 class DashboardPolicy
 {
@@ -23,7 +21,7 @@ class DashboardPolicy
      */
     public function view(User $user, Dashboard $dashboard)
     {
-        $permissionName = "Dashboard_View";
+        $permissionName = 'Dashboard_View';
 
         return DB::table('module_permissions')
             ->where('role_id', $user->role_id)

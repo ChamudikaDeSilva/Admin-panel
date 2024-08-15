@@ -22,9 +22,9 @@ class CategoryController extends Controller
     public function fetchCategories()
     {
         $categories = Category::all();
+
         return response()->json(['categories' => $categories]);
     }
-
 
     public function createCategory(Request $request)
     {
@@ -35,8 +35,9 @@ class CategoryController extends Controller
 
         if ($validator->fails()) {
             Log::error('Validation failed for createCategory', [
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ]);
+
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
@@ -47,7 +48,7 @@ class CategoryController extends Controller
             ]);
 
             Log::info('Category created successfully', [
-                'category' => $category
+                'category' => $category,
             ]);
 
             return response()->json(['message' => 'Category created successfully'], 201);
@@ -55,24 +56,25 @@ class CategoryController extends Controller
         } catch (\Exception $e) {
             Log::error('Error creating category', [
                 'exception' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
+
             return response()->json(['message' => 'Internal Server Error'], 500);
         }
     }
 
     public function editCategory($id)
-{
-    $category = Category::findOrFail($id);
-    $authUser = auth()->guard('web')->user();
+    {
+        $category = Category::findOrFail($id);
+        $authUser = auth()->guard('web')->user();
 
-    Log::info('Authenticated User Data: ', ['authUser' => $authUser]);
+        Log::info('Authenticated User Data: ', ['authUser' => $authUser]);
 
-    return Inertia::render('Products/category_edit', [
-        'category' => $category,
-        'auth' => $authUser,
-    ]);
-}
+        return Inertia::render('Products/category_edit', [
+            'category' => $category,
+            'auth' => $authUser,
+        ]);
+    }
 
     public function updateCategory(Request $request, $id)
     {
@@ -95,12 +97,13 @@ class CategoryController extends Controller
     {
         $category = Category::find($id);
 
-        if (!$category) {
+        if (! $category) {
             return response()->json(['message' => 'Category not found'], 404);
         }
 
         try {
             $category->delete();
+
             return response()->json(['message' => 'Category deleted successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to delete category'], 500);
@@ -113,6 +116,7 @@ class CategoryController extends Controller
 
         if (is_array($categoryIds) && count($categoryIds) > 0) {
             Category::whereIn('id', $categoryIds)->delete();
+
             return response()->json(['message' => 'Categories deleted successfully']);
         }
 

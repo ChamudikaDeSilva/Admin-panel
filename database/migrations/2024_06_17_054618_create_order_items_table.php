@@ -17,12 +17,11 @@ return new class extends Migration
             $table->unsignedBigInteger('product_id');
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('sub_category_id');
-            $table->decimal('quantity');
+            $table->string('quantity');
             $table->decimal('price');
             $table->decimal('discount')->nullable();
             $table->decimal('discount_price')->nullable();
             $table->decimal('subtotal');
-
 
             $table->timestamps();
 

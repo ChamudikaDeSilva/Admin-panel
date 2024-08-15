@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class UserManagementController extends Controller
@@ -23,9 +23,9 @@ class UserManagementController extends Controller
     public function fetchAdmins()
     {
         $admins = User::where('role_id', 2)->get();
+
         return response()->json(['admins' => $admins]);
     }
-
 
     public function createAdmin(Request $request)
     {
@@ -34,7 +34,7 @@ class UserManagementController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-          ]);
+        ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
@@ -52,6 +52,7 @@ class UserManagementController extends Controller
 
         return response()->json(['message' => 'Admin created successfully'], 201);
     }
+
     public function editAdmin($id)
     {
         $user = User::findOrFail($id);
@@ -95,12 +96,13 @@ class UserManagementController extends Controller
     {
         $user = User::find($id);
 
-        if (!$user) {
+        if (! $user) {
             return response()->json(['message' => 'User not found'], 404);
         }
 
         try {
             $user->delete();
+
             return response()->json(['message' => 'User deleted successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to delete user'], 500);
@@ -114,7 +116,7 @@ class UserManagementController extends Controller
 
         try {
             // Flip the value of isDisabled
-            $user->is_disabled = !$user->is_disabled; // Toggle the value
+            $user->is_disabled = ! $user->is_disabled; // Toggle the value
 
             // Save the updated value to the database
             $user->save();
@@ -130,6 +132,7 @@ class UserManagementController extends Controller
     public function getAdminStatus($id)
     {
         $user = User::findOrFail($id);
+
         return response()->json(['is_disabled' => $user->is_disabled], 200);
     }
 
@@ -142,15 +145,10 @@ class UserManagementController extends Controller
 
         if (is_array($userIds) && count($userIds) > 0) {
             User::whereIn('id', $userIds)->delete();
+
             return response()->json(['message' => 'Admins deleted successfully']);
         }
 
         return response()->json(['message' => 'No admins selected'], 400);
     }
-
-
-
-
-
-
 }

@@ -9,7 +9,7 @@ export default function Welcome({ auth, laravelVersion, phpVersion }) {
                         <div className="container mx-auto h-full sm:p-10">
                             <nav className="flex px-4 justify-between items-center">
                                 <div className="text-7xl font-bold">
-                                    <span className="text-lime-500">Pamona's Harvest Haven</span>
+                                    <span className="bg-clip-text text-transparent bg-gradient-to-r from-lime-500 to-green-600 via-amber-400">Pamona's Harvest Haven</span>
                                 </div>
                                 <div>
                                     <img src="https://image.flaticon.com/icons/svg/497/497348.svg" alt="" className="w-8"></img>

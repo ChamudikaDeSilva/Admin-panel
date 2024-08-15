@@ -23,9 +23,9 @@ class SubCategoryController extends Controller
     public function fetchSubCategories()
     {
         $subcategories = SubCategory::with('category')->get();
+
         return response()->json(['subcategories' => $subcategories]);
     }
-
 
     public function createSubCategory(Request $request)
     {
@@ -37,8 +37,9 @@ class SubCategoryController extends Controller
 
         if ($validator->fails()) {
             Log::error('Validation failed for createSubCategory', [
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ]);
+
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
@@ -50,7 +51,7 @@ class SubCategoryController extends Controller
             ]);
 
             Log::info('SubCategory created successfully', [
-                'subcategory' => $subcategory
+                'subcategory' => $subcategory,
             ]);
 
             return response()->json(['message' => 'SubCategory created successfully', 'subcategory' => $subcategory], 201);
@@ -58,8 +59,9 @@ class SubCategoryController extends Controller
         } catch (\Exception $e) {
             Log::error('Error creating subcategory', [
                 'exception' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
             ]);
+
             return response()->json(['message' => 'Internal Server Error'], 500);
         }
     }
@@ -71,17 +73,15 @@ class SubCategoryController extends Controller
         return Inertia::render('Products/sub_category_edit', [
             'subcategory' => $subcategory,
             'categories' => $categories,
-            'auth' => auth()->user()
+            'auth' => auth()->user(),
         ]);
     }
-
-
 
     public function updateSubCategory(Request $request, SubCategory $subcategory)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id'
+            'category_id' => 'required|exists:categories,id',
         ]);
 
         if ($validator->fails()) {
@@ -99,6 +99,7 @@ class SubCategoryController extends Controller
     public function destroySubCategory(SubCategory $subcategory)
     {
         $subcategory->delete();
+
         return response()->json(['message' => 'Subcategory deleted successfully']);
     }
 
@@ -108,6 +109,7 @@ class SubCategoryController extends Controller
 
         if (is_array($subcategoryIds) && count($subcategoryIds) > 0) {
             SubCategory::whereIn('id', $subcategoryIds)->delete();
+
             return response()->json(['message' => 'Sub Categories deleted successfully']);
         }
 

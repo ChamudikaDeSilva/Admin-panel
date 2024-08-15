@@ -23,9 +23,9 @@ return new class extends Migration
             $table->string('phone');
             $table->string('email');
             $table->date('date');
-            $table->decimal('total_amount',8, 2);
-            $table->enum('status',['pending','processing','completed','cancelled'])->default('pending');
-            $table->enum('payment_status',['paid','unpaid','refunded'])->default('unpaid');
+            $table->decimal('total_amount', 8, 2);
+            $table->enum('status', ['pending', 'processing', 'completed', 'cancelled'])->default('pending');
+            $table->enum('payment_status', ['paid', 'unpaid', 'refunded'])->default('unpaid');
             $table->text('shipping_address')->nullable();
             $table->text('billing_address')->nullable();
             $table->string('payment_type');

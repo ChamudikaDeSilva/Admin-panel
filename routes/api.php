@@ -6,14 +6,14 @@ use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\FrontendOrdersController;
 use App\Http\Controllers\FrontendPaymentController;
 use App\Http\Controllers\FrontendProductController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ModulePermissionController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductManagementController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\UserManagementController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,7 +56,6 @@ Route::put('/user/management/disable/admin/{id}', [UserManagementController::cla
 Route::get('/user/management/admin/status/{id}', [UserManagementController::class, 'getAdminStatus'])->name('admins.getUserStatus');
 Route::post('/user/management/admin/delete/multiple', [UserManagementController::class, 'deleteMultiple'])->name('admins.deleteMultiple');
 
-
 //Product Management
 //------Category Management
 Route::post('/product/management/category/create', [CategoryController::class, 'createCategory'])->name('categories.store');
@@ -87,17 +86,9 @@ Route::post('/product/management/delete/multiple/discounts', [DiscountController
 Route::put('/product/management/update/discounts/{discountId}', [DiscountController::class, 'updateDiscount'])->name('discount.update');
 Route::delete('/product/management/delete/discounts/{discount}', [DiscountController::class, 'destroyDiscount'])->name('discounts.delete');
 
-
-
-
-
-
 //------Frontend API--------------------------------
 Route::get('/shop/data/fetch', [FrontendProductController::class, 'shopIndex']);
 Route::get('/shop/product/fetch', [FrontendProductController::class, 'fetchProducts']);
-
-
-
 
 Route::middleware(['api'])->group(function () {
     Route::post('auth/register', [AuthController::class, 'register']);

@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Discount;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Product;
 use App\Models\SubCategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class DiscountController extends Controller
@@ -22,7 +22,6 @@ class DiscountController extends Controller
             'discounts' => $discounts,
         ]);
     }
-
 
     public function fetchDiscounts()
     {
@@ -45,7 +44,6 @@ class DiscountController extends Controller
         }
     }
 
-
     public function createDiscount(Request $request)
     {
         $request->validate([
@@ -58,7 +56,7 @@ class DiscountController extends Controller
 
         // Generate a unique code for the discount
         $latestDiscount = Discount::latest()->first(); // Get the latest discount
-        $code = 'disc' . str_pad(optional($latestDiscount)->id + 1, 3, '0', STR_PAD_LEFT); // Generate new code
+        $code = 'disc'.str_pad(optional($latestDiscount)->id + 1, 3, '0', STR_PAD_LEFT); // Generate new code
 
         $discount = Discount::create([
             'code' => $code,
@@ -78,6 +76,7 @@ class DiscountController extends Controller
 
         if (is_array($discountIds) && count($discountIds) > 0) {
             Discount::whereIn('id', $discountIds)->delete();
+
             return response()->json(['message' => 'Discounts deleted successfully']);
         }
 
@@ -126,31 +125,26 @@ class DiscountController extends Controller
 
             return response()->json(['message' => 'Discount updated successfully', 'discount' => $discount], 200);
         } catch (\Exception $e) {
-            Log::error('Error updating discount: ' . $e->getMessage());
+            Log::error('Error updating discount: '.$e->getMessage());
+
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
     }
-
 
     public function destroyDiscount($id)
     {
         $discount = Discount::find($id);
 
-        if (!$discount) {
+        if (! $discount) {
             return response()->json(['message' => 'Discount not found'], 404);
         }
 
         try {
             $discount->delete();
+
             return response()->json(['message' => 'Discount deleted successfully'], 200);
         } catch (\Exception $e) {
             return response()->json(['message' => 'Failed to delete discount'], 500);
         }
     }
-
-
-
-
-
-
 }

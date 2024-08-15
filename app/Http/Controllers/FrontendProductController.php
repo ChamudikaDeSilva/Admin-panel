@@ -8,7 +8,6 @@ use App\Models\DiscountProduct;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class FrontendProductController extends Controller
 {
@@ -76,8 +75,4 @@ class FrontendProductController extends Controller
 
         return response()->json($products);
     }
-
-
-
-
 }
