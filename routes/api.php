@@ -107,7 +107,7 @@ Route::middleware(['api'])->group(function () {
 //Route::middleware('auth:api')->get('auth/user', [AuthController::class, 'getCurrentUser']);
 
 Route::middleware('auth:api')->group(function () {
-    Route::post('auth/user', [AuthController::class, 'getCurrentUser']);
+    Route::get('auth/user', [AuthController::class, 'getCurrentUser']);
     Route::post('/create-payment-intent', [FrontendPaymentController::class, 'createPaymentIntent']);
     Route::post('place-order', [FrontendPaymentController::class, 'placeOrder']);
     Route::get('/fetch-order', [FrontendOrdersController::class, 'fetchorders']);
