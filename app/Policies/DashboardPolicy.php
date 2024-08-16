@@ -19,7 +19,7 @@ class DashboardPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Dashboard $dashboard)
+    public function view(User $user)
     {
         $permissionName = 'Dashboard_View';
 

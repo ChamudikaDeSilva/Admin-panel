@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Policies\DashboardPolicy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
@@ -29,7 +30,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-
+        //$this->authorize('view', DashboardPolicy::class);
+        
         $request->authenticate();
 
         $request->session()->regenerate();
