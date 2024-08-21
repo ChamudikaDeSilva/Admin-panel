@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DealController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ModulePermissionController;
@@ -69,3 +70,6 @@ Route::get('/product/management/products/edit/{product}', [ProductManagementCont
 
 Route::get('/product/management/discounts', [DiscountController::class, 'discountIndex'])->middleware(['auth', 'verified'])->name('discount_management');
 Route::get('/product/management/discounts/edit/{product}', [DiscountController::class, 'editDiscount'])->middleware(['auth', 'verified'])->name('discounts.edit');
+
+Route::get('/product/management/deals', [DealController::class, 'dealIndex'])->middleware(['auth', 'verified'])->name('deal_management');
+Route::get('/product/management/deals/edit/{deal}', [DealController::class, 'editDeal'])->middleware(['auth', 'verified'])->name('deals.edit');
