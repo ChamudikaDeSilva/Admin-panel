@@ -18,10 +18,10 @@ return new class extends Migration
             $table->unsignedBigInteger('category_id');
             $table->unsignedBigInteger('sub_category_id');
             $table->string('quantity');
-            $table->decimal('price');
-            $table->decimal('discount')->nullable();
-            $table->decimal('discount_price')->nullable();
-            $table->decimal('subtotal');
+            $table->decimal('unit_price');
+            $table->decimal('current_price');
+
+
 
             $table->timestamps();
 

@@ -94,6 +94,14 @@ export default function Authenticated({ user, header, children }) {
                                 -Discounts
                             </Link>
                         </li>
+                        <li>
+                            <Link
+                                href={route('deal_management')}
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                            >
+                                -Deals
+                            </Link>
+                        </li>
                     </SidebarDropdown>
 
                     <SidebarDropdown title={<><FontAwesomeIcon icon={faSackDollar} className="mr-2" /> Orders</>} >
