@@ -8,6 +8,7 @@ use App\Http\Controllers\FrontendPaymentController;
 use App\Http\Controllers\FrontendProductController;
 use App\Http\Controllers\ModuleController;
 use App\Http\Controllers\ModulePermissionController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\ProductManagementController;
 use App\Http\Controllers\SubCategoryController;
@@ -102,4 +103,5 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/create-payment-intent', [FrontendPaymentController::class, 'createPaymentIntent']);
     Route::post('place-order', [FrontendPaymentController::class, 'placeOrder']);
     Route::get('/fetch-order', [FrontendOrdersController::class, 'fetchorders']);
+    Route::get('/user/order-count', [OrderController::class, 'getOrderCount']);
 });

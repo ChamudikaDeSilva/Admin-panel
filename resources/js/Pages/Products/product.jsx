@@ -507,7 +507,7 @@ export default function Products({ auth }) {
                                         id="discounts"
                                         name="discounts"
                                         isMulti
-                                        options={discounts.map(discount => ({ value: discount.id, label: discount.code }))}
+                                        options={discounts.map(discount => ({ value: discount.id, label: discount.description }))}
                                         onChange={handleDiscountChange}
                                         className="mt-1"
                                     />
