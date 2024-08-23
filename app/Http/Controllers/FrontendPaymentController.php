@@ -7,6 +7,7 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
@@ -28,6 +29,7 @@ class FrontendPaymentController extends Controller
 
         // Extract and validate form data
         $formData = $request->input('formData');
+
         $validated = Validator::make($formData, [
             'firstName' => 'required|string|max:255',
             'lastName' => 'required|string|max:255',
@@ -97,15 +99,26 @@ class FrontendPaymentController extends Controller
                 // Multiply product quantity by 1000 (assuming it's in kg and needs to be converted to g)
                 $productQuantityInGrams = $product->quantity * 1000;
 
-                // Calculate the new quantity
-                $newQuantity = $productQuantityInGrams - ($cartItem['quantity'] * $unitValue);
+                //Log::info($productQuantityInGrams);
 
-                if ($newQuantity >= 0) {
+                $ProductQuantityInRequest=($cartItem['quantity'] * $unitValue);
+                //Log::info($ProductQuantityInRequest);
+                $newQuantity = $productQuantityInGrams - $ProductQuantityInRequest;
+
+                //Log::info($newQuantity);
+                //if ($newQuantity >= $ProductQuantityInRequest) {
+
+                // Calculate the new quantity
+                //$newQuantity = $productQuantityInGrams - ($cartItem['quantity'] * $unitValue);
+
+                if ($productQuantityInGrams >= $ProductQuantityInRequest) {
                     // Convert the new quantity back to kg
                     $product->quantity = $newQuantity / 1000;
                     $product->save();
                 } else {
-                    return response()->json(['message' => 'Insufficient stock for product ID: '.$cartItem['id']], 400);
+                    $product->isAvailable = false;
+                    $product->save();
+                    return response()->json(['message' => 'Insufficient stock at the moment for product ID: '.$cartItem['id']], 400);
                 }
             }
         }
@@ -180,15 +193,20 @@ class FrontendPaymentController extends Controller
                 // Multiply product quantity by 1000 (assuming it's in kg and needs to be converted to g)
                 $productQuantityInGrams = $product->quantity * 1000;
 
-                // Calculate the new quantity
-                $newQuantity = $productQuantityInGrams - ($cartItem['quantity'] * $unitValue);
+                $ProductQuantityInRequest=($cartItem['quantity'] * $unitValue);
 
-                if ($newQuantity >= 0) {
+                // Calculate the new quantity
+                $newQuantity = $productQuantityInGrams - $ProductQuantityInRequest;
+
+
+                if ($productQuantityInGrams >= $ProductQuantityInRequest){
                     // Convert the new quantity back to kg
                     $product->quantity = $newQuantity / 1000;
                     $product->save();
                 } else {
-                    return response()->json(['message' => 'Insufficient stock for product ID: '.$cartItem['id']], 400);
+                    $product->isAvailable = false;
+                    $product->save();
+                    return response()->json(['message' => 'Insufficient stock at the moment for product ID: '.$cartItem['id']], 400);
                 }
             }
         }

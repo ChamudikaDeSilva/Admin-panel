@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\SubCategory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
@@ -135,16 +136,32 @@ class DiscountController extends Controller
     {
         $discount = Discount::find($id);
 
-        if (! $discount) {
+        if (!$discount) {
             return response()->json(['message' => 'Discount not found'], 404);
         }
 
         try {
-            $discount->delete();
+            // Deactivate the discount
+            $discount->is_active = 0;
+            $discount->save();
 
-            return response()->json(['message' => 'Discount deleted successfully'], 200);
+            // Find products with the discount ID
+            $discountedProducts = DB::table('discount_products')
+                ->where('discount_id', $id)
+                ->get();
+
+            foreach ($discountedProducts as $discountProduct) {
+                // Update the current_price in the products table
+                DB::table('products')
+                    ->where('id', $discountProduct->product_id)
+                    ->update([
+                        'current_price' => DB::raw('current_price + ' . $discountProduct->discount_amount)
+                    ]);
+            }
+
+            return response()->json(['message' => 'Discount deactivated and prices updated successfully'], 200);
         } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to delete discount'], 500);
+            return response()->json(['message' => 'Failed to deactivate discount and update prices'], 500);
         }
     }
 }

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('discount_amount');
             $table->decimal('previous_price');
             $table->decimal('current_price');
+            $table->boolean('is_active')->default('1');
             $table->timestamps();
 
             $table->foreign('discount_id')->references('id')->on('discounts');

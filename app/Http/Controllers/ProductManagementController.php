@@ -187,6 +187,11 @@ class ProductManagementController extends Controller
         // Log incoming request data
         Log::info('Received request data:', ['request' => $request->all()]);
 
+        // Convert availability to boolean
+        $request->merge([
+            'availability' => filter_var($request->availability, FILTER_VALIDATE_BOOLEAN),
+        ]);
+
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -219,7 +224,6 @@ class ProductManagementController extends Controller
                 'quantity' => $request->quantity,
                 'isAvailable' => $request->availability,
                 'unit' => $request->unit,
-
             ]);
 
             // Handle image upload (if provided)
@@ -249,6 +253,7 @@ class ProductManagementController extends Controller
             return response()->json(['message' => 'Internal server error'], 500);
         }
     }
+
 
     public function destroyProduct(Product $product)
     {

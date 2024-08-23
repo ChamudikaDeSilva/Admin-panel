@@ -24,6 +24,8 @@ return new class extends Migration
             $table->string('email');
             $table->date('date');
             $table->decimal('total_amount', 8, 2);
+            $table->decimal('order_discounted_total', 8, 2)->nullable();
+            $table->decimal('order_discount', 8, 2)->nullable();
             $table->enum('status', ['pending', 'processing', 'completed', 'cancelled'])->default('pending');
             $table->enum('payment_status', ['paid', 'unpaid', 'refunded'])->default('unpaid');
             $table->text('shipping_address')->nullable();
