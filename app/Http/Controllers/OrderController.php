@@ -26,4 +26,42 @@ class OrderController extends Controller
             'fifth_order_discount' => $fifthOrderDiscount->value ?? 0,
         ]);
     }
+
+    public function getOrdersByUser()
+    {
+        $user = Auth::user();
+
+        $orders = Order::where('user_id', $user->id)->get();
+
+        return response()->json(['orders' => $orders]);
+    }
+
+    public function getOrderDetailsById($orderId)
+    {
+        try {
+            Log::info("Fetching order details for order ID: {$orderId}");
+
+            // Fetch the order with related items and product details
+            $order = Order::with(['items.product'])->where('id', $orderId)->first();
+
+            if (!$order) {
+                Log::warning("Order not found for order ID: {$orderId}");
+                return response()->json(['message' => 'Order not found'], 404);
+            }
+
+            // Add the product name to each order item
+            foreach ($order->items as $item) {
+                $item->product_name = $item->product->name; // Assuming the 'Product' model has a 'name' attribute
+            }
+
+            Log::info("Order found: ", $order->toArray());
+
+            return response()->json(['order' => $order], 200);
+        } catch (\Exception $e) {
+            Log::error("Error fetching order details for order ID: {$orderId}. Error: {$e->getMessage()}");
+
+            return response()->json(['message' => 'Error fetching order details'], 500);
+        }
+    }
+
 }
