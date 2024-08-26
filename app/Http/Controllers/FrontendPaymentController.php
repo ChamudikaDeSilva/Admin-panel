@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Discount;
 use App\Models\Order;
+use App\Models\OrderDiscount;
 use App\Models\OrderItem;
 use App\Models\Product;
 use Carbon\Carbon;
@@ -24,6 +26,8 @@ class FrontendPaymentController extends Controller
             'payment_currency' => 'string|default:LKR',
             'formData' => 'required|array',
             'cartData' => 'required|array',
+            'total_without_Discount' => 'nullable|numeric',
+            'final_Discount' => 'nullable|numeric',
         ]);
 
         $validated = $this->validateAndExtractFormData($request);
@@ -53,6 +57,10 @@ class FrontendPaymentController extends Controller
         $quantityCheck = $this->adjustProductQuantity($request->input('cartData')['items']);
         if ($quantityCheck) {
             return $quantityCheck;
+        }
+
+        if (!is_null($request->total_without_Discount) && !is_null($request->final_Discount)) {
+            $this->createOrderDiscounts($order->id, $request->total_without_Discount, $request->final_Discount);
         }
 
         return response()->json(['client_secret' => $paymentIntent->client_secret]);
@@ -165,6 +173,40 @@ class FrontendPaymentController extends Controller
         }
     }
 
+    private function createOrderDiscounts($orderId, $totalWithoutDiscount, $finalDiscount)
+    {
+        $user = Auth::user();
+        $orderCount = Order::where('user_id', $user->id)->count();
+
+        // Determine the discount code based on the order count
+        $discountCode = null;
+        if ($orderCount === 1) {
+            $discountCode = 'disc001'; // First order discount
+        } elseif ($orderCount % 5 === 0) {
+            $discountCode = 'disc002'; // Fifth order or multiple of five discount
+        }
+
+        if ($discountCode) {
+            // Find the discount ID by the discount code
+            $discount = Discount::where('code', $discountCode)->first();
+
+            if ($discount) {
+                $orderDiscount = new OrderDiscount();
+                $orderDiscount->order_id = $orderId;
+                $orderDiscount->discount_id = $discount->id;
+                $orderDiscount->discount_amount = $finalDiscount;
+                $orderDiscount->previous_price = $totalWithoutDiscount;
+                $orderDiscount->current_price = $totalWithoutDiscount - $finalDiscount;
+
+                $orderDiscount->save();
+            } else {
+                // Handle case where the discount is not found
+                return response()->json(['message' => 'Discount code not found'], 400);
+            }
+        }
+    }
+
+
     public function placeOrder(Request $request)
     {
         // Validate the rest of the request data
@@ -172,6 +214,8 @@ class FrontendPaymentController extends Controller
             'total_amount' => 'required|numeric',
             'payment_type' => 'required|string',
             'payment_currency' => 'string|default:LKR',
+            'total_without_Discount' => 'nullable|numeric',
+            'final_Discount' => 'nullable|numeric',
         ]);
 
         $validated = $this->validateAndExtractFormData($request);
@@ -193,6 +237,10 @@ class FrontendPaymentController extends Controller
         $quantityCheck = $this->adjustProductQuantity($request->input('cartData')['items']);
         if ($quantityCheck) {
             return $quantityCheck;
+        }
+
+        if (!is_null($request->total_without_Discount) && !is_null($request->final_Discount)) {
+            $this->createOrderDiscounts($order->id, $request->total_without_Discount, $request->final_Discount);
         }
 
         return response()->json(['message' => 'Order placed successfully!', 'order' => $order], 201);
