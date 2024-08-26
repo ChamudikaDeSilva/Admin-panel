@@ -136,7 +136,7 @@ class DiscountController extends Controller
     {
         $discount = Discount::find($id);
 
-        if (!$discount) {
+        if (! $discount) {
             return response()->json(['message' => 'Discount not found'], 404);
         }
 
@@ -155,7 +155,7 @@ class DiscountController extends Controller
                 DB::table('products')
                     ->where('id', $discountProduct->product_id)
                     ->update([
-                        'current_price' => DB::raw('current_price + ' . $discountProduct->discount_amount)
+                        'current_price' => DB::raw('current_price + '.$discountProduct->discount_amount),
                     ]);
             }
 

@@ -7,7 +7,6 @@ use App\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Stripe\PaymentIntent;
 use Stripe\Stripe;
@@ -15,117 +14,121 @@ use Stripe\Stripe;
 class FrontendPaymentController extends Controller
 {
     public function createPaymentIntent(Request $request)
-{
-    Stripe::setApiKey(env('STRIPE_SECRET'));
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET'));
 
-    $request->validate([
-        'total_amount' => 'required|numeric',
-        'payment_type' => 'required|string',
-        'payment_currency' => 'string|default:LKR',
-        'formData' => 'required|array',
-        'cartData' => 'required|array',
-    ]);
+        $request->validate([
+            'total_amount' => 'required|numeric',
+            'payment_type' => 'required|string',
+            'payment_currency' => 'string|default:LKR',
+            'formData' => 'required|array',
+            'cartData' => 'required|array',
+        ]);
 
-    $validated = $this->validateAndExtractFormData($request);
+        $validated = $this->validateAndExtractFormData($request);
 
-    if (! Auth::check()) {
-        return response()->json(['message' => 'Unauthorized'], 401);
+        if (! Auth::check()) {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+
+        $emailCheck = $this->checkEmailMatch($validated['email']);
+        if ($emailCheck) {
+            return $emailCheck;
+        }
+
+        $paymentIntent = PaymentIntent::create([
+            'amount' => $request->total_amount * 100, // Amount in cents
+            'currency' => 'usd',
+            'automatic_payment_methods' => [
+                'enabled' => true,
+                'allow_redirects' => 'never',
+            ],
+        ]);
+
+        $order = $this->createOrder($validated, $request->total_amount, $request->input('payment_type'), $request->input('payment_currency', 'LKR'));
+
+        $quantityCheck = $this->adjustProductQuantity($request->input('cartData')['items']);
+        if ($quantityCheck) {
+            return $quantityCheck;
+        }
+
+        return response()->json(['client_secret' => $paymentIntent->client_secret]);
     }
 
-    $emailCheck = $this->checkEmailMatch($validated['email']);
-    if ($emailCheck) return $emailCheck;
+    private function validateAndExtractFormData(Request $request)
+    {
+        $formData = $request->input('formData');
 
-    $paymentIntent = PaymentIntent::create([
-        'amount' => $request->total_amount * 100, // Amount in cents
-        'currency' => 'usd',
-        'automatic_payment_methods' => [
-            'enabled' => true,
-            'allow_redirects' => 'never',
-        ],
-    ]);
-
-    $order = $this->createOrder($validated, $request->total_amount, $request->input('payment_type'), $request->input('payment_currency', 'LKR'));
-
-    $quantityCheck = $this->adjustProductQuantity($request->input('cartData')['items']);
-    if ($quantityCheck) return $quantityCheck;
-
-    return response()->json(['client_secret' => $paymentIntent->client_secret]);
-}
-
-private function validateAndExtractFormData(Request $request)
-{
-    $formData = $request->input('formData');
-
-    return Validator::make($formData, [
-        'firstName' => 'required|string|max:255',
-        'lastName' => 'required|string|max:255',
-        'billingAddress' => 'required|string|max:255',
-        'city' => 'required|string|max:255',
-        'country' => 'required|string|max:255',
-        'postalCode' => 'required|string|max:255',
-        'phone' => 'required|string|max:255',
-        'email' => 'required|email|max:255',
-        'shippingAddress' => 'required|string|max:255',
-    ])->validate();
-}
-
-private function checkEmailMatch($validatedEmail)
-{
-    $authenticatedUserEmail = Auth::user()->email;
-    if ($authenticatedUserEmail !== $validatedEmail) {
-        return response()->json(['message' => 'Email mismatch'], 400);
+        return Validator::make($formData, [
+            'firstName' => 'required|string|max:255',
+            'lastName' => 'required|string|max:255',
+            'billingAddress' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'postalCode' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'shippingAddress' => 'required|string|max:255',
+        ])->validate();
     }
-}
 
-private function createOrder($validated, $totalAmount, $paymentType, $paymentCurrency)
-{
-    $order = new Order;
-    $order->user_id = Auth::id();
-    $order->date = Carbon::now()->toDateString();
-    $order->first_name = $validated['firstName'];
-    $order->last_name = $validated['lastName'];
-    $order->order_code = 'ORD-'.strtoupper(uniqid());
-    $order->billing_address = $validated['billingAddress'];
-    $order->city = $validated['city'];
-    $order->country = $validated['country'];
-    $order->postal_code = $validated['postalCode'];
-    $order->phone = $validated['phone'];
-    $order->email = $validated['email'];
-    $order->shipping_address = $validated['shippingAddress'];
-    $order->total_amount = $totalAmount;
-    $order->payment_type = $paymentType;
-    $order->payment_status = 'paid';
-    $order->payment_currency = $paymentCurrency;
+    private function checkEmailMatch($validatedEmail)
+    {
+        $authenticatedUserEmail = Auth::user()->email;
+        if ($authenticatedUserEmail !== $validatedEmail) {
+            return response()->json(['message' => 'Email mismatch'], 400);
+        }
+    }
 
-    $order->save();
+    private function createOrder($validated, $totalAmount, $paymentType, $paymentCurrency)
+    {
+        $order = new Order;
+        $order->user_id = Auth::id();
+        $order->date = Carbon::now()->toDateString();
+        $order->first_name = $validated['firstName'];
+        $order->last_name = $validated['lastName'];
+        $order->order_code = 'ORD-'.strtoupper(uniqid());
+        $order->billing_address = $validated['billingAddress'];
+        $order->city = $validated['city'];
+        $order->country = $validated['country'];
+        $order->postal_code = $validated['postalCode'];
+        $order->phone = $validated['phone'];
+        $order->email = $validated['email'];
+        $order->shipping_address = $validated['shippingAddress'];
+        $order->total_amount = $totalAmount;
+        $order->payment_type = $paymentType;
+        $order->payment_status = 'paid';
+        $order->payment_currency = $paymentCurrency;
 
-    return $order;
-}
+        $order->save();
 
-private function adjustProductQuantity($cartItems)
-{
-    foreach ($cartItems as $cartItem) {
-        $product = Product::find($cartItem['id']);
-        if ($product) {
-            preg_match('/\d+/', $product->unit, $matches);
-            $unitValue = $matches[0] ?? 1; // Default to 1 if no numeric value is found
+        return $order;
+    }
 
-            $productQuantityInGrams = $product->quantity * 1000;
-            $ProductQuantityInRequest = ($cartItem['quantity'] * $unitValue);
-            $newQuantity = $productQuantityInGrams - $ProductQuantityInRequest;
+    private function adjustProductQuantity($cartItems)
+    {
+        foreach ($cartItems as $cartItem) {
+            $product = Product::find($cartItem['id']);
+            if ($product) {
+                preg_match('/\d+/', $product->unit, $matches);
+                $unitValue = $matches[0] ?? 1; // Default to 1 if no numeric value is found
 
-            if ($productQuantityInGrams >= $ProductQuantityInRequest) {
-                $product->quantity = $newQuantity / 1000;
-                $product->save();
-            } else {
-                $product->isAvailable = false;
-                $product->save();
-                return response()->json(['message' => 'Insufficient stock at the moment for product ID: '.$cartItem['id']], 400);
+                $productQuantityInGrams = $product->quantity * 1000;
+                $ProductQuantityInRequest = ($cartItem['quantity'] * $unitValue);
+                $newQuantity = $productQuantityInGrams - $ProductQuantityInRequest;
+
+                if ($productQuantityInGrams >= $ProductQuantityInRequest) {
+                    $product->quantity = $newQuantity / 1000;
+                    $product->save();
+                } else {
+                    $product->isAvailable = false;
+                    $product->save();
+
+                    return response()->json(['message' => 'Insufficient stock at the moment for product ID: '.$cartItem['id']], 400);
+                }
             }
         }
     }
-}
-
 
     public function placeOrder(Request $request)
     {
@@ -194,19 +197,19 @@ private function adjustProductQuantity($cartItems)
                 // Multiply product quantity by 1000 (assuming it's in kg and needs to be converted to g)
                 $productQuantityInGrams = $product->quantity * 1000;
 
-                $ProductQuantityInRequest=($cartItem['quantity'] * $unitValue);
+                $ProductQuantityInRequest = ($cartItem['quantity'] * $unitValue);
 
                 // Calculate the new quantity
                 $newQuantity = $productQuantityInGrams - $ProductQuantityInRequest;
 
-
-                if ($productQuantityInGrams >= $ProductQuantityInRequest){
+                if ($productQuantityInGrams >= $ProductQuantityInRequest) {
                     // Convert the new quantity back to kg
                     $product->quantity = $newQuantity / 1000;
                     $product->save();
                 } else {
                     $product->isAvailable = false;
                     $product->save();
+
                     return response()->json(['message' => 'Insufficient stock at the moment for product ID: '.$cartItem['id']], 400);
                 }
             }

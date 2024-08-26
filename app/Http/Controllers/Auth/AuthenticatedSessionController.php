@@ -31,7 +31,7 @@ class AuthenticatedSessionController extends Controller
     public function store(LoginRequest $request)
     {
         //$this->authorize('view', DashboardPolicy::class);
-        
+
         $request->authenticate();
 
         $request->session()->regenerate();

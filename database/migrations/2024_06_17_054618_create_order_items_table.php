@@ -21,8 +21,6 @@ return new class extends Migration
             $table->decimal('unit_price');
             $table->decimal('current_price');
 
-
-
             $table->timestamps();
 
             $table->foreign('category_id')->references('id')->on('categories');

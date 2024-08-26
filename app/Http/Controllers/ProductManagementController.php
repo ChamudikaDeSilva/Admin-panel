@@ -137,12 +137,11 @@ class ProductManagementController extends Controller
 
             return response()->json(['message' => 'Product created successfully', 'product' => $product], 201);
         } catch (\Exception $e) {
-            Log::error('Error creating product: ' . $e->getMessage());
+            Log::error('Error creating product: '.$e->getMessage());
 
             return response()->json(['error' => 'Internal Server Error'], 500);
         }
     }
-
 
     /**
      * Helper function to make slug unique if already exists.
@@ -253,7 +252,6 @@ class ProductManagementController extends Controller
             return response()->json(['message' => 'Internal server error'], 500);
         }
     }
-
 
     public function destroyProduct(Product $product)
     {
