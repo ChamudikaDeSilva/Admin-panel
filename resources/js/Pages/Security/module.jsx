@@ -1,30 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
-
 export default function Modules({ auth, modules: initialModules }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [moduleName, setModuleName] = useState("");
-    const [modules, setModules] = useState([initialModules]);
+    const [modules, setModules] = useState(initialModules); // Corrected initialization
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [selectedModule, setSelectedModule] = useState(null);
-
-    useEffect(() => {
-        fetchModules();
-    }, []);
-
-    const fetchModules = async () => {
-        try {
-            const response = await axios.get("/api/modules/get");
-            setModules(response.data.modules);
-        } catch (error) {
-            console.error("Error fetching modules:", error);
-        }
-    };
 
     const openModal = () => setIsModalOpen(true);
     const closeModal = () => setIsModalOpen(false);
@@ -32,14 +18,12 @@ export default function Modules({ auth, modules: initialModules }) {
     const handleModuleNameChange = (e) => setModuleName(e.target.value);
 
     const handleSubmit = async (e) => {
-        axios.defaults.withCredentials = true;
-        axios.defaults.withXSRFToken = true;
         e.preventDefault();
         try {
             const response = await axios.post("/api/modules/create", {
                 name: moduleName,
             });
-            setModules([...modules, response.data]);
+            setModules([...modules, response.data]); // Append new module to the state
             setModuleName("");
             closeModal();
         } catch (error) {
@@ -55,9 +39,7 @@ export default function Modules({ auth, modules: initialModules }) {
     const handleDeleteConfirm = async () => {
         try {
             await axios.delete(`/api/modules/delete/${selectedModule.id}`);
-            setModules(
-                modules.filter((module) => module.id !== selectedModule.id)
-            );
+            setModules(modules.filter((module) => module.id !== selectedModule.id)); // Remove deleted module
             setIsDeleteModalOpen(false);
             setSelectedModule(null);
         } catch (error) {
