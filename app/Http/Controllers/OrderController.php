@@ -37,31 +37,42 @@ class OrderController extends Controller
     }
 
     public function getOrderDetailsById($orderId)
-    {
-        try {
-            Log::info("Fetching order details for order ID: {$orderId}");
+{
+    try {
+        Log::info("Fetching order details for order ID: {$orderId}");
 
-            // Fetch the order with related items and product details
-            $order = Order::with(['items.product'])->where('id', $orderId)->first();
+        // Fetch the order with related items, product details, and discounts
+        $order = Order::with(['items.product', 'discounts'])->where('id', $orderId)->first();
 
-            if (!$order) {
-                Log::warning("Order not found for order ID: {$orderId}");
-                return response()->json(['message' => 'Order not found'], 404);
-            }
-
-            // Add the product name to each order item
-            foreach ($order->items as $item) {
-                $item->product_name = $item->product->name; // Assuming the 'Product' model has a 'name' attribute
-            }
-
-            Log::info("Order found: ", $order->toArray());
-
-            return response()->json(['order' => $order], 200);
-        } catch (\Exception $e) {
-            Log::error("Error fetching order details for order ID: {$orderId}. Error: {$e->getMessage()}");
-
-            return response()->json(['message' => 'Error fetching order details'], 500);
+        if (!$order) {
+            Log::warning("Order not found for order ID: {$orderId}");
+            return response()->json(['message' => 'Order not found'], 404);
         }
+
+        // Add the product name to each order item
+        foreach ($order->items as $item) {
+            $item->product_name = $item->product->name; // Assuming the 'Product' model has a 'name' attribute
+        }
+
+        // Format discount data (if any)
+        $order->discounts->transform(function ($discount) {
+            return [
+                'discount_id' => $discount->id,
+                'discount_amount' => $discount->discount_amount,
+                'previous_price' => $discount->previous_price,
+                'current_price' => $discount->current_price,
+            ];
+        });
+
+        Log::info("Order found: ", $order->toArray());
+
+        return response()->json(['order' => $order], 200);
+    } catch (\Exception $e) {
+        Log::error("Error fetching order details for order ID: {$orderId}. Error: {$e->getMessage()}");
+
+        return response()->json(['message' => 'Error fetching order details'], 500);
     }
+}
+
 
 }
