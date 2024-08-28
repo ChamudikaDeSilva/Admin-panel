@@ -184,7 +184,7 @@ class ProductManagementController extends Controller
     public function updateProduct(Request $request, $productId)
     {
         // Log incoming request data
-        Log::info('Received request data:', ['request' => $request->all()]);
+        //Log::info('Received request data:', ['request' => $request->all()]);
 
         // Convert availability to boolean
         $request->merge([
