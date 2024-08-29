@@ -109,4 +109,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/user/orders/{orderId}', [OrderController::class, 'getOrderDetailsById']);
 
 
+
+
 });
+Route::get('/order-details/{orderId}', [OrderController::class, 'getOrderStages']);

@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Discount;
 use App\Models\Order;
+use App\Models\OrderStage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
@@ -72,6 +74,34 @@ class OrderController extends Controller
 
         return response()->json(['message' => 'Error fetching order details'], 500);
     }
+}
+
+public function getOrderStages($orderId)
+{
+    /*$latestStage = OrderStage::where('order_id', $orderId)
+        ->orderBy('id', 'desc')
+        ->first();*/
+
+    $latestStage= DB::table('order_stages')
+        ->where('order_id', $orderId)
+        ->orderBy('id', 'desc')
+        ->first();
+
+    if ($latestStage)
+    {
+        $currentStage=$latestStage->stage_id;
+    }
+    else
+    {
+        $currentStage=1;
+    }
+
+    $order=Order::findOrFail($orderId);
+
+    return response()->json([
+        'order'=>$order,
+        'currentStage'=>$currentStage,
+    ]);
 }
 
 
