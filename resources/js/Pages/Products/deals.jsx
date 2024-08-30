@@ -7,7 +7,7 @@ import { faFilePen,faArrowRight,faArrowLeft } from '@fortawesome/free-solid-svg-
 
 export default function Deals({ auth }) {
 
-    const [products, setProducts] = useState([]);
+    const [deals, setDeals] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [categoriesPerPage] = useState(5);

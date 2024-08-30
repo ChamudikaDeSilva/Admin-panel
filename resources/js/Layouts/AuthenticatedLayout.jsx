@@ -33,12 +33,12 @@ export default function Authenticated({ user, header, children }) {
         <div className="min-h-screen bg-gray-100">
             <div className="flex overflow-hidden bg-gray-00">
             {/* Sidebar */}
-                <div id="sidebar"className={`absolute bg-gray-900 text-white w-56 min-h-screen overflow-y-auto transition-transform transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                } ease-in-out duration-300 shadow-lg`}
-            >
+            <div id="sidebar"
+                className={`fixed top-0 left-0 bg-black text-white w-56 min-h-screen overflow-auto transition-transform transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+                } ease-in-out duration-300 shadow-lg`}>
             <div className="p-4">
                 <div className="flex items-center justify-center mb-2">
-                    <img src="/images/logo2.jpg" alt="Logo" className="h-20 w-auto mb-2" />
+                    <img src="/images/Harvest.png" alt="Logo" className="h-32 w-auto mb-2" />
                 </div>
                 <h1 className="text-2xl font-bold text-lime-500 mb-6">Pamona's Haven</h1>
                 <ul className="space-y-4">
@@ -158,6 +158,7 @@ export default function Authenticated({ user, header, children }) {
                             </Link>
                         </li>
                     </SidebarDropdown>
+
                     <SidebarDropdown title={<><FontAwesomeIcon icon={faLock} className="mr-2" /> Users</>} >
                         <li>
                             <Link
@@ -208,7 +209,7 @@ export default function Authenticated({ user, header, children }) {
                 {/* Main Content */}
                 <div className="flex-1 flex flex-col overflow-hidden">
                     {/* Navbar */}
-                    <nav className="bg-gray-900 shadow">
+                    <nav className="bg-black shadow">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                             <div className="flex justify-between h-16">
                                 <div className="flex items-left">
@@ -269,9 +270,9 @@ export default function Authenticated({ user, header, children }) {
                                                 </span>
                                             </Dropdown.Trigger>
 
-                                            <Dropdown.Content>
-                                                <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
-                                                <Dropdown.Link href={route('logout')} method="post" as="button">
+                                            <Dropdown.Content className="bg-black">
+                                                <Dropdown.Link className="bg-black text-lime-200 hover:bg-black" href={route('profile.edit')}>Profile</Dropdown.Link>
+                                                <Dropdown.Link className="bg-black text-lime-200 hover:bg-black" href={route('logout')} method="post" as="button">
                                                     Log Out
                                                 </Dropdown.Link>
                                             </Dropdown.Content>
@@ -320,9 +321,10 @@ export default function Authenticated({ user, header, children }) {
                                 </div>
                             </div>
                         </div>
+
                     </nav>
 
-                    <main className="flex-1 overflow-auto p-4">
+                    <main className={`flex-1 ml-56 p-4 overflow-auto`}>
                         {children}
                     </main>
 
