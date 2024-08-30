@@ -104,12 +104,9 @@ Route::middleware('auth:api')->group(function () {
     Route::post('place-order', [FrontendPaymentController::class, 'placeOrder']);
     //Route::get('/fetch-order', [FrontendOrdersController::class, 'fetchorders']);
     Route::get('/user/order-count', [OrderController::class, 'getOrderCount']);
-    Route::get('/user/orders',[OrderController::class,'getOrdersByUser']);
+    Route::get('/user/orders', [OrderController::class, 'getOrdersByUser']);
 
     Route::get('/user/orders/{orderId}', [OrderController::class, 'getOrderDetailsById']);
-
-
-
 
 });
 Route::get('/order-details/{orderId}', [OrderController::class, 'getOrderStages']);

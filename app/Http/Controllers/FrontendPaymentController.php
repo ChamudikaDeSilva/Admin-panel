@@ -59,7 +59,7 @@ class FrontendPaymentController extends Controller
             return $quantityCheck;
         }
 
-        if (!is_null($request->total_without_Discount) && !is_null($request->final_Discount)) {
+        if (! is_null($request->total_without_Discount) && ! is_null($request->final_Discount)) {
             $this->createOrderDiscounts($order->id, $request->total_without_Discount, $request->final_Discount);
         }
 
@@ -160,7 +160,7 @@ class FrontendPaymentController extends Controller
                 $orderItem->product_id = $cartItem['id'];
                 $orderItem->category_id = $product->category_id; // Get category_id from the product
                 $orderItem->sub_category_id = $product->sub_category_id; // Get sub_category_id from the product
-                $orderItem->quantity = $adjustedQuantity . ' ' . preg_replace('/\d+/', '', $product->unit); // Save the quantity with the unit (e.g., 500 g)
+                $orderItem->quantity = $adjustedQuantity.' '.preg_replace('/\d+/', '', $product->unit); // Save the quantity with the unit (e.g., 500 g)
                 $orderItem->unit_price = $product->unit_price;
                 $orderItem->current_price = $product->current_price;
                 //$orderItem->total_price = $adjustedQuantity * $product->current_price / $unitValue; // Calculate total price based on adjusted quantity
@@ -168,7 +168,7 @@ class FrontendPaymentController extends Controller
                 $orderItem->save();
             } else {
                 // Handle case where the product is not found
-                return response()->json(['message' => 'Product not found: ' . $cartItem['id']], 400);
+                return response()->json(['message' => 'Product not found: '.$cartItem['id']], 400);
             }
         }
     }
@@ -191,7 +191,7 @@ class FrontendPaymentController extends Controller
             $discount = Discount::where('code', $discountCode)->first();
 
             if ($discount) {
-                $orderDiscount = new OrderDiscount();
+                $orderDiscount = new OrderDiscount;
                 $orderDiscount->order_id = $orderId;
                 $orderDiscount->discount_id = $discount->id;
                 $orderDiscount->discount_amount = $finalDiscount;
@@ -205,7 +205,6 @@ class FrontendPaymentController extends Controller
             }
         }
     }
-
 
     public function placeOrder(Request $request)
     {
@@ -239,7 +238,7 @@ class FrontendPaymentController extends Controller
             return $quantityCheck;
         }
 
-        if (!is_null($request->total_without_Discount) && !is_null($request->final_Discount)) {
+        if (! is_null($request->total_without_Discount) && ! is_null($request->final_Discount)) {
             $this->createOrderDiscounts($order->id, $request->total_without_Discount, $request->final_Discount);
         }
 
