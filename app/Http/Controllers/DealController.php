@@ -11,7 +11,7 @@ class DealController extends Controller
     {
         $deals = Deal::all();
 
-        return Inertia::render('Products/deal', [
+        return Inertia::render('Products/deals', [
             'deals' => $deals,
         ]);
     }

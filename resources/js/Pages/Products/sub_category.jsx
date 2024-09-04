@@ -138,13 +138,13 @@ export default function Categories({ auth }) {
                             <div className="flex flex-col sm:flex-row items-center justify-between">
                                 <div className="flex flex-col sm:flex-row items-center">
                                     <button
-                                        className="mb-2 sm:mb-0 px-4 py-2 bg-gradient-to-r from-lime-500 to-amber-500 text-white font-semibold rounded-md hover:bg-lime-700 sm:mr-2"
+                                        className="mb-2 sm:mb-0 px-4 py-2 bg-lime-500 text-white font-semibold rounded hover:bg-lime-700 sm:mr-2"
                                         onClick={openModal}
                                     >
                                         New
                                     </button>
                                     <button
-                                        className="mb-2 sm:mb-0 px-4 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-700 sm:mr-2"
+                                        className="mb-2 sm:mb-0 px-4 py-2 bg-red-500 text-white font-semibold rounded hover:bg-red-700 sm:mr-2"
                                         onClick={handleDeleteSelectedSubCategories}
                                         disabled={selectedSubCategories.length === 0}
                                     >

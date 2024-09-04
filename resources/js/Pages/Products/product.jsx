@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/react';
 import axios from 'axios';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilePen, faArrowLeft, faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faFilePen, faArrowLeft, faArrowRight, faFolderPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import Select from 'react-select';
 
 export default function Products({ auth }) {
@@ -204,21 +204,22 @@ export default function Products({ auth }) {
                             <h1 className="text-2xl font-semibold text-gray-700 mb-4 italic">Products</h1>
                                 <hr className="border-lime-500 mb-4" /> {/* Added hr element */}
                                     <div className="flex flex-col sm:flex-row items-center justify-between">
-                                        <div className="flex flex-col sm:flex-row items-center">
-                                            <button
-                                                className="mb-2 sm:mb-0 px-4 py-2 bg-gradient-to-r from-lime-500 to-amber-500 text-white font-semibold rounded-md hover:bg-lime-700 sm:mr-2"
-                                                onClick={openModal}
-                                            >
-                                                New
-                                            </button>
-                                            <button
-                                                className="mb-2 sm:mb-0 px-4 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-700 sm:mr-2"
-                                                onClick={handleDeleteSelectedProducts}
-                                                disabled={selectedProducts.length === 0}
-                                            >
-                                                Delete Selected
-                                            </button>
-                                        </div>
+                                    <div className="flex flex-col sm:flex-row items-center">
+    <FontAwesomeIcon
+        icon={faFolderPlus}
+        className="mb-2 sm:mb-0 px-4 py-2 text-lime-600 hover:text-lime-700  cursor-pointer fa-2x"
+        onClick={openModal}
+    />
+    <FontAwesomeIcon
+        icon={faTrash}
+        className={`mb-2 sm:mb-0 px-4 py-2 text-red-600 hover:text-red-700 cursor-pointer fa-2x ${selectedProducts.length === 0 ? 'cursor-not-allowed opacity-50' : ''}`}
+        onClick={handleDeleteSelectedProducts}
+        disabled={selectedProducts.length === 0}
+    />
+</div>
+
+
+
                                         <input
                                             type="text"
                                             placeholder="Search..."
@@ -330,14 +331,14 @@ export default function Products({ auth }) {
                                 <button
                                     onClick={() => paginate(currentPage - 1)}
                                     disabled={currentPage === 1}
-                                    className="px-4 py-2 mr-2 bg-lime-500 text-white font-semibold rounded-md hover:bg-amber-500"
+                                    className="px-4 py-2 mr-2 bg-lime-500 text-white font-semibold rounded-md hover:bg-lime-600"
                                 >
                                     <FontAwesomeIcon icon={faArrowLeft} />
                                 </button>
                                 <button
                                     onClick={() => paginate(currentPage + 1)}
                                     disabled={currentProducts.length < productsPerPage}
-                                    className="px-4 py-2 bg-lime-500 text-white font-semibold rounded-md hover:bg-amber-500"
+                                    className="px-4 py-2 bg-lime-500 text-white font-semibold rounded-md hover:bg-lime-600"
                                 >
                                     <FontAwesomeIcon icon={faArrowRight} />
                                 </button>
@@ -345,234 +346,234 @@ export default function Products({ auth }) {
 
                             {/* Modal */}
                             {isModalOpen && (
-    <div className="fixed z-10 inset-0 overflow-y-auto">
-        <div className="flex items-center justify-center min-h-screen">
-            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
-            <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg w-full mx-4 sm:w-full">
-                <div className="bg-white px-8 py-4 sm:p-6 sm:pb-4 flex justify-center items-center">
-                    <div className="w-full">
-                        <h3 className="text-lg leading-6 font-medium text-gray-900 text-center" id="modal-title">
-                            Create A Product
-                        </h3>
-                        <div className="mt-4">
-                            <form onSubmit={handleSubmit}>
-                                {/* Name Field */}
-                                <div className="mb-4">
-                                    <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Name
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="name"
-                                        name="name"
-                                        value={formData.name}
-                                        onChange={handleInputChange}
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
-                                        required
-                                    />
-                                    {errors.name && (
-                                        <div className="text-red-600 text-sm">{errors.name}</div>
-                                    )}
-                                </div>
+                            <div className="fixed z-10 inset-0 overflow-y-auto">
+                                <div className="flex items-center justify-center min-h-screen">
+                                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+                                    <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg w-full mx-4 sm:w-full">
+                                        <div className="bg-white px-8 py-4 sm:p-6 sm:pb-4 flex justify-center items-center">
+                                            <div className="w-full">
+                                                <h3 className="text-lg leading-6 font-medium text-gray-900 text-center" id="modal-title">
+                                                    Create A Product
+                                                </h3>
+                                                <div className="mt-4">
+                                                    <form onSubmit={handleSubmit}>
+                                                        {/* Name Field */}
+                                                        <div className="mb-4">
+                                                            <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                                                                Name
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                id="name"
+                                                                name="name"
+                                                                value={formData.name}
+                                                                onChange={handleInputChange}
+                                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
+                                                                required
+                                                            />
+                                                            {errors.name && (
+                                                                <div className="text-red-600 text-sm">{errors.name}</div>
+                                                            )}
+                                                        </div>
 
-                                {/* Description Field */}
-                                <div className="mb-4">
-                                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Description
-                                    </label>
-                                    <textarea
-                                        id="description"
-                                        name="description"
-                                        value={formData.description}
-                                        onChange={handleInputChange}
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
-                                        required
-                                    ></textarea>
-                                    {errors.description && (
-                                        <div className="text-red-600 text-sm">{errors.description}</div>
-                                    )}
-                                </div>
+                                                        {/* Description Field */}
+                                                        <div className="mb-4">
+                                                            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                                                                Description
+                                                            </label>
+                                                            <textarea
+                                                                id="description"
+                                                                name="description"
+                                                                value={formData.description}
+                                                                onChange={handleInputChange}
+                                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
+                                                                required
+                                                            ></textarea>
+                                                            {errors.description && (
+                                                                <div className="text-red-600 text-sm">{errors.description}</div>
+                                                            )}
+                                                        </div>
 
-                                <div className="grid grid-cols-2 gap-4">
-                                    {/* Quantity Field */}
-                                    <div className="mb-4">
-                                        <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
-                                            Quantity
-                                        </label>
-                                        <input
-                                            type="number"
-                                            id="quantity"
-                                            name="quantity"
-                                            value={formData.quantity}
-                                            onChange={handleInputChange}
-                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
-                                            required
-                                        />
-                                        {errors.quantity && (
-                                            <div className="text-red-600 text-sm">{errors.quantity}</div>
-                                        )}
+                                                        <div className="grid grid-cols-2 gap-4">
+                                                            {/* Quantity Field */}
+                                                            <div className="mb-4">
+                                                                <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-1">
+                                                                    Quantity
+                                                                </label>
+                                                                <input
+                                                                    type="number"
+                                                                    id="quantity"
+                                                                    name="quantity"
+                                                                    value={formData.quantity}
+                                                                    onChange={handleInputChange}
+                                                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
+                                                                    required
+                                                                />
+                                                                {errors.quantity && (
+                                                                    <div className="text-red-600 text-sm">{errors.quantity}</div>
+                                                                )}
+                                                            </div>
+
+                                                            {/* Price Field */}
+                                                            <div className="mb-4">
+                                                                <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
+                                                                    Price
+                                                                </label>
+                                                                <input
+                                                                    type="number"
+                                                                    id="price"
+                                                                    name="price"
+                                                                    value={formData.price}
+                                                                    onChange={handleInputChange}
+                                                                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
+                                                                    required
+                                                                />
+                                                                {errors.price && (
+                                                                    <div className="text-red-600 text-sm">{errors.price}</div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Unit Field */}
+                                                        <div className="mb-4">
+                                                            <label htmlFor="unit" className="block text-sm font-medium text-gray-700 mb-1">
+                                                                Unit
+                                                            </label>
+                                                            <input
+                                                                type="text"
+                                                                id="unit"
+                                                                name="unit"
+                                                                value={formData.unit}
+                                                                onChange={handleInputChange}
+                                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
+                                                                required
+                                                            />
+                                                            {errors.unit && (
+                                                                <div className="text-red-600 text-sm">{errors.unit}</div>
+                                                            )}
+                                                        </div>
+
+                                                        {/* Remaining Fields */}
+                                                        <div className="mb-4">
+                                                            <label htmlFor="category_id" className="block text-sm font-medium text-gray-700 mb-1">
+                                                                Category
+                                                            </label>
+                                                            <select
+                                                                id="category_id"
+                                                                name="category_id"
+                                                                value={formData.category_id}
+                                                                onChange={handleInputChange}
+                                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
+                                                                required
+                                                            >
+                                                                <option value="">Select a category</option>
+                                                                {categories.map((category) => (
+                                                                    <option key={category.id} value={category.id}>
+                                                                        {category.name}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
+                                                            {errors.category_id && (
+                                                                <div className="text-red-600 text-sm">{errors.category_id}</div>
+                                                            )}
+                                                        </div>
+
+                                                        {/* Subcategory Field */}
+                                                        <div className="mb-4">
+                                                            <label htmlFor="subcategory_id" className="block text-sm font-medium text-gray-700 mb-1">
+                                                                Subcategory
+                                                            </label>
+                                                            <select
+                                                                id="subcategory_id"
+                                                                name="subcategory_id"
+                                                                value={formData.subcategory_id}
+                                                                onChange={handleInputChange}
+                                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
+                                                            >
+                                                                <option value="">Select a subcategory (optional)</option>
+                                                                {subcategories.map((subcategory) => (
+                                                                    <option key={subcategory.id} value={subcategory.id}>
+                                                                        {subcategory.name}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
+                                                        </div>
+
+                                                        {/* Discounts Field */}
+                                                        <div className="mb-4">
+                                                            <label htmlFor="discounts" className="block text-sm font-medium text-gray-700 mb-1">
+                                                                Discounts
+                                                            </label>
+                                                            <Select
+                                                                id="discounts"
+                                                                name="discounts"
+                                                                isMulti
+                                                                options={discounts.map(discount => ({ value: discount.id, label: discount.description }))}
+                                                                onChange={handleDiscountChange}
+                                                                className="mt-1"
+                                                            />
+                                                        </div>
+
+                                                        {/* Availability Field */}
+                                                        <div className="mb-4">
+                                                            <label htmlFor="isAvailable" className="block text-sm font-medium text-gray-700 mb-1">
+                                                                Availability
+                                                            </label>
+                                                            <input
+                                                                type="checkbox"
+                                                                id="isAvailable"
+                                                                name="isAvailable"
+                                                                checked={formData.isAvailable}
+                                                                onChange={handleCheckboxChange}
+                                                                className="mt-1 border-gray-300 rounded shadow-sm focus:border-lime-500 focus:ring-lime-500"
+                                                            />
+                                                        </div>
+
+                                                        {/* Image Upload Field */}
+                                                        <div className="mb-4">
+                                                            <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
+                                                                Image
+                                                            </label>
+                                                            <input
+                                                                type="file"
+                                                                id="image"
+                                                                name="image"
+                                                                accept="image/*"
+                                                                onChange={handleImageChange}
+                                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
+                                                            />
+                                                            {imagePreview && (
+                                                                <img
+                                                                    src={imagePreview}
+                                                                    alt="Product Preview"
+                                                                    className="mt-2 h-32 w-auto object-contain"
+                                                                />
+                                                            )}
+                                                        </div>
+
+                                                        <div className="mt-4 sm:mt-6 flex justify-end space-x-2">
+                                                            <button
+                                                                type="button"
+                                                                onClick={closeModal}
+                                                                className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:w-auto sm:text-sm"
+                                                            >
+                                                                Discard
+                                                            </button>
+                                                            <button
+                                                                type="submit"
+                                                                className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-lime-500 text-base font-medium text-white hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:w-auto sm:text-sm"
+                                                            >
+                                                                Create
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-
-                                    {/* Price Field */}
-                                    <div className="mb-4">
-                                        <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
-                                            Price
-                                        </label>
-                                        <input
-                                            type="number"
-                                            id="price"
-                                            name="price"
-                                            value={formData.price}
-                                            onChange={handleInputChange}
-                                            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
-                                            required
-                                        />
-                                        {errors.price && (
-                                            <div className="text-red-600 text-sm">{errors.price}</div>
-                                        )}
-                                    </div>
                                 </div>
-
-                                {/* Unit Field */}
-                                <div className="mb-4">
-                                    <label htmlFor="unit" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Unit
-                                    </label>
-                                    <input
-                                        type="text"
-                                        id="unit"
-                                        name="unit"
-                                        value={formData.unit}
-                                        onChange={handleInputChange}
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
-                                        required
-                                    />
-                                    {errors.unit && (
-                                        <div className="text-red-600 text-sm">{errors.unit}</div>
-                                    )}
-                                </div>
-
-                                {/* Remaining Fields */}
-                                <div className="mb-4">
-                                    <label htmlFor="category_id" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Category
-                                    </label>
-                                    <select
-                                        id="category_id"
-                                        name="category_id"
-                                        value={formData.category_id}
-                                        onChange={handleInputChange}
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
-                                        required
-                                    >
-                                        <option value="">Select a category</option>
-                                        {categories.map((category) => (
-                                            <option key={category.id} value={category.id}>
-                                                {category.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    {errors.category_id && (
-                                        <div className="text-red-600 text-sm">{errors.category_id}</div>
-                                    )}
-                                </div>
-
-                                {/* Subcategory Field */}
-                                <div className="mb-4">
-                                    <label htmlFor="subcategory_id" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Subcategory
-                                    </label>
-                                    <select
-                                        id="subcategory_id"
-                                        name="subcategory_id"
-                                        value={formData.subcategory_id}
-                                        onChange={handleInputChange}
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
-                                    >
-                                        <option value="">Select a subcategory (optional)</option>
-                                        {subcategories.map((subcategory) => (
-                                            <option key={subcategory.id} value={subcategory.id}>
-                                                {subcategory.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                </div>
-
-                                {/* Discounts Field */}
-                                <div className="mb-4">
-                                    <label htmlFor="discounts" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Discounts
-                                    </label>
-                                    <Select
-                                        id="discounts"
-                                        name="discounts"
-                                        isMulti
-                                        options={discounts.map(discount => ({ value: discount.id, label: discount.description }))}
-                                        onChange={handleDiscountChange}
-                                        className="mt-1"
-                                    />
-                                </div>
-
-                                {/* Availability Field */}
-                                <div className="mb-4">
-                                    <label htmlFor="isAvailable" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Availability
-                                    </label>
-                                    <input
-                                        type="checkbox"
-                                        id="isAvailable"
-                                        name="isAvailable"
-                                        checked={formData.isAvailable}
-                                        onChange={handleCheckboxChange}
-                                        className="mt-1 border-gray-300 rounded shadow-sm focus:border-lime-500 focus:ring-lime-500"
-                                    />
-                                </div>
-
-                                {/* Image Upload Field */}
-                                <div className="mb-4">
-                                    <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Image
-                                    </label>
-                                    <input
-                                        type="file"
-                                        id="image"
-                                        name="image"
-                                        accept="image/*"
-                                        onChange={handleImageChange}
-                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
-                                    />
-                                    {imagePreview && (
-                                        <img
-                                            src={imagePreview}
-                                            alt="Product Preview"
-                                            className="mt-2 h-32 w-auto object-contain"
-                                        />
-                                    )}
-                                </div>
-
-                                <div className="mt-4 sm:mt-6 flex justify-end space-x-2">
-                                    <button
-                                        type="button"
-                                        onClick={closeModal}
-                                        className="inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:w-auto sm:text-sm"
-                                    >
-                                        Discard
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        className="inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-lime-500 text-base font-medium text-white hover:bg-lime-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-lime-500 sm:w-auto sm:text-sm"
-                                    >
-                                        Create
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-)}
+                            </div>
+                        )}
 
 
                             {/* Purge Modal */}
@@ -651,7 +652,6 @@ export default function Products({ auth }) {
                                     </div>
                                 </div>
                             )}
-
                         </div>
                     </div>
                 </div>
