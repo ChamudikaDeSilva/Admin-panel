@@ -158,26 +158,22 @@ export default function Products({ auth }) {
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
-                                        {currentProducts.length > 0 ? (
-                                            currentProducts.map(product => (
-                                                <tr key={product.id}>
+                                        {currentDeals.length > 0 ? (
+                                            currentDeals.map(deal => (
+                                                <tr key={deal.id}>
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         <input
                                                             type="checkbox"
-                                                            checked={selectedProducts.includes(product.id)}
-                                                            onChange={() => handleSelectProduct(product.id)}
+                                                            checked={selectedDeals.includes(deal.id)}
+                                                            onChange={() => handleSelectProduct(deal.id)}
                                                         />
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.category ? product.category.name : 'No Category'}</td>
-                                                    <td className={`px-6 py-4 whitespace-nowrap ${product.sub_category ? '' : 'text-blue-500'}`}>
-                                                        {product.sub_category ? product.sub_category.name : 'No Subcategory'}
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.description}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.quantity}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.unit}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.unit_price}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.isAvailable ? 'Yes' : 'No'}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{deal.name}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{deal.description}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{deal.quantity}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{deal.unit}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{deal.unit_price}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{deal.isAvailable ? 'Yes' : 'No'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         <img
                                                             src={product.image}

@@ -205,18 +205,18 @@ export default function Products({ auth }) {
                                 <hr className="border-lime-500 mb-4" /> {/* Added hr element */}
                                     <div className="flex flex-col sm:flex-row items-center justify-between">
                                     <div className="flex flex-col sm:flex-row items-center">
-    <FontAwesomeIcon
-        icon={faFolderPlus}
-        className="mb-2 sm:mb-0 px-4 py-2 text-lime-600 hover:text-lime-700  cursor-pointer fa-2x"
-        onClick={openModal}
-    />
-    <FontAwesomeIcon
-        icon={faTrash}
-        className={`mb-2 sm:mb-0 px-4 py-2 text-red-600 hover:text-red-700 cursor-pointer fa-2x ${selectedProducts.length === 0 ? 'cursor-not-allowed opacity-50' : ''}`}
-        onClick={handleDeleteSelectedProducts}
-        disabled={selectedProducts.length === 0}
-    />
-</div>
+                                        <FontAwesomeIcon
+                                            icon={faFolderPlus}
+                                            className="mb-2 sm:mb-0 px-4 py-2 text-lime-600 hover:text-lime-700  cursor-pointer fa-2x"
+                                            onClick={openModal}
+                                        />
+                                        <FontAwesomeIcon
+                                            icon={faTrash}
+                                            className={`mb-2 sm:mb-0 px-4 py-2 text-red-600 hover:text-red-700 cursor-pointer fa-2x ${selectedProducts.length === 0 ? 'cursor-not-allowed opacity-50' : ''}`}
+                                            onClick={handleDeleteSelectedProducts}
+                                            disabled={selectedProducts.length === 0}
+                                        />
+                                    </div>
 
 
 
