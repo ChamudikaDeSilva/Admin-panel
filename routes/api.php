@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DealController;
 use App\Http\Controllers\DiscountController;
 use App\Http\Controllers\FrontendOrdersController;
 use App\Http\Controllers\FrontendPaymentController;
@@ -86,6 +87,12 @@ Route::post('/product/management/discount/create', [DiscountController::class, '
 Route::post('/product/management/delete/multiple/discounts', [DiscountController::class, 'deleteMultiple'])->name('discounts.deleteMultiple');
 Route::put('/product/management/update/discounts/{discountId}', [DiscountController::class, 'updateDiscount'])->name('discount.update');
 Route::delete('/product/management/delete/discounts/{discount}', [DiscountController::class, 'destroyDiscount'])->name('discounts.delete');
+
+//------Deals Management
+Route::get('/product/management/fetch/deals', [DealController::class, 'fetchdeals']);
+
+
+
 
 //------Frontend API--------------------------------
 Route::get('/shop/data/fetch', [FrontendProductController::class, 'shopIndex']);
