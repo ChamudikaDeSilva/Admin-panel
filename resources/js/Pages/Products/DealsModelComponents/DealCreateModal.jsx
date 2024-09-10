@@ -15,7 +15,7 @@ export default function DealCreateModal({ isOpen, onClose, products, categories,
         isAvailable: false,
         image: null,
     });
-
+   
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -42,7 +42,7 @@ export default function DealCreateModal({ isOpen, onClose, products, categories,
     return (
         <Modal
             isOpen={isOpen}
-            onRequestClose={onClose}
+            //onRequestClose={onClose}
             contentLabel="Create Deal Modal"
             className="modal"
             overlayClassName="modal-overlay"

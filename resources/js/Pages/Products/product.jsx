@@ -14,7 +14,7 @@ export default function Products({ auth }) {
     const [discounts, setDiscounts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [productsPerPage] = useState(5);
+    const [productsPerPage] = useState(10);
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [isPurgeModalOpen, setIsPurgeModalOpen] = useState(false);
     const [showModal, setShowModal] = useState(false);
@@ -245,6 +245,12 @@ export default function Products({ auth }) {
                                                 />
                                             </th>
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Image
+                                            </th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Actions
+                                            </th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Category
                                             </th>
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -268,12 +274,7 @@ export default function Products({ auth }) {
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Availability
                                             </th>
-                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Image
-                                            </th>
-                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Actions
-                                            </th>
+
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
@@ -287,16 +288,6 @@ export default function Products({ auth }) {
                                                             onChange={() => handleSelectProduct(product.id)}
                                                         />
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.category ? product.category.name : 'No Category'}</td>
-                                                    <td className={`px-6 py-4 whitespace-nowrap ${product.sub_category ? '' : 'text-blue-500'}`}>
-                                                        {product.sub_category ? product.sub_category.name : 'No Subcategory'}
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.description}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.quantity}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.unit}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.unit_price}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{product.isAvailable ? 'Yes' : 'No'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         <img
                                                             src={product.image}
@@ -313,6 +304,17 @@ export default function Products({ auth }) {
                                                             }}
                                                         />
                                                     </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.category ? product.category.name : 'No Category'}</td>
+                                                    <td className={`px-6 py-4 whitespace-nowrap ${product.sub_category ? '' : 'text-blue-500'}`}>
+                                                        {product.sub_category ? product.sub_category.name : 'No Subcategory'}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.name}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.description}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.quantity}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.unit}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.unit_price}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{product.isAvailable ? 'Yes' : 'No'}</td>
+
                                                 </tr>
                                             ))
                                         ) : (

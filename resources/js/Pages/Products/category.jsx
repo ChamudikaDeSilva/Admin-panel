@@ -10,7 +10,7 @@ export default function Categories({ auth }) {
     const [categories, setCategories] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [categoriesPerPage] = useState(5);
+    const [categoriesPerPage] = useState(10);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [isPurgeModalOpen, setIsPurgeModalOpen] = useState(false);
     const [showModal, setShowModal] = useState(false);

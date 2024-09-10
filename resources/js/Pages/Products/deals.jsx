@@ -5,6 +5,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePen, faArrowLeft, faArrowRight, faFolderPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import DealCreateModal from './DealsModelComponents/DealCreateModal';
+import Modal from 'react-modal';
 
 export default function Deals({ auth }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -97,11 +98,15 @@ export default function Deals({ auth }) {
                                 <hr className="border-lime-500 mb-4" />
                                 <div className="flex flex-col sm:flex-row items-center justify-between">
                                     <div className="flex flex-col sm:flex-row items-center">
-                                        <FontAwesomeIcon
-                                            icon={faFolderPlus}
-                                            className="mb-2 sm:mb-0 px-4 py-2 text-lime-600 hover:text-lime-700 cursor-pointer fa-2x"
-                                            onClick={openModal}
-                                        />
+                                    <FontAwesomeIcon
+                                        icon={faFolderPlus}
+                                        className="mb-2 sm:mb-0 px-4 py-2 text-lime-600 hover:text-lime-700 cursor-pointer fa-2x"
+                                        onClick={() => {
+                                            console.log("Open modal clicked");
+                                            openModal();
+                                        }}
+                                    />
+
                                         <FontAwesomeIcon
                                             icon={faTrash}
                                             className={`mb-2 sm:mb-0 px-4 py-2 text-red-600 hover:text-red-700 cursor-pointer fa-2x ${selectedDeals.length === 0 ? 'cursor-not-allowed opacity-50' : ''}`}
@@ -226,13 +231,13 @@ export default function Deals({ auth }) {
             </div>
 
             <DealCreateModal
-                isOpen={isModalOpen}
-                onClose={closeModal}
-                products={products}
-                categories={categories}
-                discounts={discounts}
-                onSubmit={handleSubmit}
-            />
+        isOpen={isModalOpen}
+        onClose={closeModal}
+        products={products}
+        categories={categories}
+        discounts={discounts}
+        onSubmit={handleSubmit}
+    />
         </AuthenticatedLayout>
     );
 }
