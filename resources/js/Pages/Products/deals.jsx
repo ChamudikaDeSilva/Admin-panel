@@ -5,7 +5,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePen, faArrowLeft, faArrowRight, faFolderPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import DealCreateModal from './DealsModelComponents/DealCreateModal';
-import Modal from 'react-modal';
+
 
 export default function Deals({ auth }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,13 +43,8 @@ export default function Deals({ auth }) {
         );
     };
 
-    const openModal = () => {
-        setIsModalOpen(true);
-    };
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-    };
+    const openModal = () => setIsModalOpen(true);
+    const closeModal = () => setIsModalOpen(false);
 
     // Pagination
     const indexOfLastDeal = currentPage * dealsPerPage;
@@ -101,10 +96,7 @@ export default function Deals({ auth }) {
                                     <FontAwesomeIcon
                                         icon={faFolderPlus}
                                         className="mb-2 sm:mb-0 px-4 py-2 text-lime-600 hover:text-lime-700 cursor-pointer fa-2x"
-                                        onClick={() => {
-                                            console.log("Open modal clicked");
-                                            openModal();
-                                        }}
+                                        onClick={openModal}
                                     />
 
                                         <FontAwesomeIcon
@@ -225,19 +217,20 @@ export default function Deals({ auth }) {
                                     <FontAwesomeIcon icon={faArrowRight} />
                                 </button>
                             </div>
+
+                            {isModalOpen && <DealCreateModal
+                                isOpen={isModalOpen}
+                                onClose={closeModal}
+                                products={products}
+                                categories={categories}
+                                discounts={discounts}
+                                onSubmit={handleSubmit}
+                            />} 
+
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <DealCreateModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        products={products}
-        categories={categories}
-        discounts={discounts}
-        onSubmit={handleSubmit}
-    />
+        </div>
         </AuthenticatedLayout>
     );
 }
