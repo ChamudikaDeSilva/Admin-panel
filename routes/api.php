@@ -90,6 +90,7 @@ Route::delete('/product/management/delete/discounts/{discount}', [DiscountContro
 
 //------Deals Management
 Route::get('/product/management/fetch/deals', [DealController::class, 'fetchdeals']);
+Route::post('/product/management/create/deals', [DealController::class, 'createDeal']);
 
 
 
