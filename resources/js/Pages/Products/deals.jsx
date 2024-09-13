@@ -6,7 +6,6 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePen, faArrowLeft, faArrowRight, faFolderPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import DealCreateModal from './DealsModelComponents/DealCreateModal';
 
-
 export default function Deals({ auth }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [products, setProducts] = useState([]);
@@ -25,10 +24,10 @@ export default function Deals({ auth }) {
     const fetchDeals = async () => {
         try {
             const response = await axios.get('/api/product/management/fetch/deals');
-            setDeals(response.data.deals);
-            setProducts(response.data.products);
-            setCategories(response.data.categories);
-            setDiscounts(response.data.discounts);
+            setDeals(response.data.deals || []);  // Ensure deals is an array
+            setProducts(response.data.products || []);  // Ensure products is an array
+            setCategories(response.data.categories || []);  // Ensure categories is an array
+            setDiscounts(response.data.discounts || []);  // Ensure discounts is an array
         } catch (error) {
             console.error('An error occurred while fetching deals:', error);
         }
@@ -38,8 +37,8 @@ export default function Deals({ auth }) {
     const searchDeals = (deals) => {
         return deals.filter(
             (deal) =>
-                deal.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                deal.category.name.toLowerCase().includes(searchTerm.toLowerCase())
+                deal?.name?.toLowerCase().includes(searchTerm.toLowerCase()) || // Use optional chaining
+                deal?.category?.name?.toLowerCase().includes(searchTerm.toLowerCase()) // Use optional chaining
         );
     };
 
@@ -87,8 +86,8 @@ export default function Deals({ auth }) {
             <div className="py-12">
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                        <div className="p-12 bg-white border-b border-gray-200">
-                            <div className="mb-4">
+                    <div className="p-12 bg-white border-b border-gray-200 w-full">
+                            <div className="mb-4 w-full">
                                 <h1 className="text-2xl font-semibold text-gray-700 mb-4 italic">Deals</h1>
                                 <hr className="border-lime-500 mb-4" />
                                 <div className="flex flex-col sm:flex-row items-center justify-between">
@@ -157,41 +156,35 @@ export default function Deals({ auth }) {
                                     <tbody className="bg-white divide-y divide-gray-200">
                                         {currentDeals.length > 0 ? (
                                             currentDeals.map((deal) => (
-                                                <tr key={deal.id}>
+                                                <tr key={deal?.id}>
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         <input
                                                             type="checkbox"
-                                                            checked={selectedDeals.includes(deal.id)}
-                                                            onChange={() => handleSelectDeal(deal.id)}
+                                                            checked={selectedDeals.includes(deal?.id)}
+                                                            onChange={() => handleSelectDeal(deal?.id)}
                                                         />
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{deal.name}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{deal.description}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{deal.category.name}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{deal.quantity}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{deal.unit_price}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{deal.isAvailable ? 'Yes' : 'No'}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{deal?.name || 'N/A'}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{deal?.description || 'No description'}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{deal?.category?.name || 'Uncategorized'}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{deal?.quantity || 'N/A'}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{deal?.unit_price || 'N/A'}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">{deal?.isAvailable ? 'Yes' : 'No'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         <img
-                                                            src={deal.image}
-                                                            alt={deal.name}
-                                                            className="h-12 w-12 object-cover rounded"
+                                                            src={deal?.image || 'placeholder.jpg'}
+                                                            alt={deal?.name || 'Image unavailable'}
+                                                            className="h-16 w-16 object-cover"
                                                         />
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        <FontAwesomeIcon
-                                                            icon={faFilePen}
-                                                            className="text-amber-600 hover:text-amber-900 cursor-pointer"
-                                                            onClick={() => {
-                                                                window.location.href = route('deals.edit', { id: deal.id });
-                                                            }}
-                                                        />
+                                                        <FontAwesomeIcon icon={faFilePen} className="px-4 py-2 text-blue-600 hover:text-blue-700 cursor-pointer fa-lg" />
                                                     </td>
                                                 </tr>
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan="9" className="px-6 py-4 text-center text-sm text-gray-500">
+                                                <td colSpan="9" className="px-6 py-4 text-center text-gray-500">
                                                     No deals found.
                                                 </td>
                                             </tr>
@@ -225,7 +218,7 @@ export default function Deals({ auth }) {
                                 categories={categories}
                                 discounts={discounts}
                                 onSubmit={handleSubmit}
-                            />} 
+                            />}
 
                         </div>
                     </div>
