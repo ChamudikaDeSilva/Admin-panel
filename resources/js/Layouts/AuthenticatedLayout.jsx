@@ -6,7 +6,7 @@ import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
 import { Link } from '@inertiajs/react';
 import SidebarDropdown from '@/Components/SidebarDropdown';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse, faCircleInfo, faGear, faAddressBook, faLock, faBars, faLockOpen, faUserLock, faBoxesStacked, faSackDollar } from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faCircleInfo, faGear, faAddressBook, faLock, faBars, faLockOpen, faUserLock, faBoxesStacked, faSackDollar, faUsers } from '@fortawesome/free-solid-svg-icons';
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
@@ -159,7 +159,7 @@ export default function Authenticated({ user, header, children }) {
                         </li>
                     </SidebarDropdown>
 
-                    <SidebarDropdown title={<><FontAwesomeIcon icon={faLock} className="mr-2" /> Users</>} >
+                    <SidebarDropdown title={<><FontAwesomeIcon icon={faUsers} className="mr-2" /> Users</>} >
                         <li>
                             <Link
                                 href={route('admin_management')}

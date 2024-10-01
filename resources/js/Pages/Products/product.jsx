@@ -245,11 +245,12 @@ export default function Products({ auth }) {
                                                 />
                                             </th>
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Image
-                                            </th>
-                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Actions
                                             </th>
+                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Image
+                                            </th>
+
                                             <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Category
                                             </th>
@@ -289,13 +290,6 @@ export default function Products({ auth }) {
                                                         />
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        <img
-                                                            src={product.image}
-                                                            alt={product.name}
-                                                            className="h-12 w-12 object-cover rounded"
-                                                        />
-                                                    </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
                                                         <FontAwesomeIcon
                                                             icon={faFilePen}
                                                             className="text-amber-600 hover:text-amber-900 cursor-pointer"
@@ -304,6 +298,14 @@ export default function Products({ auth }) {
                                                             }}
                                                         />
                                                     </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <img
+                                                            src={product.image}
+                                                            alt={product.name}
+                                                            className="h-12 w-12 object-cover rounded"
+                                                        />
+                                                    </td>
+
                                                     <td className="px-6 py-4 whitespace-nowrap">{product.category ? product.category.name : 'No Category'}</td>
                                                     <td className={`px-6 py-4 whitespace-nowrap ${product.sub_category ? '' : 'text-blue-500'}`}>
                                                         {product.sub_category ? product.sub_category.name : 'No Subcategory'}
