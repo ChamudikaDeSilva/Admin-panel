@@ -147,7 +147,7 @@ export default function DealCreateModal({ isOpen, onClose, products, categories,
                                             >
                                                 {discounts.map((discount) => (
                                                     <option key={discount.id} value={discount.id}>
-                                                        {discount.name}
+                                                        {discount.description}
                                                     </option>
                                                 ))}
                                             </select>

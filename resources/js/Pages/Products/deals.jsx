@@ -178,7 +178,7 @@ export default function Deals({ auth }) {
                                                         />
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        <FontAwesomeIcon icon={faFilePen} className="px-4 py-2 text-blue-600 hover:text-blue-700 cursor-pointer fa-lg" />
+                                                        <FontAwesomeIcon icon={faFilePen} className="px-4 py-2 text-amber-600  cursor-pointer fa-lg" />
                                                     </td>
                                                 </tr>
                                             ))
