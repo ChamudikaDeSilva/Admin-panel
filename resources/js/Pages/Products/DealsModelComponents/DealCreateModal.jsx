@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import Select from 'react-select'; // Import react-select
 
 export default function DealCreateModal({ isOpen, onClose, products, categories, discounts, onSubmit }) {
     const [imagePreview, setImagePreview] = useState(null);
+    const [filteredProducts, setFilteredProducts] = useState([]);
     const [formData, setFormData] = useState({
         name: '',
         description: '',
@@ -16,16 +18,29 @@ export default function DealCreateModal({ isOpen, onClose, products, categories,
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+
         setFormData({ ...formData, [name]: value });
+
+        if (name === 'category_id') {
+            const filtered = products.filter(product => product.category_id === parseInt(value));
+            setFilteredProducts(filtered);
+        }
+    };
+
+    // Handle react-select change for products
+    const handleProductChange = (selectedOptions) => {
+        const selectedProductIds = selectedOptions.map(option => option.value);
+        setFormData({ ...formData, product_ids: selectedProductIds });
+    };
+
+    // Handle react-select change for discounts
+    const handleDiscountChange = (selectedOptions) => {
+        const selectedDiscountIds = selectedOptions.map(option => option.value);
+        setFormData({ ...formData, discount_ids: selectedDiscountIds });
     };
 
     const handleCheckboxChange = (e) => {
         setFormData({ ...formData, isAvailable: e.target.checked });
-    };
-
-    const handleMultiSelectChange = (e, fieldName) => {
-        const selectedOptions = Array.from(e.target.selectedOptions, (option) => option.value);
-        setFormData({ ...formData, [fieldName]: selectedOptions });
     };
 
     const handleImageChange = (e) => {
@@ -40,7 +55,6 @@ export default function DealCreateModal({ isOpen, onClose, products, categories,
     };
 
     if (!isOpen) return null;
-
     return (
         <div className="fixed z-10 inset-0 overflow-y-auto">
             <div className="flex items-center justify-center min-h-screen">
@@ -99,14 +113,12 @@ export default function DealCreateModal({ isOpen, onClose, products, categories,
                                             />
                                         </div>
                                         <div className="mb-4">
-                                            <label htmlFor="category_id" className="block text-sm">
-                                                Category
-                                            </label>
+                                            <label htmlFor="category_id" className="block text-sm">Category</label>
                                             <select
                                                 name="category_id"
                                                 value={formData.category_id}
                                                 onChange={handleChange}
-                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
+                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
                                             >
                                                 <option value="">Select a Category</option>
                                                 {categories.map((category) => (
@@ -116,41 +128,36 @@ export default function DealCreateModal({ isOpen, onClose, products, categories,
                                                 ))}
                                             </select>
                                         </div>
+
+                                        {/* Products dropdown using react-select */}
                                         <div className="mb-4">
-                                            <label htmlFor="product_ids" className="block text-sm">
+                                            <label htmlFor="products" className="block text-sm font-medium text-gray-700 mb-1">
                                                 Products
                                             </label>
-                                            <select
-                                                name="product_ids"
-                                                value={formData.product_ids}
-                                                onChange={(e) => handleMultiSelectChange(e, 'product_ids')}
-                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
-                                                multiple
-                                            >
-                                                {products.map((product) => (
-                                                    <option key={product.id} value={product.id}>
-                                                        {product.name}
-                                                    </option>
-                                                ))}
-                                            </select>
+                                            <Select
+                                                id="products"
+                                                name="products"
+                                                isMulti
+                                                options={filteredProducts.map(product => ({ value: product.id, label: product.name }))}
+                                                onChange={handleProductChange}
+                                                className="mt-1"
+                                                isDisabled={!formData.category_id} // Disable if no category is selected
+                                            />
                                         </div>
+
+                                        {/* Discounts dropdown using react-select */}
                                         <div className="mb-4">
-                                            <label htmlFor="discount_ids" className="block text-sm">
+                                            <label htmlFor="discounts" className="block text-sm font-medium text-gray-700 mb-1">
                                                 Discounts
                                             </label>
-                                            <select
-                                                name="discount_ids"
-                                                value={formData.discount_ids}
-                                                onChange={(e) => handleMultiSelectChange(e, 'discount_ids')}
-                                                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
-                                                multiple
-                                            >
-                                                {discounts.map((discount) => (
-                                                    <option key={discount.id} value={discount.id}>
-                                                        {discount.description}
-                                                    </option>
-                                                ))}
-                                            </select>
+                                            <Select
+                                                id="discounts"
+                                                name="discounts"
+                                                isMulti
+                                                options={discounts.map(discount => ({ value: discount.id, label: discount.description }))}
+                                                onChange={handleDiscountChange}
+                                                className="mt-1"
+                                            />
                                         </div>
                                         <div className="mb-4">
                                             <label htmlFor="isAvailable" className="block text-sm">
