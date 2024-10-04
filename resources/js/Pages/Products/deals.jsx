@@ -91,10 +91,10 @@ export default function Deals({ auth }) {
                                 <h1 className="text-2xl font-semibold text-gray-700 mb-4 italic">Deals</h1>
                                 <hr className="border-lime-500 mb-4" />
                                 <div className="flex flex-col sm:flex-row items-center justify-between">
-                                    <div className="flex flex-col sm:flex-row items-center">
+                                    <div className="flex flex-col sm:flex-row items-center ">
                                     <FontAwesomeIcon
                                         icon={faFolderPlus}
-                                        className="mb-2 sm:mb-0 px-4 py-2 text-lime-600 hover:text-lime-700 cursor-pointer fa-2x"
+                                        className="mb-2 sm:mb-0 px-1 py-2 text-lime-600 hover:text-lime-700 cursor-pointer fa-2x"
                                         onClick={openModal}
                                     />
 
