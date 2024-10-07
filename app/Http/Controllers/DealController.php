@@ -31,17 +31,52 @@ class DealController extends Controller
         return response()->json(['deals'=> $deals,'products' => $products, 'categories' => $categories, 'discounts' => $discounts]);
     }
 
-    /*public function createDeals(Request $request)
+    public function createDeals(Request $request)
     {
-        try{
-            $validator=Validate::make($trquest->all(),[
-                'name'=>'required|string|max:255',
-                'description'=>'required|string',
-                'product_id'=>'required|exists:products,id',
-                'category_id'=>'required|exists:categories,id',
-                'discount_id'=>'required|exists:discounts,id',
-                'start_date'=>'required|date',
-            ]);
+        // Validate the incoming request
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'unit_price' => 'required|numeric',
+            'quantity' => 'required|integer',
+            'category_id' => 'required|integer|exists:categories,id',
+            'product_ids' => 'required|array',
+            'product_ids.*' => 'integer|exists:products,id',
+            'discount_ids' => 'nullable|array',
+            'discount_ids.*' => 'integer|exists:discounts,id',
+            'isAvailable' => 'required|boolean',
+            'image' => 'nullable|image|max:2048', // Validate image (optional)
+        ]);
+
+        // Create the deal
+        $deal = Deal::create([
+            'name' => $validated['name'],
+            'description' => $validated['description'],
+            'unit_price' => $validated['unit_price'],
+            'quantity' => $validated['quantity'],
+            'category_id' => $validated['category_id'],
+            'isAvailable' => $validated['isAvailable'],
+        ]);
+
+        // Associate selected products
+        if (isset($validated['product_ids'])) {
+            $deal->products()->attach($validated['product_ids']);
         }
-    }*/
+
+        // Associate selected discounts
+        if (isset($validated['discount_ids'])) {
+            $deal->discounts()->attach($validated['discount_ids']);
+        }
+
+        // Handle image upload if exists
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('deal_images', 'public');
+            $deal->update(['image' => $imagePath]);
+        }
+
+        return response()->json([
+            'message' => 'Deal created successfully!',
+            'deal' => $deal
+        ], 201);
+    }
 }

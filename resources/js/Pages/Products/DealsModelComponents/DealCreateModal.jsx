@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Select from 'react-select'; // Import react-select
-
+import axios from 'axios';
 export default function DealCreateModal({ isOpen, onClose, products, categories, discounts, onSubmit }) {
     const [imagePreview, setImagePreview] = useState(null);
     const [filteredProducts, setFilteredProducts] = useState([]);
@@ -15,6 +15,7 @@ export default function DealCreateModal({ isOpen, onClose, products, categories,
         isAvailable: false,
         image: null,
     });
+    const [errors, setErrors] = useState({});
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -49,10 +50,33 @@ export default function DealCreateModal({ isOpen, onClose, products, categories,
         setImagePreview(URL.createObjectURL(file));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit =async (e)=>{
         e.preventDefault();
-        onSubmit(formData);
-    };
+
+        const payload={
+            name: formData.name,
+            description: formData.description,
+            unit_price: formData.unit_price,
+            quantity: formData.quantity,
+            category_id: formData.category_id,
+            product_ids: formData.product_ids,
+            discount_ids: formData.discount_ids,
+            isAvailable: formData.isAvailable,
+            image: formData.image
+        };
+        try{
+            const response= await axios.post('/api/product/management/deals/create',payload,{
+                headers: {
+                    'Content-Type': 'multipart/form-data', //For file uploads
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+            });
+            console.log('Success',response.data);
+        }
+        catch{
+            console.error('An error occurred while creating the deal:', errors);
+        }
+    }
 
     if (!isOpen) return null;
     return (
