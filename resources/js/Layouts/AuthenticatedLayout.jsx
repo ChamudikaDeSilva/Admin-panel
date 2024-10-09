@@ -45,7 +45,7 @@ export default function Authenticated({ user, header, children }) {
                     <li>
                         <Link
                             href={route('dashboard')}
-                            className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                            className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                         >
                             <FontAwesomeIcon icon={faHouse} className="mr-2" />
                             <span>Dashboard</span>
@@ -54,7 +54,7 @@ export default function Authenticated({ user, header, children }) {
                     <li>
                         <a
                             href="#"
-                            className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                            className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                         >
                             <FontAwesomeIcon icon={faCircleInfo} className="mr-2" />
                             <span>About</span>
@@ -65,7 +65,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('category_management')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500  hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Categories
                             </Link>
@@ -73,7 +73,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('subcategory_management')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Sub Categories
                             </Link>
@@ -81,7 +81,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('product_management')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Products
                             </Link>
@@ -89,7 +89,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('discount_management')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Discounts
                             </Link>
@@ -97,7 +97,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('deal_management')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Deals
                             </Link>
@@ -108,7 +108,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('modules')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Invoices
                             </Link>
@@ -116,7 +116,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('permissions')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Receipts
                             </Link>
@@ -124,7 +124,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('modules_permissions')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Payments
                             </Link>
@@ -136,7 +136,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('modules')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Modules
                             </Link>
@@ -144,7 +144,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('permissions')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Permissions
                             </Link>
@@ -152,7 +152,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('modules_permissions')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Module Permissions
                             </Link>
@@ -163,7 +163,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('admin_management')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Admins
                             </Link>
@@ -171,7 +171,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('permissions')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Roots
                             </Link>
@@ -179,7 +179,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('modules_permissions')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Customers
                             </Link>
@@ -187,7 +187,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('modules_permissions')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Suppliers
                             </Link>
@@ -195,7 +195,7 @@ export default function Authenticated({ user, header, children }) {
                         <li>
                             <Link
                                 href={route('modules_permissions')}
-                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                                className="flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
                             >
                                 -Delivery
                             </Link>
@@ -244,8 +244,8 @@ export default function Authenticated({ user, header, children }) {
                                     </Link>*/}
                                 </div>
 
-                                <div className="hidden sm:flex sm:items-center sm:ms-6">
-                                    <div className="ms-3 relative bg-lime-200">
+                                <div className="hidden sm:flex sm:items-center sm:ms-6 bg-black">
+                                    <div className="ms-3 relative bg-black">
                                         <Dropdown>
                                             <Dropdown.Trigger>
                                                 <span className="inline-flex rounded-md">
@@ -271,8 +271,8 @@ export default function Authenticated({ user, header, children }) {
                                             </Dropdown.Trigger>
 
                                             <Dropdown.Content className="bg-black">
-                                                <Dropdown.Link className="bg-black text-lime-200 hover:bg-black" href={route('profile.edit')}>Profile</Dropdown.Link>
-                                                <Dropdown.Link className="bg-black text-lime-200 hover:bg-black" href={route('logout')} method="post" as="button">
+                                                <Dropdown.Link className="bg-black text-lime-600 hover:bg-black" href={route('profile.edit')}>Profile</Dropdown.Link>
+                                                <Dropdown.Link className="bg-black text-lime-600 hover:bg-black" href={route('logout')} method="post" as="button">
                                                     Log Out
                                                 </Dropdown.Link>
                                             </Dropdown.Content>

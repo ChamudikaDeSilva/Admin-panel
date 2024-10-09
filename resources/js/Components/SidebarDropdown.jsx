@@ -11,7 +11,7 @@ export default function SidebarDropdown({ title, children }) {
         <div>
             <button
                 onClick={toggleDropdown}
-                className="w-full flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-lime-300 hover:text-black transition duration-150 ease-in-out"
+                className="w-full flex items-center p-2 text-base font-medium text-gray-300 rounded-md hover:bg-gradient-to-r from-black to-lime-500 hover:text-white transition duration-150 ease-in-out"
             >
                 <span className="ml-2">{title}</span>
                 <svg
