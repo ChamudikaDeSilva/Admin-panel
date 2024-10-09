@@ -203,32 +203,31 @@ export default function Products({ auth }) {
                         <div className="mb-4">
                             <h1 className="text-2xl font-semibold text-gray-700 mb-4 italic">Products</h1>
                                 <hr className="border-lime-500 mb-4" /> {/* Added hr element */}
-                                    <div className="flex flex-col sm:flex-row items-center justify-between">
-                                    <div className="flex flex-col sm:flex-row items-center">
-                                        <FontAwesomeIcon
-                                            icon={faFolderPlus}
-                                            className="mb-2 sm:mb-0 px-4 py-2 text-lime-600 hover:text-lime-700  cursor-pointer fa-2x"
+                                <div className="flex flex-col sm:flex-row items-center justify-between">
+                                    <input
+                                        type="text"
+                                        placeholder="Search..."
+                                        value={searchTerm}
+                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        className="border border-lime-500 focus:border-lime-500 focus:ring-0 rounded-md mb-2 sm:mb-0 px-4 py-2 sm:w-1/5"
+                                    />
+                                    <div className="flex items-center space-x-2">
+                                        <button
+                                            className="px-4 py-2 bg-lime-500 text-white font-semibold rounded hover:bg-lime-700"
                                             onClick={openModal}
-                                        />
-                                        <FontAwesomeIcon
-                                            icon={faTrash}
-                                            className={`mb-2 sm:mb-0 px-4 py-2 text-red-600 hover:text-red-700 cursor-pointer fa-2x ${selectedProducts.length === 0 ? 'cursor-not-allowed opacity-50' : ''}`}
+                                        >
+                                            New
+                                        </button>
+                                        <button
+                                            className="px-4 py-2 bg-red-500 text-white font-semibold rounded hover:bg-red-700"
                                             onClick={handleDeleteSelectedProducts}
                                             disabled={selectedProducts.length === 0}
-                                        />
-                                    </div>
-
-
-
-                                        <input
-                                            type="text"
-                                            placeholder="Search..."
-                                            value={searchTerm}
-                                            onChange={(e) => setSearchTerm(e.target.value)}
-                                            className="border border-lime-500 focus:border-lime-500 focus:ring-0 rounded-md mb-2 sm:mb-0 px-4 py-2"
-                                        />
+                                        >
+                                            Delete Selected
+                                        </button>
                                     </div>
                                 </div>
+                            </div>
 
 
 

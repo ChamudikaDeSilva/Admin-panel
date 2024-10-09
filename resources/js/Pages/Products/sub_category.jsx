@@ -135,30 +135,32 @@ export default function Categories({ auth }) {
                         <div className="mb-4">
                             <h1 className="text-2xl font-semibold text-gray-700 mb-4 italic">Sub Categories</h1>
                             <hr className="border-lime-500 mb-4" />
+
                             <div className="flex flex-col sm:flex-row items-center justify-between">
-                                <div className="flex flex-col sm:flex-row items-center">
+                                <input
+                                    type="text"
+                                    placeholder="Search..."
+                                    value={searchTerm}
+                                    onChange={(e) => setSearchTerm(e.target.value)}
+                                    className="border border-lime-500 focus:border-lime-500 focus:ring-0 rounded-md mb-2 sm:mb-0 px-4 py-2 sm:w-1/5"
+                                />
+                                <div className="flex items-center space-x-2">
                                     <button
-                                        className="mb-2 sm:mb-0 px-4 py-2 bg-lime-500 text-white font-semibold rounded hover:bg-lime-700 sm:mr-2"
+                                        className="px-4 py-2 bg-lime-500 text-white font-semibold rounded hover:bg-lime-700"
                                         onClick={openModal}
                                     >
                                         New
                                     </button>
                                     <button
-                                        className="mb-2 sm:mb-0 px-4 py-2 bg-red-500 text-white font-semibold rounded hover:bg-red-700 sm:mr-2"
+                                        className="px-4 py-2 bg-red-500 text-white font-semibold rounded hover:bg-red-700"
                                         onClick={handleDeleteSelectedSubCategories}
                                         disabled={selectedSubCategories.length === 0}
                                     >
                                         Delete Selected
                                     </button>
                                 </div>
-                                <input
-                                    type="text"
-                                    placeholder="Search..."
-                                    value={searchTerm}
-                                    onChange={(e) => setSearchTerm(e.target.value)}
-                                    className="border border-lime-500 focus:border-lime-500 focus:ring-0 rounded-md mb-2 sm:mb-0 px-4 py-2"
-                                />
                             </div>
+
                         </div>
                             <div className="overflow-x-auto">
                                 <table className="min-w-full divide-y divide-gray-200">
