@@ -155,7 +155,6 @@ export default function Categories({ auth }) {
                                     </button>
                                 </div>
                             </div>
-
                         </div>
 
                             {/* Responsive Tailwind CSS table */}

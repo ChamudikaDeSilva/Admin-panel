@@ -78,6 +78,7 @@ export default function Deals({ auth }) {
         // Logic to handle form submission (e.g., create new deal)
         closeModal();
         fetchDeals();
+        
     };
 
     return (
