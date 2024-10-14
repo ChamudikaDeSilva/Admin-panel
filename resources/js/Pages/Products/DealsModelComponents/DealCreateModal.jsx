@@ -3,14 +3,14 @@ import Select from 'react-select'; // Import react-select
 import axios from 'axios';
 export default function DealCreateModal({ isOpen, onClose, products, categories, discounts, onSubmit }) {
     const [imagePreview, setImagePreview] = useState(null);
-    const [filteredProducts, setFilteredProducts] = useState([]);
+
     const [formData, setFormData] = useState({
         name: '',
         description: '',
         unit_price: '',
         quantity: '',
         category_id: '',
-        product_ids: [],
+
         discount_ids: [],
         isAvailable: false,
         image: null,
@@ -22,17 +22,9 @@ export default function DealCreateModal({ isOpen, onClose, products, categories,
 
         setFormData({ ...formData, [name]: value });
 
-        if (name === 'category_id') {
-            const filtered = products.filter(product => product.category_id === parseInt(value));
-            setFilteredProducts(filtered);
-        }
     };
 
-    // Handle react-select change for products
-    const handleProductChange = (selectedOptions) => {
-        const selectedProductIds = selectedOptions.map(option => option.value);
-        setFormData({ ...formData, product_ids: selectedProductIds });
-    };
+
 
     // Handle react-select change for discounts
     const handleDiscountChange = (selectedOptions) => {
@@ -50,36 +42,54 @@ export default function DealCreateModal({ isOpen, onClose, products, categories,
         setImagePreview(URL.createObjectURL(file));
     };
 
-    const handleSubmit =async (e)=>{
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const payload={
-            name: formData.name,
-            description: formData.description,
-            unit_price: formData.unit_price,
-            quantity: formData.quantity,
-            category_id: formData.category_id,
-            product_ids: formData.product_ids,
-            discount_ids: formData.discount_ids,
-            isAvailable: formData.isAvailable,
-            image: formData.image
-        };
-        try{
-            const response= await axios.post('/api/product/management/deals/create',payload,{
-                headers: {
-                    'Content-Type': 'multipart/form-data', //For file uploads
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                },
+        const payload = new FormData();
+        payload.append('name', formData.name);
+        payload.append('description', formData.description);
+        payload.append('unit_price', formData.unit_price);
+        payload.append('quantity', formData.quantity);
+        payload.append('category_id', formData.category_id);
+        payload.append('isAvailable', formData.isAvailable ? 1 : 0);
+        payload.append('image', formData.image);
+
+        formData.discount_ids.forEach((id) => {
+            payload.append('discount_ids[]', id);
+        });
+
+        try {
+            const response = await axios.post('/api/product/management/deals/create', payload, {
+
             });
-            console.log('Success',response.data);
+
+            if (response && response.data) {
+                console.log('Success', response.data);
+
+                if (onSubmit) {
+                    onSubmit(response.data);
+                }
+            } else {
+                console.error('Unexpected response structure:', response);
+            }
+        } catch (error) {
+            console.error('Full error details:', error);
+
+            // Log specific error details if available
+            if (error.response) {
+                console.error('Error response data:', error.response.data);
+                setErrors(error.response.data.errors || {});
+            } else {
+                console.error('An unexpected error occurred:', error.message);
+            }
         }
-        catch{
-            console.error('An error occurred while creating the deal:', errors);
-        }
-    }
+    };
+
+
+
 
     if (!isOpen) return null;
-    
+
     return (
         <div className="fixed z-10 inset-0 overflow-y-auto">
             <div className="flex items-center justify-center min-h-screen">
@@ -152,22 +162,6 @@ export default function DealCreateModal({ isOpen, onClose, products, categories,
                                                     </option>
                                                 ))}
                                             </select>
-                                        </div>
-
-                                        {/* Products dropdown using react-select */}
-                                        <div className="mb-4">
-                                            <label htmlFor="products" className="block text-sm font-medium text-gray-700 mb-1">
-                                                Products
-                                            </label>
-                                            <Select
-                                                id="products"
-                                                name="products"
-                                                isMulti
-                                                options={filteredProducts.map(product => ({ value: product.id, label: product.name }))}
-                                                onChange={handleProductChange}
-                                                className="mt-1"
-                                                isDisabled={!formData.category_id} // Disable if no category is selected
-                                            />
                                         </div>
 
                                         {/* Discounts dropdown using react-select */}

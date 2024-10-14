@@ -1,0 +1,450 @@
+import React, { useState } from "react";
+import Select from "react-select"; // Import react-select
+import axios from "axios";
+
+export default function DealCreateModal({
+    isOpen,
+    onClose,
+    products,
+    categories,
+    discounts,
+    onSubmit,
+}) {
+    const [imagePreview, setImagePreview] = useState(null);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+    const [formData, setFormData] = useState({
+        name: "",
+        description: "",
+        unit_price: "",
+        quantity: "",
+        category_id: "",
+        product_ids: [],
+        discount_ids: [],
+        product_quantities: {}, // Track quantities for each product
+        isAvailable: false,
+        image: null,
+    });
+    const [selectedProduct, setSelectedProduct] = useState(null); // Currently selected product
+    const [selectedProductQuantity, setSelectedProductQuantity] =
+        useState(null); // Quantity for the selected product
+    const [errors, setErrors] = useState({});
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        setFormData({ ...formData, [name]: value });
+
+        if (name === "category_id") {
+            const filtered = products.filter(
+                (product) => product.category_id === parseInt(value)
+            );
+            setFilteredProducts(filtered);
+            // Reset product selections when category changes
+            setSelectedProduct(null);
+            setSelectedProductQuantity(null);
+            setFormData((prevState) => ({
+                ...prevState,
+                product_ids: [],
+                product_quantities: {},
+            }));
+        }
+    };
+
+    // Handle product selection
+    const handleProductChange = (selectedOption) => {
+        if (selectedOption) {
+            setSelectedProduct(selectedOption);
+            setSelectedProductQuantity(null); // Reset quantity when a new product is selected
+        }
+    };
+
+    // Handle quantity selection for the selected product
+    const handleQuantityChange = (option) => {
+        const quantity = option.value;
+        setSelectedProductQuantity(quantity);
+
+        // Add selected product and quantity to formData
+        setFormData((prevState) => ({
+            ...prevState,
+            product_ids: [...prevState.product_ids, selectedProduct.value],
+            product_quantities: {
+                ...prevState.product_quantities,
+                [selectedProduct.value]: quantity,
+            },
+        }));
+
+        // Reset selected product and quantity to allow next selection
+        setSelectedProduct(null);
+        setSelectedProductQuantity(null);
+    };
+
+    // Handle discounts selection
+    const handleDiscountChange = (selectedOptions) => {
+        const selectedDiscountIds = selectedOptions.map(
+            (option) => option.value
+        );
+        setFormData({ ...formData, discount_ids: selectedDiscountIds });
+    };
+
+    const handleCheckboxChange = (e) => {
+        setFormData({ ...formData, isAvailable: e.target.checked });
+    };
+
+    const handleImageChange = (e) => {
+        const file = e.target.files[0];
+        setFormData({ ...formData, image: file });
+        setImagePreview(URL.createObjectURL(file));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const data = new FormData();
+        data.append("name", formData.name);
+        data.append("description", formData.description);
+        data.append("unit_price", formData.unit_price);
+        data.append("quantity", formData.quantity);
+        data.append("category_id", formData.category_id);
+        data.append("isAvailable", formData.isAvailable);
+        data.append("image", formData.image);
+
+        // Append product IDs and their quantities
+        formData.product_ids.forEach((productId) => {
+            data.append("product_ids[]", productId);
+            data.append(
+                `product_quantities[${productId}]`,
+                formData.product_quantities[productId]
+            );
+        });
+
+        // Append discount IDs
+        formData.discount_ids.forEach((discountId) => {
+            data.append("discount_ids[]", discountId);
+        });
+
+        try {
+            const response = await axios.post(
+                "/api/product/management/deals/create",
+                data,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data", // For file uploads
+                        "X-CSRF-TOKEN": document
+                            .querySelector('meta[name="csrf-token"]')
+                            .getAttribute("content"),
+                    },
+                }
+            );
+            console.log("Success", response.data);
+            if (onSubmit) onSubmit(); // Call onSubmit callback if provided
+            onClose(); // Close the modal after successful submission
+        } catch (error) {
+            console.error("An error occurred while creating the deal:", error);
+            setErrors(error.response.data.errors || {});
+        }
+    };
+
+    const quantityOptions = [
+        { value: "100g", label: "100g" },
+        { value: "250g", label: "250g" },
+        { value: "500g", label: "500g" },
+        { value: "750g", label: "750g" },
+        { value: "1kg", label: "1kg" },
+    ];
+
+    if (!isOpen) return null;
+
+    return (
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+            <div className="flex items-center justify-center min-h-screen">
+                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+                <div className="bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:max-w-lg w-full mx-4 sm:w-full">
+                    <div className="bg-white px-8 py-4 sm:p-6 sm:pb-4 flex justify-center items-center">
+                        <div className="w-full">
+                            <h3
+                                className="text-lg leading-6 font-medium text-gray-900 text-center"
+                                id="modal-title"
+                            >
+                                Create New Deal
+                            </h3>
+                            <form onSubmit={handleSubmit}>
+                                <div className="mb-4">
+                                    <label
+                                        htmlFor="name"
+                                        className="block text-sm"
+                                    >
+                                        Name
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="name"
+                                        value={formData.name}
+                                        onChange={handleChange}
+                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
+                                    />
+                                    {errors.name && (
+                                        <p className="text-red-500 text-sm">
+                                            {errors.name}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="mb-4">
+                                    <label
+                                        htmlFor="description"
+                                        className="block text-sm"
+                                    >
+                                        Description
+                                    </label>
+                                    <textarea
+                                        name="description"
+                                        value={formData.description}
+                                        onChange={handleChange}
+                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
+                                    ></textarea>
+                                    {errors.description && (
+                                        <p className="text-red-500 text-sm">
+                                            {errors.description}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="mb-4">
+                                    <label
+                                        htmlFor="unit_price"
+                                        className="block text-sm"
+                                    >
+                                        Unit Price
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="unit_price"
+                                        value={formData.unit_price}
+                                        onChange={handleChange}
+                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
+                                        step="0.01"
+                                    />
+                                    {errors.unit_price && (
+                                        <p className="text-red-500 text-sm">
+                                            {errors.unit_price}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="mb-4">
+                                    <label
+                                        htmlFor="quantity"
+                                        className="block text-sm"
+                                    >
+                                        Quantity
+                                    </label>
+                                    <input
+                                        type="number"
+                                        name="quantity"
+                                        value={formData.quantity}
+                                        onChange={handleChange}
+                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
+                                    />
+                                    {errors.quantity && (
+                                        <p className="text-red-500 text-sm">
+                                            {errors.quantity}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <div className="mb-4">
+                                    <label
+                                        htmlFor="category_id"
+                                        className="block text-sm"
+                                    >
+                                        Category
+                                    </label>
+                                    <select
+                                        name="category_id"
+                                        value={formData.category_id}
+                                        onChange={handleChange}
+                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
+                                    >
+                                        <option value="">
+                                            Select a Category
+                                        </option>
+                                        {categories.map((category) => (
+                                            <option
+                                                key={category.id}
+                                                value={category.id}
+                                            >
+                                                {category.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors.category_id && (
+                                        <p className="text-red-500 text-sm">
+                                            {errors.category_id}
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Products selection */}
+                                <div className="mb-4">
+                                    <label
+                                        htmlFor="products"
+                                        className="block text-sm font-medium text-gray-700 mb-1"
+                                    >
+                                        Products
+                                    </label>
+                                    <Select
+                                        id="products"
+                                        name="products"
+                                        value={selectedProduct}
+                                        options={filteredProducts.map(
+                                            (product) => ({
+                                                value: product.id,
+                                                label: product.name,
+                                            })
+                                        )}
+                                        onChange={handleProductChange}
+                                        className="mt-1"
+                                        isDisabled={
+                                            !formData.category_id ||
+                                            selectedProduct !== null
+                                        }
+                                    />
+                                </div>
+
+                                {/* Quantity selection for selected product */}
+                                {selectedProduct && (
+                                    <div className="mb-4">
+                                        <label
+                                            htmlFor="quantity"
+                                            className="block text-sm font-medium text-gray-700 mb-1"
+                                        >
+                                            Select Quantity for{" "}
+                                            {selectedProduct.label}
+                                        </label>
+                                        <Select
+                                            id="quantity"
+                                            name="quantity"
+                                            options={quantityOptions}
+                                            onChange={handleQuantityChange}
+                                            className="mt-1"
+                                        />
+                                    </div>
+                                )}
+
+                                {/* Display selected products and their quantities */}
+                                {formData.product_ids.length > 0 && (
+                                    <div className="mb-4">
+                                        <h4 className="text-sm font-medium text-gray-700 mb-1">
+                                            Selected Products:
+                                        </h4>
+                                        <ul className="list-disc list-inside">
+                                            {formData.product_ids.map(
+                                                (productId) => {
+                                                    const product =
+                                                        filteredProducts.find(
+                                                            (p) =>
+                                                                p.id ===
+                                                                productId
+                                                        );
+                                                    const quantity =
+                                                        formData
+                                                            .product_quantities[
+                                                            productId
+                                                        ];
+                                                    return (
+                                                        <li key={productId}>
+                                                            {product.name} -{" "}
+                                                            {quantity}
+                                                        </li>
+                                                    );
+                                                }
+                                            )}
+                                        </ul>
+                                    </div>
+                                )}
+
+                                {/* Discounts selection */}
+                                <div className="mb-4">
+                                    <label
+                                        htmlFor="discounts"
+                                        className="block text-sm font-medium text-gray-700 mb-1"
+                                    >
+                                        Discounts
+                                    </label>
+                                    <Select
+                                        id="discounts"
+                                        name="discounts"
+                                        isMulti
+                                        options={discounts.map((discount) => ({
+                                            value: discount.id,
+                                            label: discount.description,
+                                        }))}
+                                        onChange={handleDiscountChange}
+                                        className="mt-1"
+                                    />
+                                </div>
+
+                                <div className="mb-4">
+                                    <label
+                                        htmlFor="isAvailable"
+                                        className="block text-sm"
+                                    >
+                                        Availability
+                                    </label>
+                                    <input
+                                        type="checkbox"
+                                        name="isAvailable"
+                                        checked={formData.isAvailable}
+                                        onChange={handleCheckboxChange}
+                                        className="mr-2"
+                                    />
+                                    Available
+                                </div>
+
+                                <div className="mb-4">
+                                    <label
+                                        htmlFor="image"
+                                        className="block text-sm font-medium text-gray-700 mb-1"
+                                    >
+                                        Image
+                                    </label>
+                                    <input
+                                        type="file"
+                                        id="image"
+                                        name="image"
+                                        accept="image/*"
+                                        onChange={handleImageChange}
+                                        className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-lime-500 focus:border-lime-500 sm:text-sm"
+                                    />
+                                    {imagePreview && (
+                                        <img
+                                            src={imagePreview}
+                                            alt="Product Preview"
+                                            className="mt-2 h-32 w-auto object-contain"
+                                        />
+                                    )}
+                                </div>
+
+                                <div className="flex justify-end">
+                                    <button
+                                        type="button"
+                                        onClick={onClose}
+                                        className="px-4 py-2 bg-gray-400 text-white rounded-md mr-2"
+                                    >
+                                        Discard
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="px-4 py-2 bg-lime-500 text-white rounded-md"
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}
