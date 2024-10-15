@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\CategoryDeal;
 use App\Models\Deal;
 use App\Models\Discount;
 use App\Models\Product;
@@ -20,6 +21,7 @@ class DealController extends Controller
     {
         $deals = Deal::all();
 
+
         return Inertia::render('Products/deals', [
             'deals' => $deals,
         ]);
@@ -31,8 +33,9 @@ class DealController extends Controller
         $products = Product::all();
         $categories = Category::all();
         $discounts = Discount::all();
+        $category=CategoryDeal::with('categorydeal')->get();
 
-        return response()->json(['deals'=> $deals,'products' => $products, 'categories' => $categories, 'discounts' => $discounts]);
+        return response()->json(['deals'=> $deals,'products' => $products, 'categories' => $categories, 'discounts' => $discounts,'category' => $category]);
     }
 
 
@@ -80,6 +83,7 @@ class DealController extends Controller
         $deal->unit_price = $request->input('unit_price');
         $deal->quantity = $request->input('quantity');
         $deal->isAvailable = $request->input('isAvailable');
+        $deal->image = $imageUrl;
         $deal->save();
         Log::info('Deal created successfully', ['deal_id' => $deal->id]);
 

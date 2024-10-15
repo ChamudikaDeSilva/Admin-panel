@@ -16,6 +16,7 @@ export default function Deals({ auth }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [dealsPerPage] = useState(5);
     const [selectedDeals, setSelectedDeals] = useState([]);
+    const[category,setCategory] = useState([]);
 
     useEffect(() => {
         fetchDeals();
@@ -27,11 +28,14 @@ export default function Deals({ auth }) {
             setDeals(response.data.deals || []);  // Ensure deals is an array
             setProducts(response.data.products || []);  // Ensure products is an array
             setCategories(response.data.categories || []);  // Ensure categories is an array
+            console.log(response.data);
             setDiscounts(response.data.discounts || []);  // Ensure discounts is an array
+
         } catch (error) {
             console.error('An error occurred while fetching deals:', error);
         }
     };
+
 
     // Search function
     const searchDeals = (deals) => {
@@ -78,7 +82,7 @@ export default function Deals({ auth }) {
         // Logic to handle form submission (e.g., create new deal)
         closeModal();
         fetchDeals();
-        
+
     };
 
     return (
@@ -181,8 +185,10 @@ export default function Deals({ auth }) {
                                                         />
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        <FontAwesomeIcon icon={faFilePen} className="px-4 py-2 text-amber-600  cursor-pointer fa-lg" />
+                                                        <FontAwesomeIcon icon={faFilePen} className="text-amber-600 cursor-pointer fa-lg mr-2" />
+                                                        <FontAwesomeIcon icon={faFolderPlus} className="text-green-600 cursor-pointer fa-lg" />
                                                     </td>
+
                                                 </tr>
                                             ))
                                         ) : (
