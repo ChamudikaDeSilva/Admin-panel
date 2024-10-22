@@ -155,4 +155,9 @@ class DealController extends Controller
             return response()->json(['error' => 'An error occurred while creating the deal. Please try again.'], 500);
         }
     }
+
+    public function assignProducts()
+    {
+        
+    }
 }
