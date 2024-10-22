@@ -174,9 +174,8 @@ export default function Deals({ auth }) {
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.name || 'N/A'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.description || 'No description'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-    {deal?.categorydeals?.map(category => category.name).join(', ') || 'Uncategorized'}
-</td>
-
+                                                        {deal?.categorydeals?.map(category => category.name).join(', ') || 'Uncategorized'}
+                                                    </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.quantity || 'N/A'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.unit_price || 'N/A'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.isAvailable ? 'Yes' : 'No'}</td>

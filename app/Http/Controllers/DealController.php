@@ -162,6 +162,6 @@ class DealController extends Controller
 
     public function assignProducts()
     {
-
+        
     }
 }
