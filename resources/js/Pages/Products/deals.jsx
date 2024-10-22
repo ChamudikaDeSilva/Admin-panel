@@ -25,11 +25,11 @@ export default function Deals({ auth }) {
     const fetchDeals = async () => {
         try {
             const response = await axios.get('/api/product/management/fetch/deals');
-            setDeals(response.data.deals || []);  // Ensure deals is an array
-            setProducts(response.data.products || []);  // Ensure products is an array
-            setCategories(response.data.categories || []);  // Ensure categories is an array
+            setDeals(response.data.deals || []);
+            setProducts(response.data.products || []);
+            setCategories(response.data.categories || []);
             console.log(response.data);
-            setDiscounts(response.data.discounts || []);  // Ensure discounts is an array
+            setDiscounts(response.data.discounts || []);  
 
         } catch (error) {
             console.error('An error occurred while fetching deals:', error);

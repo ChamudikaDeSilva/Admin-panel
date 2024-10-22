@@ -92,8 +92,6 @@ Route::delete('/product/management/delete/discounts/{discount}', [DiscountContro
 Route::get('/product/management/fetch/deals', [DealController::class, 'fetchdeals']);
 Route::post('/product/management/deals/create', [DealController::class, 'createDeals'])->name('deals.store');
 
-
-
 //------Frontend API--------------------------------
 Route::get('/shop/data/fetch', [FrontendProductController::class, 'shopIndex']);
 Route::get('/shop/product/fetch', [FrontendProductController::class, 'fetchProducts']);

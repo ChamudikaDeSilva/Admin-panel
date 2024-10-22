@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Deal extends Model
 {
@@ -14,7 +13,7 @@ class Deal extends Model
         'name',
         'description',
         'start_date',
-        'end_date'
+        'end_date',
     ];
 
     public function products()
