@@ -29,7 +29,7 @@ export default function Deals({ auth }) {
             setProducts(response.data.products || []);
             setCategories(response.data.categories || []);
             console.log(response.data);
-            setDiscounts(response.data.discounts || []);  
+            setDiscounts(response.data.discounts || []);
 
         } catch (error) {
             console.error('An error occurred while fetching deals:', error);
@@ -173,7 +173,10 @@ export default function Deals({ auth }) {
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.name || 'N/A'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.description || 'No description'}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">{deal?.category?.name || 'Uncategorized'}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+    {deal?.categorydeals?.map(category => category.name).join(', ') || 'Uncategorized'}
+</td>
+
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.quantity || 'N/A'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.unit_price || 'N/A'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.isAvailable ? 'Yes' : 'No'}</td>

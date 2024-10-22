@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -63,5 +63,10 @@ class Deal extends Model
     public function category()
     {
         return $this->belongsToMany(Category::class);
+    }
+
+    public function categorydeals()
+    {
+        return $this->belongsToMany(Category::class, 'category_deals', 'deal_id', 'category_id');
     }
 }

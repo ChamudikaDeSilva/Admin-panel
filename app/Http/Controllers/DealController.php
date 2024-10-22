@@ -28,13 +28,17 @@ class DealController extends Controller
 
     public function fetchDeals()
     {
-        $deals = Deal::all();
+        try {
+            $deals = Deal::with('categorydeals')->get();
         $products = Product::all();
         $categories = Category::all();
         $discounts = Discount::all();
-        $category = CategoryDeal::with('categorydeal')->get();
 
-        return response()->json(['deals' => $deals, 'products' => $products, 'categories' => $categories, 'discounts' => $discounts, 'category' => $category]);
+
+        return response()->json(['deals' => $deals, 'products' => $products, 'categories' => $categories, 'discounts' => $discounts]);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
+    }
     }
 
     public function createDeals(Request $request)
@@ -158,6 +162,6 @@ class DealController extends Controller
 
     public function assignProducts()
     {
-        
+
     }
 }
