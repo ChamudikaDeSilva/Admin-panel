@@ -172,7 +172,7 @@ class DealController extends Controller
         $products=Product::all();
         $discounts=Discount::all();
         $user = auth()->user();
-        $deal = Deal::with('categorydeals')->get();
+        $deals = Deal::with('categorydeals')->get();
 
         // Pass the necessary data to the frontend
         return Inertia::render('Products/deal_edit', [
@@ -181,6 +181,80 @@ class DealController extends Controller
             'discounts' => $discounts,
             'auth' => $user,
             'deal' => $deal,
+            'deals' => $deals,
         ]);
+    }
+
+
+    public function updateDeal(Request $request, $dealId)
+    {
+        // Log incoming request data
+        //Log::info('Received request data:', ['request' => $request->all()]);
+
+        // Convert availability to boolean
+        $request->merge([
+            'availability' => filter_var($request->availability, FILTER_VALIDATE_BOOLEAN),
+        ]);
+
+        // Validate incoming request data
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'category_id' => 'required|integer|exists:categories,id',
+
+            'description' => 'required|string',
+            'unit_price' => 'required|numeric|min:0',
+            'quantity' => 'required|numeric|min:0',
+            'availability' => 'required|boolean',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+
+        ]);
+
+        if ($validator->fails()) {
+            Log::error('Validation errors:', ['errors' => $validator->errors()]);
+
+            return response()->json($validator->errors(), 422);
+        }
+
+        try {
+            $deal = Deal::findOrFail($dealId);
+
+            // Update product details (except image)
+            $deal->update([
+                'name' => $request->name,
+                'category_id' => $request->category_id,
+
+                'description' => $request->description,
+                'unit_price' => $request->unit_price,
+                'quantity' => $request->quantity,
+                'isAvailable' => $request->availability,
+
+            ]);
+
+            // Handle image upload (if provided)
+            if ($request->hasFile('image')) {
+                // Remove existing image if present
+                if ($deal->image) {
+                    Storage::disk('public')->delete($deal->image);
+                }
+
+                $image = $request->file('image');
+                $imageName = $image->getClientOriginalName();
+                $imagePath = $image->storeAs('deals', $imageName, 'public');
+                $imageUrl = Storage::url($imagePath);
+
+                $deal->image = $imageUrl;
+            }
+
+            $deal->save();
+
+            return response()->json(['message' => 'Deal updated successfully', 'product' => $deal], 201);
+        } catch (\Exception $e) {
+            Log::error('Error updating deal:', [
+                'exception' => $e->getMessage(),
+                'request_data' => $request->all(),
+            ]);
+
+            return response()->json(['message' => 'Internal server error'], 500);
+        }
     }
 }

@@ -33,7 +33,7 @@ export default function EditDeal() {
         availability: deal.isAvailable || false,
         image: null,
         existingImage: deal.image || '',
-        unit:deal.unit || '',
+
     });
 
     const handleChange = (e) => {
@@ -87,7 +87,7 @@ export default function EditDeal() {
         formData.append('unit_price', data.unit_price);
         formData.append('quantity', data.quantity);
         formData.append('availability', data.availability);
-        formData.append('unit', data.unit);
+
 
         if (data.image instanceof File) {
             formData.append('image', data.image);
@@ -195,17 +195,7 @@ export default function EditDeal() {
                                     {errors.quantity && <div className="text-red-600">{errors.quantity}</div>}
                                 </div>
 
-                                <div className="mt-4 w-full max-w-md">
-                                    <label htmlFor="quantity" className="block text-sm font-medium text-gray-700">Unit</label>
-                                    <input
-                                        id="unit"
-                                        name="unit"
-                                        value={data.unit}
-                                        onChange={handleChange}
-                                        className="mt-1 block w-full border-gray-300 focus:border-lime-500 focus:outline-none focus:ring-lime-500 rounded-md shadow-sm"
-                                    />
-                                    {errors.unit && <div className="text-red-600">{errors.unit}</div>}
-                                </div>
+
 
                                 <div className="mt-4 w-full max-w-md">
                                     <label htmlFor="availability" className="block text-sm font-medium text-gray-700">Availability</label>
