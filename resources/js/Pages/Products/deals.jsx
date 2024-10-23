@@ -187,7 +187,11 @@ export default function Deals({ auth }) {
                                                         />
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
-                                                        <FontAwesomeIcon icon={faFilePen} className="text-amber-600 cursor-pointer fa-lg mr-2" />
+                                                        <FontAwesomeIcon icon={faFilePen} className="text-amber-600 cursor-pointer fa-lg mr-2"
+                                                            onClick={() => {
+                                                                window.location.href = route('deals.edit', { id: deal.id });
+                                                            }}
+                                                        />
                                                         <FontAwesomeIcon icon={faFolderPlus} className="text-green-600 cursor-pointer fa-lg" />
                                                     </td>
 

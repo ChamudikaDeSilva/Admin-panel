@@ -162,6 +162,25 @@ class DealController extends Controller
 
     public function assignProducts()
     {
-        
+
+    }
+
+    public function editDeal(Deal $deal)
+    {
+        // Load the categories and subcategories
+        $categories = Category::all();
+        $products=Product::all();
+        $discounts=Discount::all();
+        $user = auth()->user();
+        $deal = Deal::with('categorydeals')->get();
+
+        // Pass the necessary data to the frontend
+        return Inertia::render('Products/deal_edit', [
+            'products' => $products,
+            'categories' => $categories,
+            'discounts' => $discounts,
+            'auth' => $user,
+            'deal' => $deal,
+        ]);
     }
 }
