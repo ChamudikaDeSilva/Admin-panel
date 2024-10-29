@@ -55,7 +55,7 @@ class Deal extends Model
         return $this->belongsToMany(Product::class);
     }
 
-    public function discounts()
+    /*public function discounts()
     {
         return $this->belongsToMany(Discount::class);
     }
@@ -63,10 +63,15 @@ class Deal extends Model
     public function category()
     {
         return $this->belongsToMany(Category::class);
-    }
+    }*/
 
     public function categorydeals()
     {
         return $this->belongsToMany(Category::class, 'category_deals', 'deal_id', 'category_id');
+    }
+
+    public function discountdeals()
+    {
+        return $this->belongsToMany(Discount::class, 'discount_deals', 'deal_id', 'discount_id');
     }
 }

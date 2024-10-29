@@ -4,37 +4,35 @@ import axios from 'axios';
 import { Inertia } from '@inertiajs/inertia';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
+import Select from 'react-select';
 
 export default function EditDeal() {
     const { props } = usePage();
-    const { auth, categories, discounts,products,deal } = props;
+    const { auth, categories, discounts, products, deal, deals } = props;
     const [showModal, setShowModal] = useState(false);
     const [purgeModal, setPurgeModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
     const [dealToDelete, setProductToDelete] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [imagePreview, setImagePreview] = useState(deal?.image || '');
-
-
     const [imageName, setImageName] = useState(deal?.image ? deal.image.split('/').pop() : '');
-
-
-    if (!auth || !deal) {
-        console.log('User, Auth, or Deal data is not available');
-        return <div>Loading...</div>;
-    }
 
     const { data, setData, errors } = useForm({
         name: deal.name || '',
-        category_id: deal.category_id || '',
+        category_id: deal.categorydeals.length > 0 ? deal.categorydeals[0].id : '',
         description: deal.description || '',
         unit_price: deal.unit_price || '',
         quantity: deal.quantity || '',
         availability: deal.isAvailable || false,
         image: null,
         existingImage: deal.image || '',
-
+        discounts: deal.discounts || [],
     });
+
+    if (!auth || !deal) {
+        console.log('User, Auth, or Deal data is not available');
+        return <div>Loading...</div>;
+    }
 
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
@@ -46,6 +44,10 @@ export default function EditDeal() {
         } else {
             setData(name, value);
         }
+    };
+
+    const handleDiscountChange = (selectedOptions) => {
+        setData('discounts', selectedOptions || []); // Handle multi-select change
     };
 
     const handleModalClose = () => {
@@ -79,7 +81,6 @@ export default function EditDeal() {
         setIsLoading(true);
 
         const dealId = deal.id;
-
         const formData = new FormData();
         formData.append('name', data.name);
         formData.append('category_id', data.category_id);
@@ -88,12 +89,16 @@ export default function EditDeal() {
         formData.append('quantity', data.quantity);
         formData.append('availability', data.availability);
 
-
         if (data.image instanceof File) {
             formData.append('image', data.image);
         } else {
             formData.append('existingImage', data.existingImage);
         }
+
+        // Append selected discounts to formData
+        data.discounts.forEach(discount => {
+            formData.append('discounts[]', discount.value); // Use discount.value if using react-select
+        });
 
         try {
             await axios.post(`/api/product/management/update/deals/${dealId}`, formData);
@@ -125,6 +130,7 @@ export default function EditDeal() {
                         {/*<div className="p-6 bg-white border-b border-gray-200">*/}
                             <h2 className="font-semibold text-xl text-gray-800 leading-tight text-center mb-6">Edit Deal</h2>
                             <form onSubmit={handleSubmit} className="flex flex-col items-center pb-20" encType="multipart/form-data">
+
                                 <div className="mt-4 w-full max-w-md">
                                     <label htmlFor="name" className="block text-sm font-medium text-gray-700">Name</label>
                                     <input
@@ -137,6 +143,7 @@ export default function EditDeal() {
                                     />
                                     {errors.name && <div className="text-red-600">{errors.name}</div>}
                                 </div>
+
                                 <div className="mt-4 w-full max-w-md">
                                     <label htmlFor="category_id" className="block text-sm font-medium text-gray-700">Category</label>
                                     <select
@@ -156,6 +163,21 @@ export default function EditDeal() {
                                     {errors.category_id && <div className="text-red-600">{errors.category_id}</div>}
                                 </div>
 
+                                <div className="mt-4 w-full max-w-md">
+                                    <label htmlFor="discounts" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Discounts
+                                    </label>
+                                    <Select
+                                        id="discounts"
+                                        name="discounts"
+                                        isMulti
+                                        options={discounts.map(discount => ({ value: discount.id, label: discount.description }))}
+                                        value={data.discounts} // Set the selected values here
+                                        onChange={handleDiscountChange} // Handle multi-select change
+                                        className="mt-1"
+                                    />
+                                    {errors.discounts && <div className="text-red-600">{errors.discounts}</div>}
+                                </div>
 
                                 <div className="mt-4 w-full max-w-md">
                                     <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
@@ -194,8 +216,6 @@ export default function EditDeal() {
                                     />
                                     {errors.quantity && <div className="text-red-600">{errors.quantity}</div>}
                                 </div>
-
-
 
                                 <div className="mt-4 w-full max-w-md">
                                     <label htmlFor="availability" className="block text-sm font-medium text-gray-700">Availability</label>
