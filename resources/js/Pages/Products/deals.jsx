@@ -16,7 +16,6 @@ export default function Deals({ auth }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [dealsPerPage] = useState(5);
     const [selectedDeals, setSelectedDeals] = useState([]);
-    const[category,setCategory] = useState([]);
 
     useEffect(() => {
         fetchDeals();

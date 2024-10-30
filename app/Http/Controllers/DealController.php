@@ -297,4 +297,18 @@ class DealController extends Controller
         }
     }
 
+    public function destroyProduct(Product $product)
+    {
+        $product->delete();
+
+        return response()->json(['message' => 'Product deleted successfully']);
+    }
+
+    public function destroyDeal(Deal $deal)
+    {
+        $deal->delete();
+        
+        return response()->json(['message' => 'Deal deleted successfully']);
+    }
+
 }

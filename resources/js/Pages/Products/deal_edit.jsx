@@ -5,12 +5,15 @@ import { Inertia } from '@inertiajs/inertia';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head, Link } from '@inertiajs/react';
 import Select from 'react-select';
+import ShowMessageModal from './DealsModelComponents/ShowMessageModal';
+import PurgeModal from './DealsModelComponents/PurgeModal';
+
 
 export default function EditDeal() {
     const { props } = usePage();
     const { auth, categories, discounts, products, deal } = props;
-    const [showModal, setShowModal] = useState(false);
     const [purgeModal, setPurgeModal] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
     const [dealToDelete, setProductToDelete] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -61,6 +64,7 @@ export default function EditDeal() {
 
     const handleModalClose = () => {
         setShowModal(false);
+        setPurgeModal(false);
         Inertia.visit('/product/management/deals');
     };
 
@@ -99,8 +103,7 @@ export default function EditDeal() {
         formData.append('category_id', data.category_id);
         formData.append('description', data.description);
         formData.append('unit_price', parseFloat(data.unit_price)); // Ensure it's a number
-formData.append('quantity', parseInt(data.quantity, 10)); // Ensure it's an integer
-
+        formData.append('quantity', parseInt(data.quantity, 10)); // Ensure it's an integer
         formData.append('availability', data.availability ? '1' : '0'); // Ensure boolean is converted to string
 
         if (data.image instanceof File) {
@@ -122,14 +125,13 @@ formData.append('quantity', parseInt(data.quantity, 10)); // Ensure it's an inte
         try {
             await axios.post(`/api/product/management/update/deals/${dealId}`, formData);
             setModalMessage('The deal was updated successfully.');
-            setShowModal(true);
+        setShowModal(true);
         } catch (errors) {
             console.error('Error updating deal:', errors);
         } finally {
             setIsLoading(false);
         }
     };
-
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -300,6 +302,18 @@ formData.append('quantity', parseInt(data.quantity, 10)); // Ensure it's an inte
                                     </button>
                                 </div>
                             </form>
+                            {showModal && (
+                                <ShowMessageModal
+                                    modalMessage={modalMessage}
+                                    handleModalClose={handleModalClose}
+                                />
+                            )}
+                            {purgeModal && (
+                                <PurgeModal
+                                    handleModalClose={handleModalClose}
+                                    handleDeleteProduct={handleDeleteProduct}
+                                />
+                            )}
                         </div>
                     </div>
                 </div>
