@@ -41,19 +41,23 @@ export default function EditDeal() {
     const handleChange = (e) => {
         const { name, value, type, checked, files } = e.target;
 
-        if (type === 'checkbox') {
-            setData(name, checked);
-        } else if (type === 'file') {
-            setData(name, files[0]);
-        } else {
-            setData(name, value);
-        }
+        setData((prevData) => {
+            if (type === 'checkbox') {
+                return { ...prevData, [name]: checked };
+            } else if (type === 'file') {
+                return { ...prevData, [name]: files[0] };
+            } else if (type === 'number') {
+                return { ...prevData, [name]: Number(value) }; // Convert to number
+            } else {
+                return { ...prevData, [name]: value };
+            }
+        });
     };
+
 
     const handleDiscountChange = (selectedOptions) => {
         setData('discounts', selectedOptions || []);
     };
-
 
     const handleModalClose = () => {
         setShowModal(false);
@@ -85,14 +89,19 @@ export default function EditDeal() {
         event.preventDefault();
         setIsLoading(true);
 
-        const dealId = deal.id;
+        const dealId = deal.id; // Ensure 'deal' is correctly defined
         const formData = new FormData();
+
+        // Log the data to see if it has values
+        console.log('Data to be submitted:', data);
+
         formData.append('name', data.name);
         formData.append('category_id', data.category_id);
         formData.append('description', data.description);
-        formData.append('unit_price', data.unit_price);
-        formData.append('quantity', data.quantity);
-        formData.append('availability', data.availability);
+        formData.append('unit_price', parseFloat(data.unit_price)); // Ensure it's a number
+formData.append('quantity', parseInt(data.quantity, 10)); // Ensure it's an integer
+
+        formData.append('availability', data.availability ? '1' : '0'); // Ensure boolean is converted to string
 
         if (data.image instanceof File) {
             formData.append('image', data.image);
@@ -102,8 +111,13 @@ export default function EditDeal() {
 
         // Append selected discounts to formData
         data.discounts.forEach(discount => {
-            formData.append('discounts[]', discount.value); // Use discount.value if using react-select
+            formData.append('discount_ids[]', discount.value); // Use discount.value if using react-select
         });
+
+        // Log the FormData
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
 
         try {
             await axios.post(`/api/product/management/update/deals/${dealId}`, formData);
@@ -115,6 +129,7 @@ export default function EditDeal() {
             setIsLoading(false);
         }
     };
+
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];

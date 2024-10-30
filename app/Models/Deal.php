@@ -48,6 +48,11 @@ class Deal extends Model
         'description',
         'start_date',
         'end_date',
+        'unit_price',
+        'quantity',
+        'current_price',
+        'isAvailable',
+        'image',
     ];
 
     public function products()
