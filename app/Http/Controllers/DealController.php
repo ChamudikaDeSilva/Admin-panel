@@ -297,18 +297,24 @@ class DealController extends Controller
         }
     }
 
-    public function destroyProduct(Product $product)
-    {
-        $product->delete();
-
-        return response()->json(['message' => 'Product deleted successfully']);
-    }
-
     public function destroyDeal(Deal $deal)
     {
         $deal->delete();
-        
+
         return response()->json(['message' => 'Deal deleted successfully']);
+    }
+
+    public function deleteMultiple(Request $request)
+    {
+        $dealIds=$request->input('deal_ids');
+
+        if(is_array($dealIds) && count($dealIds) > 0) {
+            Deal::whereIn('id', $dealIds)->delete();
+
+            return response()->json(['message' => 'Deals deleted successfully']);
+        }
+
+        return response()->json(['message' => 'No deals selected'], 400);
     }
 
 }

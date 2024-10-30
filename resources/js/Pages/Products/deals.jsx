@@ -5,6 +5,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePen, faArrowLeft, faArrowRight, faFolderPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 import DealCreateModal from './DealsModelComponents/DealCreateModal';
+import MultipleDeleteModal from './DealsModelComponents/MultipleDeleteModal';
 
 export default function Deals({ auth }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -16,6 +17,7 @@ export default function Deals({ auth }) {
     const [currentPage, setCurrentPage] = useState(1);
     const [dealsPerPage] = useState(5);
     const [selectedDeals, setSelectedDeals] = useState([]);
+    const [multiplePurgeModalOpen, setmultiplePurgeModalOpen] = useState(false);
 
     useEffect(() => {
         fetchDeals();
@@ -46,7 +48,11 @@ export default function Deals({ auth }) {
     };
 
     const openModal = () => setIsModalOpen(true);
-    const closeModal = () => setIsModalOpen(false);
+    const closeModal = () => {
+        setIsModalOpen(false);
+        setmultiplePurgeModalOpen(false);
+    };
+
 
     // Pagination
     const indexOfLastDeal = currentPage * dealsPerPage;
@@ -73,8 +79,19 @@ export default function Deals({ auth }) {
         }
     };
 
+    const confirmDeleteDeals = async () => {
+        try {
+            await axios.post(route('deals.deleteMultiple'), { deal_ids: selectedDeals });
+            setSelectedDeals([]);
+            fetchDeals();
+            setmultiplePurgeModalOpen(false);
+        } catch (error) {
+            console.error('An error occurred while deleting deals:', error);
+        }
+    };
+
     const handleDeleteSelectedDeals = async () => {
-        // Logic to delete selected deals
+        setmultiplePurgeModalOpen(true);
     };
 
     const handleSubmit = async (formData) => {
@@ -232,6 +249,11 @@ export default function Deals({ auth }) {
                                 categories={categories}
                                 discounts={discounts}
                                 onSubmit={handleSubmit}
+                            />}
+
+                            {multiplePurgeModalOpen && <MultipleDeleteModal
+                                confirmDeleteDeals={confirmDeleteDeals}
+                                closeModal={closeModal}
                             />}
 
                         </div>
