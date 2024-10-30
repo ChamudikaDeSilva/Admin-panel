@@ -44,10 +44,8 @@ class DealController extends Controller
     public function createDeals(Request $request)
     {
         try {
-            // Log incoming request
-            Log::info('Creating a new deal', ['request_data' => $request->all()]);
+            //Log::info('Creating a new deal', ['request_data' => $request->all()]);
 
-            // Validate the incoming request
             $validator = Validator::make($request->all(), [
                 'name' => 'required|string|max:255',
                 'description' => 'nullable|string',
@@ -61,7 +59,7 @@ class DealController extends Controller
             ]);
 
             if ($validator->fails()) {
-                Log::error('Validation failed', ['errors' => $validator->errors()]);
+                //Log::error('Validation failed', ['errors' => $validator->errors()]);
 
                 return response()->json(['errors' => $validator->errors()], 422);
             }
@@ -72,9 +70,9 @@ class DealController extends Controller
                 $imageName = $image->getClientOriginalName();
                 $imagePath = $image->storeAs('deals', $imageName, 'public');
                 $imageUrl = Storage::url($imagePath);
-                Log::info('Image uploaded successfully', ['image_url' => $imageUrl]);
+                //Log::info('Image uploaded successfully', ['image_url' => $imageUrl]);
             } else {
-                Log::error('Image file is required but not provided');
+                //Log::error('Image file is required but not provided');
 
                 return response()->json(['error' => 'Image file is required.'], 422);
             }
@@ -88,7 +86,7 @@ class DealController extends Controller
             $deal->isAvailable = $request->input('isAvailable');
             $deal->image = $imageUrl;
             $deal->save();
-            Log::info('Deal created successfully', ['deal_id' => $deal->id]);
+            //Log::info('Deal created successfully', ['deal_id' => $deal->id]);
 
             // Insert category_id and deal_id into category_deals table
             DB::table('category_deals')->insert([
@@ -97,17 +95,16 @@ class DealController extends Controller
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
-            Log::info('Category-deal relation saved', ['category_id' => $request->input('category_id'), 'deal_id' => $deal->id]);
+            //Log::info('Category-deal relation saved', ['category_id' => $request->input('category_id'), 'deal_id' => $deal->id]);
 
             // Handle discounts
             $current_price = $deal->unit_price;
-            if ($request->has('discounts')) {
-                $discounts = $request->input('discounts');
+            if ($request->has('discount_ids')) {
+                $discounts = $request->input('discount_ids');
                 foreach ($discounts as $discountId) {
                     $discount = Discount::find($discountId);
                     if (! $discount) {
-                        Log::warning('Discount not found', ['discount_id' => $discountId]);
-
+                        //Log::warning('Discount not found', ['discount_id' => $discountId]);
                         continue;
                     }
 
@@ -146,16 +143,16 @@ class DealController extends Controller
             } else {
                 $deal->current_price = $deal->unit_price;
                 $deal->save();
-                Log::info('No discounts applied, current price set to unit price', ['deal_id' => $deal->id]);
+                //Log::info('No discounts applied, current price set to unit price', ['deal_id' => $deal->id]);
             }
 
             return response()->json([
                 'message' => 'Deal created successfully!',
                 'deal' => $deal,
             ], 201);
-        } catch (Exception $e) {
-            Log::error('Error creating deal', ['exception' => $e->getMessage()]);
-
+        } catch (Exception $e)
+        {
+            //Log::error('Error creating deal', ['exception' => $e->getMessage()]);
             return response()->json(['error' => 'An error occurred while creating the deal. Please try again.'], 500);
         }
     }

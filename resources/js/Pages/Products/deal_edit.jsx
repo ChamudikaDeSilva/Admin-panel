@@ -8,7 +8,7 @@ import Select from 'react-select';
 
 export default function EditDeal() {
     const { props } = usePage();
-    const { auth, categories, discounts, products, deal, deals } = props;
+    const { auth, categories, discounts, products, deal } = props;
     const [showModal, setShowModal] = useState(false);
     const [purgeModal, setPurgeModal] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
@@ -26,8 +26,12 @@ export default function EditDeal() {
         availability: deal.isAvailable || false,
         image: null,
         existingImage: deal.image || '',
-        discounts: deal.discounts || [],
+        discounts: deal.discountdeals.map(discount => ({
+            value: discount.id,
+            label: discount.description,
+        })), // Format discounts correctly for Select component
     });
+    //console.log(data);
 
     if (!auth || !deal) {
         console.log('User, Auth, or Deal data is not available');
@@ -47,8 +51,9 @@ export default function EditDeal() {
     };
 
     const handleDiscountChange = (selectedOptions) => {
-        setData('discounts', selectedOptions || []); // Handle multi-select change
+        setData('discounts', selectedOptions || []);
     };
+
 
     const handleModalClose = () => {
         setShowModal(false);
@@ -171,11 +176,13 @@ export default function EditDeal() {
                                         id="discounts"
                                         name="discounts"
                                         isMulti
-                                        options={discounts.map(discount => ({ value: discount.id, label: discount.description }))}
-                                        value={data.discounts} // Set the selected values here
-                                        onChange={handleDiscountChange} // Handle multi-select change
-                                        className="mt-1"
+                                        options={discounts.map(discount => ({ value: discount.id, label: discount.description }))} // All available options
+                                        value={data.discounts} // Pre-selected values for the specific deal
+                                        onChange={handleDiscountChange}
+                                        className="mt-1 block w-full border-gray-300 focus:border-lime-500 focus:outline-none focus:ring-lime-500 rounded-md shadow-sm"
                                     />
+
+
                                     {errors.discounts && <div className="text-red-600">{errors.discounts}</div>}
                                 </div>
 
