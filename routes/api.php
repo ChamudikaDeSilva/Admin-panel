@@ -94,6 +94,7 @@ Route::post('/product/management/deals/create', [DealController::class, 'createD
 Route::post('/product/management/update/deals/{dealId}', [DealController::class, 'updateDeal'])->name('deal.update');
 Route::delete('/product/management/delete/deals/{deal}', [DealController::class, 'destroyDeal'])->name('deals.delete');
 Route::post('/product/management/delete/multiple/deals', [DealController::class, 'deleteMultiple'])->name('deals.deleteMultiple');
+Route::post('/product/management/deals/assign/products', [DealController::class, 'assignProduct'])->name('deals.assignProduct');
 
 //------Frontend API--------------------------------
 Route::get('/shop/data/fetch', [FrontendProductController::class, 'shopIndex']);

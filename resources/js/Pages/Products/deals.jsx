@@ -105,7 +105,7 @@ export default function Deals({ auth }) {
         <AuthenticatedLayout user={auth.user}>
             <Head title="Deals" />
             <div className="py-12">
-                <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                <div className="max-w-8xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                     <div className="p-12 bg-white border-b border-gray-200 w-full">
                             <div className="mb-4 w-full">
@@ -151,6 +151,9 @@ export default function Deals({ auth }) {
                                                 />
                                             </th>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Actions
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Name
                                             </th>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -171,9 +174,7 @@ export default function Deals({ auth }) {
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Image
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Actions
-                                            </th>
+
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
@@ -185,6 +186,18 @@ export default function Deals({ auth }) {
                                                             type="checkbox"
                                                             checked={selectedDeals.includes(deal?.id)}
                                                             onChange={() => handleSelectDeal(deal?.id)}
+                                                        />
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <FontAwesomeIcon icon={faFilePen} className="text-amber-600 cursor-pointer fa-lg mr-2"
+                                                            onClick={() => {
+                                                                window.location.href = route('deals.edit', { id: deal.id });
+                                                            }}
+                                                        />
+                                                        <FontAwesomeIcon icon={faFolderPlus} className="text-green-600 cursor-pointer fa-lg"
+                                                            onClick={() => {
+                                                                window.location.href = route('deals.assignProduct', { id: deal.id });
+                                                            }}
                                                         />
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.name || 'N/A'}</td>
@@ -202,14 +215,7 @@ export default function Deals({ auth }) {
                                                             className="h-16 w-16 object-cover"
                                                         />
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <FontAwesomeIcon icon={faFilePen} className="text-amber-600 cursor-pointer fa-lg mr-2"
-                                                            onClick={() => {
-                                                                window.location.href = route('deals.edit', { id: deal.id });
-                                                            }}
-                                                        />
-                                                        <FontAwesomeIcon icon={faFolderPlus} className="text-green-600 cursor-pointer fa-lg" />
-                                                    </td>
+
 
                                                 </tr>
                                             ))

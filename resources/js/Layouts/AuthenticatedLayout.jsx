@@ -10,23 +10,44 @@ import { faHouse, faCircleInfo, faGear, faAddressBook, faLock, faBars, faLockOpe
 
 export default function Authenticated({ user, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
-    const [sidebarOpen, setSidebarOpen] = useState(true);
+    const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth >= 768);
 
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 768) {
+                setSidebarOpen(true); // Keep sidebar open on larger screens
+            } else {
+                setSidebarOpen(false); // Hide sidebar on smaller screens
+            }
+        };
+
+        // Adjust sidebar visibility on screen resize
+        window.addEventListener('resize', handleResize);
+        handleResize();
+
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
             const sidebar = document.getElementById('sidebar');
             const openSidebarButton = document.getElementById('open-sidebar');
-            if (sidebar && !sidebar.contains(event.target) && !openSidebarButton.contains(event.target)) {
+
+            // Only close the sidebar on smaller screens
+            if (
+                window.innerWidth < 768 &&
+                sidebar &&
+                !sidebar.contains(event.target) &&
+                !openSidebarButton.contains(event.target)
+            ) {
                 setSidebarOpen(false);
             }
         };
 
         document.addEventListener('click', handleClickOutside);
 
-        return () => {
-            document.removeEventListener('click', handleClickOutside);
-        };
+        return () => document.removeEventListener('click', handleClickOutside);
     }, []);
 
     return (
@@ -324,7 +345,7 @@ export default function Authenticated({ user, header, children }) {
 
                     </nav>
 
-                    <main className={`flex-1 ml-56 p-4 overflow-auto`}>
+                    <main className={`flex-1 ml-4 md:ml-56 p-4 overflow-auto`}>
                         {children}
                     </main>
 

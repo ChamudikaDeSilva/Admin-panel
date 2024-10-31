@@ -73,3 +73,4 @@ Route::get('/product/management/discounts/edit/{product}', [DiscountController::
 
 Route::get('/product/management/deals', [DealController::class, 'dealIndex'])->middleware(['auth', 'verified'])->name('deal_management');
 Route::get('/product/management/deals/edit/{deal}', [DealController::class, 'editDeal'])->middleware(['auth', 'verified'])->name('deals.edit');
+Route::get('/product/management/deals/assign/products', [DealController::class, 'assignProductView'])->middleware(['auth', 'verified'])->name('deals.assignProduct');

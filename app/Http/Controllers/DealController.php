@@ -55,7 +55,7 @@ class DealController extends Controller
                 'discounts' => 'nullable|array',
                 'discounts.*' => 'integer|exists:discounts,id',
                 'isAvailable' => 'required|boolean',
-                'image' => 'nullable|image|max:2048', // Validate image (optional)
+                'image' => 'nullable|image', // Validate image (optional)
             ]);
 
             if ($validator->fails()) {
@@ -315,6 +315,25 @@ class DealController extends Controller
         }
 
         return response()->json(['message' => 'No deals selected'], 400);
+    }
+
+    public function assignProductView(Deal $deal)
+    {
+        //$categories = Category::all();  // For populating the dropdown
+        //$products = Product::all();
+        //$discounts = Discount::all();
+        $user = auth()->user();
+
+        // Load both categorydeals and discountdeals relationships
+        $deal->load('categorydeals', 'discountdeals');
+
+        return Inertia::render('Products/deal_product_assign', [
+            //'products' => $products,
+            //'categories' => $categories,
+            //'discounts' => $discounts,
+            'auth' => $user,
+            'deal' => $deal,
+        ]);
     }
 
 }
