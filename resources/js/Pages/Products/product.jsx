@@ -14,7 +14,7 @@ export default function Products({ auth }) {
     const [discounts, setDiscounts] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
-    const [productsPerPage] = useState(10);
+    const [productsPerPage] = useState(5);
     const [selectedProducts, setSelectedProducts] = useState([]);
     const [isPurgeModalOpen, setIsPurgeModalOpen] = useState(false);
     const [showModal, setShowModal] = useState(false);
