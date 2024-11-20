@@ -107,10 +107,12 @@ export default function EditProduct() {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        if (file) {
+        if (file && file.type.startsWith('image/')) {
             setData('image', file);
             setImagePreview(URL.createObjectURL(file));
             setImageName(file.name);
+        } else {
+            alert('Please select a valid image file.');
         }
     };
 
