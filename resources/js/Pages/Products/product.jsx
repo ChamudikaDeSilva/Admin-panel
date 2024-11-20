@@ -90,7 +90,8 @@ export default function Products({ auth }) {
         const file = e.target.files[0];
         if (file && file.type.startsWith('image/')) {
             setFormData({ ...formData, image: file });
-            setImagePreview(URL.createObjectURL(file));
+            const objectURL = URL.createObjectURL(file);
+            setImagePreview(objectURL);
         } else {
             setFormData({ ...formData, image: null });
             setImagePreview(null);
