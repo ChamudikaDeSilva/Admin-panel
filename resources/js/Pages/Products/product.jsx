@@ -88,8 +88,14 @@ export default function Products({ auth }) {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        setFormData({ ...formData, image: file });
-        setImagePreview(URL.createObjectURL(file));
+        if (file && file.type.startsWith('image/')) {
+            setFormData({ ...formData, image: file });
+            setImagePreview(URL.createObjectURL(file));
+        } else {
+            setFormData({ ...formData, image: null });
+            setImagePreview(null);
+            alert('Please select a valid image file.');
+        }
     };
 
     const handleSubmit = async (e) => {
