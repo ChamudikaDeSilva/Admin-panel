@@ -202,14 +202,14 @@ export default function Products({ auth }) {
                         <div className="p-12 bg-white border-b border-gray-200">
                         <div className="mb-4">
                             <h1 className="text-2xl font-semibold text-gray-700 mb-4 italic">Products</h1>
-                                <hr className="border-lime-500 mb-4" /> {/* Added hr element */}
+                            <hr className="border-gray-300 mb-4" />
                                 <div className="flex flex-col sm:flex-row items-center justify-between">
                                     <input
                                         type="text"
                                         placeholder="Search..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="border border-lime-500 focus:border-lime-500 focus:ring-0 rounded-md mb-2 sm:mb-0 px-4 py-2 sm:w-1/5"
+                                        className="border border-gray-300 focus:border-gray-300 focus:ring-0 rounded-md mb-2 sm:mb-0 px-4 py-2 sm:w-1/5"
                                     />
                                     <div className="flex items-center space-x-2">
                                         <button

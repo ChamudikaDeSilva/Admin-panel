@@ -96,6 +96,9 @@ export default function Modules({ auth }) {
                 <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-12 bg-white border-b border-gray-200">
+                        <h2 className="text-xl font-semibold mb-4">Assign Permissions</h2>
+                        <hr className="border-gray-300 mb-4" />
+                        
                             <div className="mb-4 flex items-center">
                                 <label htmlFor="role" className="block text-base font-bold text-gray-700 mr-4">
                                     Select Role

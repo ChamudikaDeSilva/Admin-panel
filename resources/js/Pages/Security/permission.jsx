@@ -73,14 +73,16 @@ export default function Modules({ auth,permissions: initialPermissions }) {
                     <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
                         <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                             <div className="p-12 bg-white border-b border-gray-200">
-                                <button
-                                    onClick={openModal}
-                                    className="bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded">
-                                    Add Permission
-                                </button>
-
+                                <div className="flex justify-between items-center mb-4">
+                                    <h2 className="text-xl font-semibold mb-4">Permission List</h2>
+                                    <button
+                                        onClick={openModal}
+                                        className="bg-lime-500 hover:bg-lime-700 text-white font-bold py-2 px-4 rounded">
+                                            Add Permission
+                                    </button>
+                                </div>
+                                <hr className="border-gray-300 mb-4" />
                                 <div className="mt-8">
-                                <h2 className="text-xl font-semibold mb-4">Permission List</h2>
                                 <div className="overflow-x-auto">
                                     <table className="min-w-full divide-y divide-gray-200">
                                         <thead>

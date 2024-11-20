@@ -110,7 +110,7 @@ export default function Deals({ auth }) {
                     <div className="p-12 bg-white border-b border-gray-200 w-full">
                             <div className="mb-4 w-full">
                                 <h1 className="text-2xl font-semibold text-gray-700 mb-4 italic">Deals</h1>
-                                <hr className="border-lime-500 mb-4" />
+                                <hr className="border-gray-300 mb-4" />
 
                                 <div className="flex flex-col sm:flex-row items-center justify-between">
                                     <input
@@ -118,7 +118,7 @@ export default function Deals({ auth }) {
                                         placeholder="Search..."
                                         value={searchTerm}
                                         onChange={(e) => setSearchTerm(e.target.value)}
-                                        className="border border-lime-500 focus:border-lime-500 focus:ring-0 rounded-md mb-2 sm:mb-0 px-4 py-2 sm:w-1/5"
+                                        className="border border-gray-300 focus:border-gray-300 focus:ring-0 rounded-md mb-2 sm:mb-0 px-4 py-2 sm:w-1/5"
                                     />
                                     <div className="flex items-center space-x-2">
                                         <button
@@ -154,6 +154,9 @@ export default function Deals({ auth }) {
                                                 Actions
                                             </th>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                                Image
+                                            </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Name
                                             </th>
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -171,10 +174,6 @@ export default function Deals({ auth }) {
                                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Available
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                Image
-                                            </th>
-
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
@@ -200,6 +199,13 @@ export default function Deals({ auth }) {
                                                             }}
                                                         />
                                                     </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <img
+                                                            src={deal?.image || 'placeholder.jpg'}
+                                                            alt={deal?.name || 'Image unavailable'}
+                                                            className="h-16 w-16 object-cover"
+                                                        />
+                                                    </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.name || 'N/A'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.description || 'No description'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
@@ -208,15 +214,6 @@ export default function Deals({ auth }) {
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.quantity || 'N/A'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.unit_price || 'N/A'}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap">{deal?.isAvailable ? 'Yes' : 'No'}</td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
-                                                        <img
-                                                            src={deal?.image || 'placeholder.jpg'}
-                                                            alt={deal?.name || 'Image unavailable'}
-                                                            className="h-16 w-16 object-cover"
-                                                        />
-                                                    </td>
-
-
                                                 </tr>
                                             ))
                                         ) : (
