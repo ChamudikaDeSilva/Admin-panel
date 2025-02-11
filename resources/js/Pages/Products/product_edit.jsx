@@ -107,12 +107,13 @@ export default function EditProduct() {
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
-        if (file && file.type.startsWith('image/')) {
+        if (file && file.type.startsWith('image/') && file.size <= 5 * 1024 * 1024) { // 5MB limit
             setData('image', file);
-            setImagePreview(URL.createObjectURL(file));
+            const objectUrl = URL.createObjectURL(file);
+            setImagePreview(objectUrl);
             setImageName(file.name);
         } else {
-            alert('Please select a valid image file.');
+            alert('Please select a valid image file (max size 5MB).');
         }
     };
 
