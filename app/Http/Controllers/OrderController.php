@@ -42,7 +42,7 @@ class OrderController extends Controller
     public function getOrderDetailsById($orderId)
     {
         try {
-            Log::info("Fetching order details for order ID: {$orderId}");
+            //Log::info("Fetching order details for order ID: {$orderId}");
 
             // Fetch the order with related items, product details, and discounts
             $order = Order::with(['items.product', 'discounts'])->where('id', $orderId)->first();
@@ -68,11 +68,11 @@ class OrderController extends Controller
                 ];
             });
 
-            Log::info('Order found: ', $order->toArray());
+            //Log::info('Order found: ', $order->toArray());
 
             return response()->json(['order' => $order], 200);
         } catch (\Exception $e) {
-            Log::error("Error fetching order details for order ID: {$orderId}. Error: {$e->getMessage()}");
+            //Log::error("Error fetching order details for order ID: {$orderId}. Error: {$e->getMessage()}");
 
             return response()->json(['message' => 'Error fetching order details'], 500);
         }

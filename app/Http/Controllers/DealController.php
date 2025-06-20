@@ -30,9 +30,9 @@ class DealController extends Controller
     {
         try {
             $deals = Deal::with('categorydeals')->get();
-        $products = Product::all();
-        $categories = Category::all();
-        $discounts = Discount::all();
+            $products = Product::all();
+            $categories = Category::all();
+            $discounts = Discount::all();
 
 
         return response()->json(['deals' => $deals, 'products' => $products, 'categories' => $categories, 'discounts' => $discounts]);
@@ -334,6 +334,39 @@ class DealController extends Controller
             'auth' => $user,
             'deal' => $deal,
         ]);
+    }
+
+    public function assignProducts(Request $request, $dealId)
+    {
+        $validator = Validator::make($request->all(), [
+            'product_ids' => 'required|array',
+            'product_ids.*' => 'integer|exists:products,id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), 422);
+        }
+
+        try {
+            $deal = Deal::findOrFail($dealId);
+            $productIds = $request->input('product_ids');
+
+            // Clear existing product associations
+            DB::table('deal_products')->where('deal_id', $deal->id)->delete();
+
+            foreach ($productIds as $productId) {
+                DB::table('deal_products')->insert([
+                    'deal_id' => $deal->id,
+                    'product_id' => $productId,
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+
+            return response()->json(['message' => 'Products assigned successfully'], 200);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Internal server error'], 500);
+        }
     }
 
 }
