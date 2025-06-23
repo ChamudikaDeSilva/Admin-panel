@@ -11,17 +11,21 @@ RUN a2enmod rewrite
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy Composer separately and install before app code
+# Copy Composer separately before app code
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy the Laravel application code
 COPY . .
 
-# Install dependencies
+# Install Laravel dependencies
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 
-# Fix permissions for Laravel
+# Set correct permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Expose port 80
+# 👇 Fix: Serve Laravel from /public and allow .htaccess
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf \
+    && sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s|AllowOverride None|AllowOverride All|' /etc/apache2/apache2.conf
+
+# Expose Apache port
 EXPOSE 80
