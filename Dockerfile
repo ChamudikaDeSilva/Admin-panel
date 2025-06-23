@@ -23,9 +23,12 @@ RUN composer install --no-interaction --prefer-dist --optimize-autoloader
 # Set correct permissions for Laravel
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# 👇 Fix: Serve Laravel from /public and allow .htaccess
+# Serve Laravel from public/
 RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf \
     && sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s|AllowOverride None|AllowOverride All|' /etc/apache2/apache2.conf
 
-# Expose Apache port
+# Optional: Silence ServerName warning
+RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
 EXPOSE 80
+
