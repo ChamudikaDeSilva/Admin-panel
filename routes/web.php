@@ -75,4 +75,7 @@ Route::get('/product/management/deals', [DealController::class, 'dealIndex'])->m
 Route::get('/product/management/deals/edit/{deal}', [DealController::class, 'editDeal'])->middleware(['auth', 'verified'])->name('deals.edit');
 Route::get('/product/management/deals/assign/products', [DealController::class, 'assignProductView'])->middleware(['auth', 'verified'])->name('deals.assignProduct');
 
+Route::get('/health', function () {
+    return response()->json(['status' => 'ok']);
+});
 
