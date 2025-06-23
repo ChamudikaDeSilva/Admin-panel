@@ -26,14 +26,14 @@ use Inertia\Inertia;
 */
 
 Route::middleware(['web'])->group(function () {
-    Route::get('/', function () {
-        return Inertia::render('Welcome', [
-            'canLogin' => Route::has('login'),
-            'canRegister' => Route::has('register'),
-            'laravelVersion' => Application::VERSION,
-            'phpVersion' => PHP_VERSION,
-        ]);
-    });
+    // Route::get('/', function () {
+    //     return Inertia::render('Welcome', [
+    //         'canLogin' => Route::has('login'),
+    //         'canRegister' => Route::has('register'),
+    //         'laravelVersion' => Application::VERSION,
+    //         'phpVersion' => PHP_VERSION,
+    //     ]);
+    // });
 
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/dashboard', function () {
@@ -74,3 +74,8 @@ Route::get('/product/management/discounts/edit/{product}', [DiscountController::
 Route::get('/product/management/deals', [DealController::class, 'dealIndex'])->middleware(['auth', 'verified'])->name('deal_management');
 Route::get('/product/management/deals/edit/{deal}', [DealController::class, 'editDeal'])->middleware(['auth', 'verified'])->name('deals.edit');
 Route::get('/product/management/deals/assign/products', [DealController::class, 'assignProductView'])->middleware(['auth', 'verified'])->name('deals.assignProduct');
+
+Route::get('/', function () {
+    return 'Laravel is working!';
+});
+
