@@ -11,6 +11,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SubCategoryController;
 use App\Http\Controllers\UserManagementController;
 use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -48,6 +49,15 @@ Route::middleware(['web'])->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::get('/test-db', function() {
+    try {
+        DB::connection()->getPdo();
+        return "Connected successfully to: " . DB::connection()->getDatabaseName();
+    } catch (\Exception $e) {
+        return "Error: " . $e->getMessage();
+    }
+});
 
 //Route::get('/modules', [ModuleController::class, 'index'])->name('modules');
 Route::get('/modules', [ModuleController::class, 'index'])->middleware(['auth', 'verified'])->name('modules');
