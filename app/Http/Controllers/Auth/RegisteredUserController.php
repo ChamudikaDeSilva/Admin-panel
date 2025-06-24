@@ -27,32 +27,8 @@ class RegisteredUserController extends Controller
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'name' => 'required|string|max:255',
-    //         'email' => 'required|string|email|max:255|unique:users',
-    //         'password' => 'required|string|confirmed|min:8',
-    //     ]);
-
-    //     $user = User::create([
-    //         'name' => $request->name,
-    //         'email' => $request->email,
-    //         'password' => Hash::make($request->password),
-    //     ]);
-
-    //     event(new Registered($user));
-
-    //     Auth::login($user);
-
-    //     return redirect('/dashboard');
-    // }
-
-  public function store(Request $request)
-{
-    try {
-        Log::info('Registering new user', $request->all());
-
+    public function store(Request $request)
+    {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -65,22 +41,48 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        Log::info('User created successfully', ['id' => $user->id]);
+        event(new Registered($user));
 
-        event(new \Illuminate\Auth\Events\Registered($user));
         Auth::login($user);
 
         return redirect('/dashboard');
-
-    } catch (\Exception $e) {
-        Log::error('Registration failed', [
-            'message' => $e->getMessage(),
-            'trace' => $e->getTraceAsString(),
-        ]);
-
-        return back()->withErrors([
-            'registration' => 'Something went wrong. Please try again.',
-        ]);
     }
-}
+
+//   public function store(Request $request)
+// {
+//     try {
+//         Log::info('Registering new user', $request->all());
+
+//         $request->validate([
+//             'name' => 'required|string|max:255',
+//             'email' => 'required|string|email|max:255|unique:users',
+//             'password' => 'required|string|confirmed|min:8',
+//         ]);
+
+//         $user = User::create([
+//             'name' => $request->name,
+//             'email' => $request->email,
+//             'password' => Hash::make($request->password),
+//         ]);
+
+//         Log::info('User created successfully', ['id' => $user->id]);
+
+//         event(new \Illuminate\Auth\Events\Registered($user));
+//         Auth::login($user);
+
+//         return redirect('/dashboard');
+
+//     } catch (\Exception $e) {
+//         Log::error('Registration failed', [
+//             'message' => $e->getMessage(),
+//             'trace' => $e->getTraceAsString(),
+//         ]);
+
+//         return back()->withErrors([
+//             'registration' => 'Something went wrong. Please try again.',
+//         ]);
+//     }
+// }
+// }
+
 }
