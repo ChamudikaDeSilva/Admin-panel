@@ -48,7 +48,7 @@ class RegisteredUserController extends Controller
     //     return redirect('/dashboard');
     // }
 
-    public function store(Request $request)
+  public function store(Request $request)
 {
     try {
         Log::info('Registering new user', $request->all());
@@ -67,22 +67,20 @@ class RegisteredUserController extends Controller
 
         Log::info('User created successfully', ['id' => $user->id]);
 
-        event(new Registered($user));
+        event(new \Illuminate\Auth\Events\Registered($user));
         Auth::login($user);
 
         return redirect('/dashboard');
+
     } catch (\Exception $e) {
-    Log::error('Registration failed', [
-        'message' => $e->getMessage(),
-        'file' => $e->getFile(),
-        'line' => $e->getLine(),
-        'trace' => $e->getTraceAsString(),
-    ]);
+        Log::error('Registration failed', [
+            'message' => $e->getMessage(),
+            'trace' => $e->getTraceAsString(),
+        ]);
 
-    return redirect()->back()->withErrors([
-        'registration' => 'Something went wrong. Please try again.',
-    ]);
+        return back()->withErrors([
+            'registration' => 'Something went wrong. Please try again.',
+        ]);
+    }
 }
-
-
-}}
+}
