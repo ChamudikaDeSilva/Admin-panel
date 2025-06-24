@@ -1,7 +1,6 @@
 <?php
 
-echo "✅ Apache is serving Laravel public/index.php!";
-exit;
+
 
 // Laravel bootstrap (leave this below)
 require __DIR__.'/../vendor/autoload.php';
