@@ -72,14 +72,17 @@ class RegisteredUserController extends Controller
 
         return redirect('/dashboard');
     } catch (\Exception $e) {
-        Log::error('Registration failed', [
-            'message' => $e->getMessage(),
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'trace' => $e->getTraceAsString(),
-        ]);
-        return response()->json(['message' => 'Registration failed'], 500);
-    }
+    Log::error('Registration failed', [
+        'message' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+        'trace' => $e->getTraceAsString(),
+    ]);
+
+    return redirect()->back()->withErrors([
+        'registration' => 'Something went wrong. Please try again.',
+    ]);
 }
 
-}
+
+}}
