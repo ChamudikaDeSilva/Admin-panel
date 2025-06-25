@@ -68,9 +68,13 @@ class Product extends Model
 
     protected $appends = ['image_url'];
 
+    // 👇 Define the accessor
     public function getImageUrlAttribute()
     {
-        return asset('storage/products/' . $this->image);
+        // If image is null or missing, return a placeholder or null
+        return $this->image
+            ? asset('storage/products/' . $this->image)
+            : null;
     }
 
 }
