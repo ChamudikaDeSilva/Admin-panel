@@ -304,7 +304,7 @@ export default function Products({ auth }) {
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         <img
-                                                            src={product.image_url} alt={product.name} 
+                                                            src={product.image} alt={product.name}
 
                                                             className="h-12 w-12 object-cover rounded"
                                                         />
