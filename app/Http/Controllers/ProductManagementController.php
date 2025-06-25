@@ -56,15 +56,19 @@ class ProductManagementController extends Controller
     //     ]);
     // }
 
-    public function fetchProducts()
+   public function fetchProducts()
     {
         $products = Product::with(['category', 'subCategory'])->get();
-        $categories = Category::all();
-        $subcategories = SubCategory::all();
-        $discounts = Discount::all();
 
-        return response()->json(['products' => $products, 'categories' => $categories, 'subcategories' => $subcategories, 'discounts' => $discounts]);
-    } 
+        return response()->json([
+            'products' => $products,
+            'categories' => Category::all(),
+            'subcategories' => SubCategory::all(),
+            'discounts' => Discount::all(),
+        ]);
+    }
+
+
 
 
     public function createProduct(Request $request)

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * 
+ *
  *
  * @property int $id
  * @property int $category_id
@@ -64,5 +64,12 @@ class Product extends Model
     public function subCategory()
     {
         return $this->belongsTo(SubCategory::class);
+    }
+
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute()
+    {
+        return asset('storage/products/' . $this->image);
     }
 }
