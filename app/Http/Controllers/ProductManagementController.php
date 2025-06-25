@@ -25,36 +25,46 @@ class ProductManagementController extends Controller
         ]);
     }
 
+    // public function fetchProducts()
+    // {
+    //     $products = Product::with(['category', 'subCategory'])->get();
+
+    //     // Transform products to include full image URL
+    //     $products = $products->map(function ($product) {
+    //         return [
+    //             'id' => $product->id,
+    //             'name' => $product->name,
+    //             'description' => $product->description,
+    //             'price' => $product->price,
+    //             'category' => $product->category,
+    //             'subCategory' => $product->subCategory,
+    //             'image' => $product->image
+    //                 ? asset('storage/products/' . $product->image)
+    //                 : null,
+    //         ];
+    //     });
+
+    //     $categories = Category::all();
+    //     $subcategories = SubCategory::all();
+    //     $discounts = Discount::all();
+
+    //     return response()->json([
+    //         'products' => $products,
+    //         'categories' => $categories,
+    //         'subcategories' => $subcategories,
+    //         'discounts' => $discounts
+    //     ]);
+    // }
+
     public function fetchProducts()
     {
         $products = Product::with(['category', 'subCategory'])->get();
-
-        // Transform products to include full image URL
-        $products = $products->map(function ($product) {
-            return [
-                'id' => $product->id,
-                'name' => $product->name,
-                'description' => $product->description,
-                'price' => $product->price,
-                'category' => $product->category,
-                'subCategory' => $product->subCategory,
-                'image' => $product->image
-                    ? asset('storage/products/' . $product->image)
-                    : null,
-            ];
-        });
-
         $categories = Category::all();
         $subcategories = SubCategory::all();
         $discounts = Discount::all();
 
-        return response()->json([
-            'products' => $products,
-            'categories' => $categories,
-            'subcategories' => $subcategories,
-            'discounts' => $discounts
-        ]);
-    }
+        return response()->json(['products' => $products, 'categories' => $categories, 'subcategories' => $subcategories, 'discounts' => $discounts]);
+    } 
 
 
     public function createProduct(Request $request)
