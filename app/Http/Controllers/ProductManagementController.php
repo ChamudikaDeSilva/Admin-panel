@@ -72,112 +72,102 @@ class ProductManagementController extends Controller
 
 
     public function createProduct(Request $request)
-    {
-        try {
-            // Validate incoming request data
-            $validator = Validator::make($request->all(), [
-                'name' => 'required|string|max:255',
-                'description' => 'required|string',
-                'quantity' => 'required|integer|min:1',
-                'price' => 'required|numeric|min:0',
-                'category_id' => 'required|exists:categories,id',
-                'subcategory_id' => 'nullable|exists:sub_categories,id',
-                'isAvailable' => 'nullable|boolean',
-                'image' => 'required|image|max:2048',
-                'discounts' => 'nullable|array',
-                'discounts.*' => 'exists:discounts,id',
-                'unit' => 'required|string',
-            ]);
+{
+    try {
+        // 1. Validate request
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'quantity' => 'required|integer|min:1',
+            'price' => 'required|numeric|min:0',
+            'category_id' => 'required|exists:categories,id',
+            'subcategory_id' => 'nullable|exists:sub_categories,id',
+            'isAvailable' => 'nullable|boolean',
+            'image' => 'required|image|max:2048',
+            'discounts' => 'nullable|array',
+            'discounts.*' => 'exists:discounts,id',
+            'unit' => 'required|string',
+        ]);
 
-            if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 422);
-            }
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors()], 422);
+        }
 
-            // Handle image upload
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = time() . '_' . $image->getClientOriginalName(); // Prevent overwrites
-                $image->storeAs('public/products', $imageName); // Save in storage/app/public/products
+        // 2. Handle image upload
+        $imageName = null;
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->storeAs('public/products', $imageName);
+        }
 
-            } else {
-                return response()->json(['error' => 'Image file is required.'], 422);
-            }
+        // 3. Generate unique slug
+        $slug = Str::slug($request->input('name'), '-');
+        $slug = $this->makeUniqueSlug($slug);
 
-            // Generate unique slug
-            $slug = Str::slug($request->input('name'), '-');
-            $slug = $this->makeUniqueSlug($slug);
+        // 4. Create product
+        $product = new Product;
+        $product->name = $request->input('name');
+        $product->description = $request->input('description');
+        $product->quantity = $request->input('quantity');
+        $product->unit_price = $request->input('price');
+        $product->unit = $request->input('unit');
+        $product->category_id = $request->input('category_id');
+        $product->sub_category_id = $request->input('subcategory_id');
+        $product->isAvailable = $request->input('isAvailable', false);
+        $product->image = $imageName; // Just the filename
+        $product->slug = $slug;
+        $product->save();
 
-            // Create new product
-            $product = new Product;
-            $product->name = $request->input('name');
-            $product->description = $request->input('description');
-            $product->quantity = $request->input('quantity');
-            $product->unit_price = $request->input('price');
-            $product->unit = $request->input('unit');
-            $product->category_id = $request->input('category_id');
-            $product->sub_category_id = $request->input('subcategory_id');
-            $product->isAvailable = $request->input('isAvailable', false);
-            $$product->image = $imageName;
-            $product->slug = $slug;
+        // 5. Apply discounts if any
+        $currentPrice = $product->unit_price;
 
-            // Initialize current price
-            $currentPrice = $product->unit_price;
+        if ($request->has('discounts')) {
+            $discounts = $request->input('discounts');
 
-            $product->save();
+            foreach ($discounts as $discountId) {
+                $discount = Discount::find($discountId);
 
-            // Attach discounts to the product
-            if ($request->has('discounts')) {
-                $discounts = $request->input('discounts');
+                $existingDiscount = DB::table('discount_products')
+                    ->where('product_id', $product->id)
+                    ->first();
 
-                foreach ($discounts as $discountId) {
-                    $discount = Discount::find($discountId);
+                $previousPrice = $existingDiscount ? $existingDiscount->current_price : $product->unit_price;
 
-                    // Check if product already has a discount
-                    $existingDiscount = DB::table('discount_products')
-                        ->where('product_id', $product->id)
-                        ->first();
-
-                    if ($existingDiscount) {
-                        $previousPrice = $existingDiscount->current_price;
-                    } else {
-                        $previousPrice = $product->unit_price;
-                    }
-
-                    // Calculate discount amount and current price
-                    if ($discount->type == 'fixed') {
-                        $discountAmount = $discount->value;
-                    } elseif ($discount->type == 'percentage') {
-                        $discountAmount = $previousPrice * ($discount->value / 100);
-                    }
-
-                    $currentPrice = $previousPrice - $discountAmount;
-
-                    // Insert into discount_products table
-                    DB::table('discount_products')->insert([
-                        'product_id' => $product->id,
-                        'discount_id' => $discountId,
-                        'discount_amount' => $discountAmount,
-                        'previous_price' => $previousPrice,
-                        'current_price' => $currentPrice,
-                    ]);
+                if ($discount->type === 'fixed') {
+                    $discountAmount = $discount->value;
+                } elseif ($discount->type === 'percentage') {
+                    $discountAmount = $previousPrice * ($discount->value / 100);
+                } else {
+                    $discountAmount = 0;
                 }
 
-                // Update product with the final current price
-                $product->current_price = $currentPrice;
-                $product->save();
-            } else {
-                // No discounts, set current price equal to unit price
-                $product->current_price = $product->unit_price;
-                $product->save();
+                $currentPrice = $previousPrice - $discountAmount;
+
+                DB::table('discount_products')->insert([
+                    'product_id' => $product->id,
+                    'discount_id' => $discountId,
+                    'discount_amount' => $discountAmount,
+                    'previous_price' => $previousPrice,
+                    'current_price' => $currentPrice,
+                ]);
             }
 
-            return response()->json(['message' => 'Product created successfully', 'product' => $product], 201);
-        } catch (\Exception $e) {
-            Log::error('Error creating product: '.$e->getMessage());
-
-            return response()->json(['error' => 'Internal Server Error'], 500);
+            $product->current_price = $currentPrice;
+            $product->save();
+        } else {
+            $product->current_price = $product->unit_price;
+            $product->save();
         }
+
+        return response()->json(['message' => 'Product created successfully', 'product' => $product], 201);
+
+    } catch (\Exception $e) {
+        Log::error('Error creating product: '.$e->getMessage());
+        return response()->json(['error' => 'Internal Server Error'], 500);
     }
+}
+
 
     /**
      * Helper function to make slug unique if already exists.
