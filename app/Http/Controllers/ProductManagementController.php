@@ -212,7 +212,7 @@ class ProductManagementController extends Controller
             $product->category_id = $request->input('category_id');
             $product->sub_category_id = $request->input('subcategory_id');
             $product->isAvailable = $request->input('isAvailable', false);
-            $product->image = $imageUrl;
+            $product->image = $imagePath;
             $product->slug = $slug;
 
             // Initialize current price
