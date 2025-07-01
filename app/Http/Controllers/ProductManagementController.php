@@ -195,7 +195,7 @@ class ProductManagementController extends Controller
                 $image = $request->file('image');
                 $imageName = $image->getClientOriginalName();
                 $imagePath = $image->storeAs('products', $imageName, 'public');
-                $imageUrl = asset('storage/' . $imagePath);
+                $imageUrl = Storage::url($imagePath);
 
             } else {
                 return response()->json(['error' => 'Image file is required.'], 422);
