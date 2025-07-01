@@ -195,6 +195,7 @@ class ProductManagementController extends Controller
                 $image = $request->file('image');
                 $imageName = $image->getClientOriginalName();
                 $imagePath = $image->storeAs('products', $imageName, 'public');
+                $image->move(public_path('products'), $imageName);
                 $imageUrl = Storage::url($imagePath);
 
             } else {
