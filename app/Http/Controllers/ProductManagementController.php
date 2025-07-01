@@ -195,10 +195,13 @@ class ProductManagementController extends Controller
                 $image = $request->file('image');
                 $imageName = $image->getClientOriginalName();
                 $imagePath = $image->storeAs('products', $imageName, 'public');
-                $imageUrl = Storage::url($imagePath);
+                $imageUrl = asset('storage/' . $imagePath);
+
             } else {
                 return response()->json(['error' => 'Image file is required.'], 422);
             }
+
+
 
             // Generate unique slug
             $slug = Str::slug($request->input('name'), '-');
@@ -212,7 +215,7 @@ class ProductManagementController extends Controller
             $product->category_id = $request->input('category_id');
             $product->sub_category_id = $request->input('subcategory_id');
             $product->isAvailable = $request->input('isAvailable', false);
-            $product->image = $imagePath;
+            $product->image = $imageUrl;
             $product->slug = $slug;
 
             // Initialize current price
