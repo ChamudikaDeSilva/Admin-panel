@@ -85,7 +85,15 @@ Route::get('/product/management/deals', [DealController::class, 'dealIndex'])->m
 Route::get('/product/management/deals/edit/{deal}', [DealController::class, 'editDeal'])->middleware(['auth', 'verified'])->name('deals.edit');
 Route::get('/product/management/deals/assign/products', [DealController::class, 'assignProductView'])->middleware(['auth', 'verified'])->name('deals.assignProduct');
 
-Route::get('/health', function () {
-    return response()->json(['status' => 'ok']);
+
+
+Route::get('/check-storage-link', function () {
+    $link = public_path('storage');
+    return response()->json([
+        'exists' => file_exists($link),
+        'is_link' => is_link($link),
+        'target' => readlink($link),
+    ]);
 });
+
 
