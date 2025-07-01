@@ -194,11 +194,11 @@ class ProductManagementController extends Controller
             // Handle image upload
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = time() . '_' . $image->getClientOriginalName(); // Add unique prefix
+                $imageName = $image->getClientOriginalName();
                 $imagePath = $image->storeAs('products', $imageName, 'public');
 
                 // Use absolute URL instead of Storage::url()
-                $imageUrl = URL::asset("storage/$imagePath");
+               $imageUrl = Storage::url($imagePath);
 
 
             }
