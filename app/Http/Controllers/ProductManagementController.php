@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -193,12 +194,13 @@ class ProductManagementController extends Controller
             // Handle image upload
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = $image->getClientOriginalName();
+                $imageName = time() . '_' . $image->getClientOriginalName(); // Add unique prefix
                 $imagePath = $image->storeAs('products', $imageName, 'public');
-                $imageUrl = Storage::url($imagePath);
 
-            } else {
-                return response()->json(['error' => 'Image file is required.'], 422);
+                // Use absolute URL instead of Storage::url()
+                $imageUrl = URL::asset("storage/$imagePath");
+
+
             }
 
             // Generate unique slug

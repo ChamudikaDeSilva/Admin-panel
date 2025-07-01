@@ -304,7 +304,7 @@ export default function Products({ auth }) {
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap">
                                                         <img
-                                                            src={`https://laravel-backend-production-dde3.up.railway.app/${product.image}`} alt={product.name}
+                                                            src={product.image_url} alt={product.name}
 
 
 
