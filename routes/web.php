@@ -87,13 +87,13 @@ Route::get('/product/management/deals/assign/products', [DealController::class, 
 
 
 
-Route::get('/check-storage-link', function () {
-    $link = public_path('storage');
-    return response()->json([
-        'exists' => file_exists($link),
-        'is_link' => is_link($link),
-        'target' => readlink($link),
-    ]);
-});
+Route::get('/product-image/{filename}', function ($filename) {
+    $path = storage_path('app/public/products/' . $filename);
 
+    if (!file_exists($path)) {
+        abort(404);
+    }
+
+    return response()->file($path);
+});
 
