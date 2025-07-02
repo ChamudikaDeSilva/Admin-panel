@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\URL;
 
@@ -21,7 +22,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (env('APP_ENV') === 'production') {
-        URL::forceScheme('https');
-    }
+            URL::forceScheme('https');
+        }
+
+        if (!is_link(public_path('storage'))) {
+            Artisan::call('storage:link');
+        }
     }
 }
