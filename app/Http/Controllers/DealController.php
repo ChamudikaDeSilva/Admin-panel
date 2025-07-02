@@ -64,38 +64,16 @@ class DealController extends Controller
                 return response()->json(['errors' => $validator->errors()], 422);
             }
 
-            // // Handle image upload
-            // if ($request->hasFile('image')) {
-            //     $image = $request->file('image');
-            //     $imageName = $image->getClientOriginalName();
-            //     $imagePath = $image->storeAs('deals', $imageName, 'public');
-            //     $imageUrl = Storage::url($imagePath);
-            //     //Log::info('Image uploaded successfully', ['image_url' => $imageUrl]);
-            // } else {
-            //     //Log::error('Image file is required but not provided');
-
-            //     return response()->json(['error' => 'Image file is required.'], 422);
-            // }
-
-
+            // Handle image upload
             if ($request->hasFile('image')) {
-                 $image = $request->file('image');
-                // // $imageName = time() . '_' . $image->getClientOriginalName();
-                // // $image->storeAs('products', $imageName, 'public'); // stored in storage/app/public/products
-                // $imageName = time() . '_' . $image->getClientOriginalName();
-                // $image->move(public_path('images/products'), $imageName);
-
-                $destinationPath = public_path('images/deals');
-
-                // ✅ Ensure directory exists
-                if (!file_exists($destinationPath)) {
-                    mkdir($destinationPath, 0755, true);
-                }
-
-                $imageName = time() . '_' . $image->getClientOriginalName();
-                $image->move($destinationPath, $imageName);
-
+                $image = $request->file('image');
+                $imageName = $image->getClientOriginalName();
+                $imagePath = $image->storeAs('deals', $imageName, 'public');
+                $imageUrl = Storage::url($imagePath);
+                //Log::info('Image uploaded successfully', ['image_url' => $imageUrl]);
             } else {
+                //Log::error('Image file is required but not provided');
+
                 return response()->json(['error' => 'Image file is required.'], 422);
             }
 
@@ -106,7 +84,7 @@ class DealController extends Controller
             $deal->unit_price = $request->input('unit_price');
             $deal->quantity = $request->input('quantity');
             $deal->isAvailable = $request->input('isAvailable');
-            $deal->image = $imageName;
+            $deal->image = $imageUrl;
             $deal->save();
             //Log::info('Deal created successfully', ['deal_id' => $deal->id]);
 
@@ -236,47 +214,17 @@ class DealController extends Controller
                 'isAvailable' => $request->isAvailable,
             ]);
 
-            // // Handle image upload (if provided)
-            // if ($request->hasFile('image')) {
-            //     // Remove existing image if present
-            //     if ($deal->image) {
-            //         Storage::disk('public')->delete($deal->image);
-            //     }
-            //     $image = $request->file('image');
-            //     $imageName = $image->getClientOriginalName();
-            //     $imagePath = $image->storeAs('deals', $imageName, 'public');
-            //     $imageUrl = Storage::url($imagePath);
-            //     $deal->image = $imageUrl;
-            // }
-
+            // Handle image upload (if provided)
             if ($request->hasFile('image')) {
-                 $image = $request->file('image');
-                // // $imageName = time() . '_' . $image->getClientOriginalName();
-                // // $image->storeAs('products', $imageName, 'public'); // stored in storage/app/public/products
-                // $imageName = time() . '_' . $image->getClientOriginalName();
-                // $image->move(public_path('images/products'), $imageName);
-
-                if($deal->image){
-                    // Remove existing image if present
-                    $existingImagePath = public_path('images/deals/' . $deal->image);
-                    if (file_exists($existingImagePath)) {
-                        unlink($existingImagePath);
-                    }
+                // Remove existing image if present
+                if ($deal->image) {
+                    Storage::disk('public')->delete($deal->image);
                 }
-
-                $destinationPath = public_path('images/deals');
-
-                // ✅ Ensure directory exists
-                if (!file_exists($destinationPath)) {
-                    mkdir($destinationPath, 0755, true);
-                }
-
-                $imageName = time() . '_' . $image->getClientOriginalName();
-                $image->move($destinationPath, $imageName);
-                $deal->image = $imageName;
-
-            } else {
-                return response()->json(['error' => 'Image file is required.'], 422);
+                $image = $request->file('image');
+                $imageName = $image->getClientOriginalName();
+                $imagePath = $image->storeAs('deals', $imageName, 'public');
+                $imageUrl = Storage::url($imagePath);
+                $deal->image = $imageUrl;
             }
 
             // Update category association
