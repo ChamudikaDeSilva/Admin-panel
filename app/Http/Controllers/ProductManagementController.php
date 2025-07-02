@@ -192,11 +192,19 @@ class ProductManagementController extends Controller
             }
 
             // Handle image upload
+            // if ($request->hasFile('image')) {
+            //     $image = $request->file('image');
+            //     $imageName = time() . '_' . $image->getClientOriginalName(); // Prevent overwrites
+            //     $image->storeAs('public/products', $imageName); // Save in storage/app/public/products
+
+            // } else {
+            //     return response()->json(['error' => 'Image file is required.'], 422);
+            // }
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = time() . '_' . $image->getClientOriginalName(); // Prevent overwrites
-                $image->storeAs('public/products', $imageName); // Save in storage/app/public/products
-
+                $imageName = $image->getClientOriginalName();
+                $imagePath = $image->storeAs('products', $imageName, 'public');
+                $imageUrl = Storage::url($imagePath);
             } else {
                 return response()->json(['error' => 'Image file is required.'], 422);
             }
@@ -215,7 +223,7 @@ class ProductManagementController extends Controller
             $product->category_id = $request->input('category_id');
             $product->sub_category_id = $request->input('subcategory_id');
             $product->isAvailable = $request->input('isAvailable', false);
-            $$product->image = $imageName;
+            $$product->image = $imageUrl;
             $product->slug = $slug;
 
             // Initialize current price
