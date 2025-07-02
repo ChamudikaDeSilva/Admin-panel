@@ -194,18 +194,18 @@ class ProductManagementController extends Controller
             // Handle image upload
             if ($request->hasFile('image')) {
                 $image = $request->file('image');
-                $imageName = $image->getClientOriginalName();
-                $imagePath = $image->storeAs('products', $imageName, 'public');
+                $imageName = time() . '_' . $image->getClientOriginalName(); // Prevent overwrites
+                $image->storeAs('public/products', $imageName); // Save in storage/app/public/products
 
-                // Use absolute URL instead of Storage::url()
-               $imageUrl = Storage::url($imagePath);
-
-
+            } else {
+                return response()->json(['error' => 'Image file is required.'], 422);
             }
 
             // Generate unique slug
             $slug = Str::slug($request->input('name'), '-');
-            $slug = $this->makeUniqueSlug($slug);// Create new product
+            $slug = $this->makeUniqueSlug($slug);
+
+            // Create new product
             $product = new Product;
             $product->name = $request->input('name');
             $product->description = $request->input('description');
@@ -215,7 +215,7 @@ class ProductManagementController extends Controller
             $product->category_id = $request->input('category_id');
             $product->sub_category_id = $request->input('subcategory_id');
             $product->isAvailable = $request->input('isAvailable', false);
-            $product->image = $imageUrl;
+            $$product->image = $imageName;
             $product->slug = $slug;
 
             // Initialize current price
@@ -258,7 +258,9 @@ class ProductManagementController extends Controller
                         'previous_price' => $previousPrice,
                         'current_price' => $currentPrice,
                     ]);
-                }// Update product with the final current price
+                }
+
+                // Update product with the final current price
                 $product->current_price = $currentPrice;
                 $product->save();
             } else {

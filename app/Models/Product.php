@@ -66,15 +66,11 @@ class Product extends Model
         return $this->belongsTo(SubCategory::class);
     }
 
-    protected $appends = ['image_url'];
+     protected $appends = ['image_url'];
 
-    // 👇 Define the accessor
     public function getImageUrlAttribute()
     {
-        // If image is null or missing, return a placeholder or null
-        return $this->image
-            ? asset('storage/products/' . $this->image)
-            : null;
+        return asset('storage/products/' . $this->image);
     }
 
 }
