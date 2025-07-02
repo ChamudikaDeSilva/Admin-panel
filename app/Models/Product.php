@@ -70,7 +70,10 @@ class Product extends Model
 
     public function getImageUrlAttribute()
     {
-        return asset('storage/products/' . $this->image);
+        return $this->image
+            ? asset('images/products/' . $this->image)
+            : null;
     }
+
 
 }
