@@ -372,19 +372,50 @@ class ProductManagementController extends Controller
                 'unit' => $request->unit,
             ]);
 
-            // Handle image upload (if provided)
+            // // Handle image upload (if provided)
+            // if ($request->hasFile('image')) {
+            //     // Remove existing image if present
+            //     if ($product->image) {
+            //         Storage::disk('public')->delete($product->image);
+            //     }
+
+            //     $image = $request->file('image');
+            //     $imageName = $image->getClientOriginalName();
+            //     $imagePath = $image->storeAs('products', $imageName, 'public');
+            //     $imageUrl = Storage::url($imagePath);
+
+            //     $product->image = $imageName;
+            // }
+
+
             if ($request->hasFile('image')) {
-                // Remove existing image if present
-                if ($product->image) {
-                    Storage::disk('public')->delete($product->image);
+                 $image = $request->file('image');
+                // // $imageName = time() . '_' . $image->getClientOriginalName();
+                // // $image->storeAs('products', $imageName, 'public'); // stored in storage/app/public/products
+                // $imageName = time() . '_' . $image->getClientOriginalName();
+                // $image->move(public_path('images/products'), $imageName);
+
+                if($product->image){
+                    // Remove existing image if present
+                    $existingImagePath = public_path('images/products/' . $product->image);
+                    if (file_exists($existingImagePath)) {
+                        unlink($existingImagePath);
+                    }
                 }
 
-                $image = $request->file('image');
-                $imageName = $image->getClientOriginalName();
-                $imagePath = $image->storeAs('products', $imageName, 'public');
-                $imageUrl = Storage::url($imagePath);
+                $destinationPath = public_path('images/products');
 
+                // ✅ Ensure directory exists
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0755, true);
+                }
+
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $image->move($destinationPath, $imageName);
                 $product->image = $imageName;
+
+            } else {
+                return response()->json(['error' => 'Image file is required.'], 422);
             }
 
             $product->save();
