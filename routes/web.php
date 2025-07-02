@@ -13,6 +13,7 @@ use App\Http\Controllers\UserManagementController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 /*
@@ -96,4 +97,9 @@ Route::get('/product-image/{filename}', function ($filename) {
 
     return response()->file($path);
 });
+
+Route::get('/debug-files', function () {
+    return Storage::disk('public')->files('products');
+});
+
 
