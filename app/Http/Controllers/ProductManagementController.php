@@ -328,111 +328,16 @@ class ProductManagementController extends Controller
         ]);
     }
 
-    // public function updateProduct(Request $request, $productId)
-    // {
-    //     // Log incoming request data
-    //     //Log::info('Received request data:', ['request' => $request->all()]);
-
-    //     // Convert availability to boolean
-    //     $request->merge([
-    //         'availability' => filter_var($request->availability, FILTER_VALIDATE_BOOLEAN),
-    //     ]);
-
-    //     // Validate incoming request data
-    //     $validator = Validator::make($request->all(), [
-    //         'name' => 'required|string|max:255',
-    //         'category_id' => 'required|integer|exists:categories,id',
-    //         'subcategory_id' => 'nullable|integer|exists:sub_categories,id',
-    //         'description' => 'required|string',
-    //         'unit_price' => 'required|numeric|min:0',
-    //         'quantity' => 'required|numeric|min:0',
-    //         'availability' => 'required|boolean',
-    //         'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-    //         'unit' => 'required|string',
-    //     ]);
-
-    //     if ($validator->fails()) {
-    //         Log::error('Validation errors:', ['errors' => $validator->errors()]);
-
-    //         return response()->json($validator->errors(), 422);
-    //     }
-
-    //     try {
-    //         $product = Product::findOrFail($productId);
-
-    //         // Update product details (except image)
-    //         $product->update([
-    //             'name' => $request->name,
-    //             'category_id' => $request->category_id,
-    //             'sub_category_id' => $request->subcategory_id,
-    //             'description' => $request->description,
-    //             'unit_price' => $request->unit_price,
-    //             'quantity' => $request->quantity,
-    //             'isAvailable' => $request->availability,
-    //             'unit' => $request->unit,
-    //         ]);
-
-    //         // // Handle image upload (if provided)
-    //         // if ($request->hasFile('image')) {
-    //         //     // Remove existing image if present
-    //         //     if ($product->image) {
-    //         //         Storage::disk('public')->delete($product->image);
-    //         //     }
-
-    //         //     $image = $request->file('image');
-    //         //     $imageName = $image->getClientOriginalName();
-    //         //     $imagePath = $image->storeAs('products', $imageName, 'public');
-    //         //     $imageUrl = Storage::url($imagePath);
-
-    //         //     $product->image = $imageName;
-    //         // }
-
-
-    //         if ($request->hasFile('image')) {
-    //              $image = $request->file('image');
-    //             // // $imageName = time() . '_' . $image->getClientOriginalName();
-    //             // // $image->storeAs('products', $imageName, 'public'); // stored in storage/app/public/products
-    //             // $imageName = time() . '_' . $image->getClientOriginalName();
-    //             // $image->move(public_path('images/products'), $imageName);
-
-    //             if($product->image){
-    //                 // Remove existing image if present
-    //                 $existingImagePath = public_path('images/products/' . $product->image);
-    //                 if (file_exists($existingImagePath)) {
-    //                     unlink($existingImagePath);
-    //                 }
-    //             }
-
-    //             $destinationPath = public_path('images/products');
-
-    //             // ✅ Ensure directory exists
-    //             if (!file_exists($destinationPath)) {
-    //                 mkdir($destinationPath, 0755, true);
-    //             }
-
-    //             $imageName = time() . '_' . $image->getClientOriginalName();
-    //             $image->move($destinationPath, $imageName);
-    //             $product->image = $imageName;
-
-    //         } else {
-    //             return response()->json(['error' => 'Image file is required.'], 422);
-    //         }
-
-    //         $product->save();
-
-    //         return response()->json(['message' => 'Product updated successfully', 'product' => $product], 201);
-    //     } catch (\Exception $e) {
-    //         Log::error('Error updating product:', [
-    //             'exception' => $e->getMessage(),
-    //             'request_data' => $request->all(),
-    //         ]);
-
-    //         return response()->json(['message' => 'Internal server error'], 500);
-    //     }
-    // }
-
     public function updateProduct(Request $request, $productId)
     {
+        // Log incoming request data
+        //Log::info('Received request data:', ['request' => $request->all()]);
+
+        // Convert availability to boolean
+        $request->merge([
+            'availability' => filter_var($request->availability, FILTER_VALIDATE_BOOLEAN),
+        ]);
+
         // Validate incoming request data
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
@@ -448,13 +353,14 @@ class ProductManagementController extends Controller
 
         if ($validator->fails()) {
             Log::error('Validation errors:', ['errors' => $validator->errors()]);
+
             return response()->json($validator->errors(), 422);
         }
 
         try {
             $product = Product::findOrFail($productId);
 
-            // Update product fields
+            // Update product details (except image)
             $product->update([
                 'name' => $request->name,
                 'category_id' => $request->category_id,
@@ -462,38 +368,59 @@ class ProductManagementController extends Controller
                 'description' => $request->description,
                 'unit_price' => $request->unit_price,
                 'quantity' => $request->quantity,
-                'isAvailable' => filter_var($request->availability, FILTER_VALIDATE_BOOLEAN),
+                'isAvailable' => $request->availability,
                 'unit' => $request->unit,
             ]);
 
-            // Handle optional image upload
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
+            // // Handle image upload (if provided)
+            // if ($request->hasFile('image')) {
+            //     // Remove existing image if present
+            //     if ($product->image) {
+            //         Storage::disk('public')->delete($product->image);
+            //     }
 
-                // Delete old image
-                if ($product->image) {
-                    $oldPath = public_path('images/products/' . $product->image);
-                    if (file_exists($oldPath)) {
-                        unlink($oldPath);
+            //     $image = $request->file('image');
+            //     $imageName = $image->getClientOriginalName();
+            //     $imagePath = $image->storeAs('products', $imageName, 'public');
+            //     $imageUrl = Storage::url($imagePath);
+
+            //     $product->image = $imageName;
+            // }
+
+
+            if ($request->hasFile('image')) {
+                 $image = $request->file('image');
+                // // $imageName = time() . '_' . $image->getClientOriginalName();
+                // // $image->storeAs('products', $imageName, 'public'); // stored in storage/app/public/products
+                // $imageName = time() . '_' . $image->getClientOriginalName();
+                // $image->move(public_path('images/products'), $imageName);
+
+                if($product->image){
+                    // Remove existing image if present
+                    $existingImagePath = public_path('images/products/' . $product->image);
+                    if (file_exists($existingImagePath)) {
+                        unlink($existingImagePath);
                     }
                 }
 
-                // Create directory if it doesn't exist
                 $destinationPath = public_path('images/products');
+
+                // ✅ Ensure directory exists
                 if (!file_exists($destinationPath)) {
                     mkdir($destinationPath, 0755, true);
                 }
 
-                // Move new image
                 $imageName = time() . '_' . $image->getClientOriginalName();
                 $image->move($destinationPath, $imageName);
                 $product->image = $imageName;
+
+            } else {
+                return response()->json(['error' => 'Image file is required.'], 422);
             }
 
             $product->save();
 
-            return response()->json(['message' => 'Product updated successfully', 'product' => $product], 200);
-
+            return response()->json(['message' => 'Product updated successfully', 'product' => $product], 201);
         } catch (\Exception $e) {
             Log::error('Error updating product:', [
                 'exception' => $e->getMessage(),
@@ -503,7 +430,6 @@ class ProductManagementController extends Controller
             return response()->json(['message' => 'Internal server error'], 500);
         }
     }
-
 
     public function destroyProduct(Product $product)
     {
