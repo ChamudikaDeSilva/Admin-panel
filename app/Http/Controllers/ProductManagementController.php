@@ -193,12 +193,20 @@ class ProductManagementController extends Controller
 
             if ($request->hasFile('image')) {
                  $image = $request->file('image');
+                // // $imageName = time() . '_' . $image->getClientOriginalName();
+                // // $image->storeAs('products', $imageName, 'public'); // stored in storage/app/public/products
                 // $imageName = time() . '_' . $image->getClientOriginalName();
-                // $image->storeAs('products', $imageName, 'public'); // stored in storage/app/public/products
-                $imageName = time() . '_' . $image->getClientOriginalName();
-                $image->move(public_path('images/products'), $imageName);
-            
+                // $image->move(public_path('images/products'), $imageName);
 
+                $destinationPath = public_path('images/products');
+
+                // ✅ Ensure directory exists
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0755, true);
+                }
+
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $image->move($destinationPath, $imageName);
 
             } else {
                 return response()->json(['error' => 'Image file is required.'], 422);
